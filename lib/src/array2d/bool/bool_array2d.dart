@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2D extends Object
-    with IterableMixin<Array<bool>>, Bool2DMixin
+    with Bool2DMixin
     implements Array2D<bool>, Bool2DFix {
   final List<Bool1D> _data;
 
@@ -43,14 +43,14 @@ class Bool2D extends Object
 
   Bool2D.repeatRow(Iterable<bool> row, [int numRows = 1])
       : _data = new List<Bool1D>(numRows) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D(row);
     }
   }
 
   Bool2D.repeatCol(Iterable<bool> column, [int numCols = 1])
       : _data = new List<Bool1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.sized(numCols, data: column.elementAt(i));
     }
   }
@@ -60,7 +60,7 @@ class Bool2D extends Object
   }
 
   Bool2D.aCol(Iterable<bool> column) : _data = new List<Bool1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.single(column.elementAt(i));
     }
   }
@@ -172,19 +172,6 @@ class Bool2D extends Object
     return ret;
   }
 
-  Array<bool> firstWhere(covariant bool test(Bool1D element),
-          {covariant Bool1D orElse()}) =>
-      super.firstWhere(test, orElse: orElse);
-
-  Array<bool> lastWhere(covariant bool test(Bool1D element),
-          {covariant Bool1D orElse()}) =>
-      super.lastWhere(test, orElse: orElse);
-
-  Array<bool> reduce(
-          covariant Bool1D combine(
-              ArrayView<bool> value, ArrayView<bool> element)) =>
-      super.reduce(combine);
-
   covariant Bool2DCol _col;
 
   Bool2DCol get col => _col ??= new Bool2DCol(this);
@@ -197,22 +184,31 @@ class Bool2D extends Object
 
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, Iterable<bool> val) {
+  operator []=(final int i, final /* Iterable<bool> | ArrayView<bool> */ val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
+    Iterable<bool> v;
+    if (val is ArrayView<bool>) {
+      v = val.iterable;
+    } else if (val is Iterable<bool>) {
+      v = val;
+    } else {
+      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+    }
+
     if (numRows == 0) {
-      final arr = new Bool1D(val);
+      final arr = new Bool1D(v);
       _data.add(arr);
       return;
     }
 
-    if (val.length != numCols) {
+    if (v.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Bool1D(val);
+    final arr = new Bool1D(v);
 
     if (i == numRows) {
       _data.add(arr);
@@ -224,7 +220,7 @@ class Bool2D extends Object
 
   /// Sets all elements in the array to given value [v]
   void set(bool v) {
-    for (int c = 0; c < length; c++) {
+    for (int c = 0; c < numRows; c++) {
       for (int r = 0; r < numCols; r++) {
         _data[c][r] = v;
       }

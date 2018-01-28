@@ -37,6 +37,8 @@ class Bool1DView extends Object
 
   Bool1D makeArray(Iterable<bool> newData) => new Bool1D(newData);
 
+  Iterable<bool> get iterable => _data;
+
   Iterator<bool> get iterator => _data.iterator;
 
   Index1D get shape => new Index1D(_data.length);
@@ -158,10 +160,10 @@ class Bool1DView extends Object
     return ret;
   }
 
-  bool operator ==(other) {
-    if (other is! Array<int>) return false;
+  bool operator ==(final other) {
+    if (other is! Array<bool>) return false;
 
-    if (other is Array<int>) {
+    if (other is Array<bool>) {
       if (length != other.length) return false;
       for (int i = 0; i < length; i++) {
         if (_data[i] != other[i]) return false;
@@ -237,4 +239,7 @@ class Bool1DView extends Object
     }
     return false;
   }
+
+  @override
+  int get hashCode => _data.hashCode;
 }

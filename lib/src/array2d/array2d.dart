@@ -7,21 +7,27 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 
 import 'package:grizzly_array/src/array/array.dart';
 
+part 'common/array2d_mixin.dart';
+
+part 'int/int_mixin.dart';
 part 'int/int_array2d.dart';
 part 'int/int_fix_array2d.dart';
 part 'int/int_view_array2d.dart';
 part 'int/int_axis.dart';
 
+part 'double/double_mixin.dart';
 part 'double/double_array2d.dart';
 part 'double/double_fix_array2d.dart';
 part 'double/double_axis.dart';
 part 'double/double_view_array2d.dart';
 
+part 'bool/bool_mixin.dart';
 part 'bool/bool_array2d.dart';
 part 'bool/bool_fix_array2d.dart';
 part 'bool/bool_axis.dart';
 part 'bool/bool_view_array2d.dart';
 
+part 'string/string_mixin.dart';
 part 'string/string_array2d.dart';
 part 'string/string_fix_array2d.dart';
 part 'string/string_axis.dart';

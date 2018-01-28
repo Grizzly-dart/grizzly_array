@@ -37,6 +37,8 @@ class String1DView extends Object
 
   String1D makeArray(Iterable<String> newData) => new String1D(newData);
 
+  Iterable<String> get iterable => _data;
+
   Iterator<String> get iterator => _data.iterator;
 
   Index1D get shape => new Index1D(_data.length);
@@ -142,9 +144,9 @@ class String1DView extends Object
   }
 
   bool operator ==(other) {
-    if (other is! Array<int>) return false;
+    if (other is! Array<String>) return false;
 
-    if (other is Array<int>) {
+    if (other is Array<String>) {
       if (length != other.length) return false;
       for (int i = 0; i < length; i++) {
         if (_data[i] != other[i]) return false;
@@ -183,4 +185,7 @@ class String1DView extends Object
     return ret;
   }
   */
+
+  @override
+  int get hashCode => _data.hashCode;
 }

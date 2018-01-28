@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Double2DFix extends Object
-    with IterableMixin<ArrayFix<double>>, Double2DMixin
+    with Double2DMixin
     implements Numeric2DFix<double>, Double2DView {
   final List<Double1DFix> _data;
 
@@ -58,14 +58,14 @@ class Double2DFix extends Object
 
   Double2DFix.repeatRow(Iterable<double> row, [int numRows = 1])
       : _data = new List<Double1D>(numRows) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Double1D(row);
     }
   }
 
   Double2DFix.repeatCol(Iterable<double> column, [int numCols = 1])
       : _data = new List<Double1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Double1D.sized(numCols, data: column.elementAt(i));
     }
   }
@@ -76,7 +76,7 @@ class Double2DFix extends Object
 
   Double2DFix.aCol(Iterable<double> column)
       : _data = new List<Double1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Double1D.single(column.elementAt(i));
     }
   }
@@ -192,19 +192,6 @@ class Double2DFix extends Object
 
   Iterator<Numeric1DFix<double>> get iterator => _data.iterator;
 
-  Numeric1DFix<double> firstWhere(covariant bool test(Double1DFix element),
-          {covariant Double1DFix orElse()}) =>
-      super.firstWhere(test, orElse: orElse);
-
-  Numeric1DFix<double> lastWhere(covariant bool test(Double1DFix element),
-          {covariant Double1DFix orElse()}) =>
-      super.lastWhere(test, orElse: orElse);
-
-  Numeric1DFix<double> reduce(
-          covariant Double1DFix combine(
-              ArrayView<double> value, ArrayView<double> element)) =>
-      super.reduce(combine);
-
   covariant Double2DColFix _col;
 
   Double2DColFix get col => _col ??= new Double2DColFix(this);
@@ -215,29 +202,38 @@ class Double2DFix extends Object
 
   Double1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, Iterable<double> val) {
+  operator []=(final int i, /* Iterable<double> | ArrayView<double> */ val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
+    Iterable<double> v;
+    if (val is ArrayView<double>) {
+      v = val.iterable;
+    } else if (val is Iterable<double>) {
+      v = val;
+    } else {
+      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+    }
+
     if (numRows == 0) {
-      final arr = new Double1D(val);
+      final arr = new Double1D(v);
       _data.add(arr);
       return;
     }
 
-    if (val.length != numCols) {
+    if (v.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Double1D(val);
+    final arr = new Double1D(v);
 
     _data[i] = arr;
   }
 
   /// Sets all elements in the array to given value [v]
   void set(double v) {
-    for (int c = 0; c < length; c++) {
+    for (int c = 0; c < numRows; c++) {
       for (int r = 0; r < numCols; r++) {
         _data[c][r] = v;
       }
@@ -327,4 +323,131 @@ class Double2DFix extends Object
   Double2DView get view => _view ??= new Double2DView.make(_data);
 
   Double2DFix get fixed => this;
+
+  Double2D addition(/* int | Iterable<int> | Numeric2DArray */ other,
+      {bool self: false}) {
+    if (!self) return this + other;
+
+    if (other is num) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          _data[r][c] += other;
+        }
+      }
+      return this;
+    } else if (other is Iterable<num>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] += other;
+      }
+      return this;
+    } else if (other is Numeric2D) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] += other[r];
+      }
+      return this;
+    }
+
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+
+  Double2D subtract(/* int | Iterable<int> | Numeric2DArray */ other,
+          {bool self: false}) {
+    if (!self) return this - other;
+
+    if (other is num) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          _data[r][c] -= other;
+        }
+      }
+      return this;
+    } else if (other is Iterable<num>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] -= other;
+      }
+      return this;
+    } else if (other is Numeric2D) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] -= other[r];
+      }
+      return this;
+    }
+
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+
+  Double2D multiply(/* int | Iterable<int> | Numeric2DArray */ other,
+          {bool self: false}) {
+    if (!self) return this * other;
+
+    if (other is num) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          _data[r][c] *= other;
+        }
+      }
+      return this;
+    } else if (other is Iterable<num>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] *= other;
+      }
+      return this;
+    } else if (other is Numeric2D) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] *= other[r];
+      }
+      return this;
+    }
+
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+
+  Double2D divide(/* int | Iterable<int> | Numeric2DArray */ other,
+          {bool self: false}) {
+    if (!self) return this / other;
+
+    if (other is num) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          _data[r][c] /= other;
+        }
+      }
+      return this;
+    } else if (other is Iterable<num>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] /= other;
+      }
+      return this;
+    } else if (other is Numeric2D) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        _data[r] /= other[r];
+      }
+      return this;
+    }
+
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+
+  Int2D truncDiv(/* int | Iterable<int> | Int2DArray */ other,
+          {bool self: false}) {
+    if (!self) return this ~/ other;
+
+    throw new Exception('self not allowed!');
+  }
 }

@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2DFix extends Object
-    with IterableMixin<ArrayFix<bool>>, Bool2DMixin
+    with Bool2DMixin
     implements Array2DFix<bool>, Bool2DView {
   final List<Bool1DFix> _data;
 
@@ -43,14 +43,14 @@ class Bool2DFix extends Object
 
   Bool2DFix.repeatRow(Iterable<bool> row, [int numRows = 1])
       : _data = new List<Bool1D>(numRows) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D(row);
     }
   }
 
   Bool2DFix.repeatCol(Iterable<bool> column, [int numCols = 1])
       : _data = new List<Bool1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.sized(numCols, data: column.elementAt(i));
     }
   }
@@ -61,7 +61,7 @@ class Bool2DFix extends Object
 
   Bool2DFix.aCol(Iterable<bool> column)
       : _data = new List<Bool1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.single(column.elementAt(i));
     }
   }
@@ -175,19 +175,6 @@ class Bool2DFix extends Object
 
   Iterator<ArrayFix<bool>> get iterator => _data.iterator;
 
-  ArrayFix<bool> firstWhere(covariant bool test(Bool1DFix element),
-          {covariant Bool1DFix orElse()}) =>
-      super.firstWhere(test, orElse: orElse);
-
-  ArrayFix<bool> lastWhere(covariant bool test(Bool1DFix element),
-          {covariant Bool1DFix orElse()}) =>
-      super.lastWhere(test, orElse: orElse);
-
-  ArrayFix<bool> reduce(
-          covariant Bool1DFix combine(
-              ArrayView<bool> value, ArrayView<bool> element)) =>
-      super.reduce(combine);
-
   covariant Bool2DColFix _col;
 
   Bool2DColFix get col => _col ??= new Bool2DColFix(this);
@@ -198,29 +185,38 @@ class Bool2DFix extends Object
 
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, Iterable<bool> val) {
+  operator []=(final int i, /* Iterable<bool> | ArrayView<bool> */ val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
+    Iterable<bool> v;
+    if(val is ArrayView<bool>) {
+      v = val.iterable;
+    } else if(val is Iterable<bool>) {
+      v = val;
+    } else {
+      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+    }
+
     if (numRows == 0) {
-      final arr = new Bool1D(val);
+      final arr = new Bool1D(v);
       _data.add(arr);
       return;
     }
 
-    if (val.length != numCols) {
+    if (v.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Bool1D(val);
+    final arr = new Bool1D(v);
 
     _data[i] = arr;
   }
 
   /// Sets all elements in the array to given value [v]
   void set(bool v) {
-    for (int c = 0; c < length; c++) {
+    for (int c = 0; c < numRows; c++) {
       for (int r = 0; r < numCols; r++) {
         _data[c][r] = v;
       }

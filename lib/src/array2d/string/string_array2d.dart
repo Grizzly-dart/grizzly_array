@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2D extends Object
-    with IterableMixin<Array<String>>, String2DMixin
+    with String2DMixin
     implements Array2D<String>, String2DFix {
   final List<String1D> _data;
 
@@ -43,14 +43,14 @@ class String2D extends Object
 
   String2D.repeatRow(Iterable<String> row, [int numRows = 1])
       : _data = new List<String1D>(numRows) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D(row);
     }
   }
 
   String2D.repeatCol(Iterable<String> column, [int numCols = 1])
       : _data = new List<String1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.sized(numCols, data: column.elementAt(i));
     }
   }
@@ -61,7 +61,7 @@ class String2D extends Object
 
   String2D.aCol(Iterable<String> column)
       : _data = new List<String1D>(column.length) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.single(column.elementAt(i));
     }
   }
@@ -173,19 +173,6 @@ class String2D extends Object
     return ret;
   }
 
-  Array<String> firstWhere(covariant bool test(String1D element),
-          {covariant String1D orElse()}) =>
-      super.firstWhere(test, orElse: orElse);
-
-  Array<String> lastWhere(covariant bool test(String1D element),
-          {covariant String1D orElse()}) =>
-      super.lastWhere(test, orElse: orElse);
-
-  Array<String> reduce(
-          covariant String1D combine(
-              ArrayView<String> value, ArrayView<String> element)) =>
-      super.reduce(combine);
-
   covariant String2DCol _col;
 
   String2DCol get col => _col ??= new String2DCol(this);
@@ -198,22 +185,31 @@ class String2D extends Object
 
   String1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, Iterable<String> val) {
+  operator []=(final int i, final /* Iterable<String> | ArrayView<String> */ val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
+    Iterable<String> v;
+    if (val is ArrayView<String>) {
+      v = val.iterable;
+    } else if (val is Iterable<String>) {
+      v = val;
+    } else {
+      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+    }
+
     if (numRows == 0) {
-      final arr = new String1D(val);
+      final arr = new String1D(v);
       _data.add(arr);
       return;
     }
 
-    if (val.length != numCols) {
+    if (v.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new String1D(val);
+    final arr = new String1D(v);
 
     if (i == numRows) {
       _data.add(arr);
@@ -225,7 +221,7 @@ class String2D extends Object
 
   /// Sets all elements in the array to given value [v]
   void set(String v) {
-    for (int c = 0; c < length; c++) {
+    for (int c = 0; c < numRows; c++) {
       for (int r = 0; r < numCols; r++) {
         _data[c][r] = v;
       }

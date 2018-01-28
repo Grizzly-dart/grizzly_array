@@ -35,6 +35,8 @@ class Int1DView extends Object
 
   Int1D makeArray(Iterable<int> newData) => new Int1D(newData);
 
+  Iterable<int> get iterable => _data;
+
   Iterator<int> get iterator => _data.iterator;
 
   Index1D get shape => new Index1D(_data.length);
@@ -621,4 +623,7 @@ class Int1DView extends Object
     if (y.numRows != length) throw new Exception('Size mismatch!');
     return covMatrix(y) / (y.std * std);
   }
+
+  @override
+  int get hashCode => _data.hashCode;
 }

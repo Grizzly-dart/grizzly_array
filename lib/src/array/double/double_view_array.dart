@@ -48,6 +48,8 @@ class Double1DView extends Object
 
   Double1D makeArray(Iterable<double> newData) => new Double1D(newData);
 
+  Iterable<double> get iterable => _data;
+
   Iterator<double> get iterator => _data.iterator;
 
   Index1D get shape => new Index1D(_data.length);
