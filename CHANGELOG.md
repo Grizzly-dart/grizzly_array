@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
++ Do not inherit from `Iterable`
+
 ## 0.0.1
 
 + `Bool1D`
