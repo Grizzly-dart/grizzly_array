@@ -283,6 +283,20 @@ class Int1D extends Int1DFix implements Numeric1D<int> {
     return ret;
   }
 
+  void mask(Array<bool> mask) {
+    if(mask.length != _data.length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.count(true);
+    final ret = new Int32List(retLength);
+    int idx = 0;
+    for(int i = 0; i < mask.length; i++) {
+      if(mask[i]) ret[idx++] = _data[i];
+    }
+    _data = ret;
+  }
+
   Int1DFix _fixed;
   Int1DFix get fixed => _fixed ??= new Int1DFix.make(_data);
+
+  String toString() => _data.toString();
 }

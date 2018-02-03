@@ -37,6 +37,13 @@ class Bool1DFix extends Bool1DView implements ArrayFix<bool> {
     for (int i = 0; i < length; i++) _data[i] = other.elementAt(i);
   }
 
+  void sort({bool descending: false}) {
+    if (!descending)
+      _data.sort();
+    else
+      _data.sort((bool a, bool b) => b ? 1 : 0);
+  }
+
   Bool1DView _view;
   Bool1DView get view => _view ??= new Bool1DView.make(_data);
 

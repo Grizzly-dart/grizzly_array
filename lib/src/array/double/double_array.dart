@@ -253,6 +253,27 @@ class Double1D extends Double1DFix implements Numeric1D<double> {
     return super.ceilToDouble();
   }
 
+  void mask(Array<bool> mask) {
+    if(mask.length != _data.length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.count(true);
+    final ret = new Float64List(retLength);
+    int idx = 0;
+    for(int i = 0; i < mask.length; i++) {
+      if(mask[i]) ret[idx++] = _data[i];
+    }
+    _data = ret;
+  }
+
+  void maskByPos(Array<int> pos) {
+    final poss = pos.unique()..sort(descending: true);
+    if(poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+
+    for(int pos in poss.iterable) {
+      _data.removeAt(pos);
+    }
+  }
+
   Double1DFix _fixed;
   Double1DFix get fixed => _fixed ??= new Double1DFix.make(_data);
 }

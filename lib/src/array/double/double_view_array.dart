@@ -1,8 +1,6 @@
 part of grizzly.series.array;
 
-class Double1DView extends Object
-    with IterableMixin<double>
-    implements Numeric1DView<double> {
+class Double1DView extends Object implements Numeric1DView<double> {
   Float64List _data;
 
   Double1DView(Iterable<double> iterable)
@@ -52,12 +50,30 @@ class Double1DView extends Object
 
   Iterator<double> get iterator => _data.iterator;
 
+  int get length => _data.length;
+
   Index1D get shape => new Index1D(_data.length);
 
   double operator [](int i) => _data[i];
 
+  Double1D clone() => new Double1D(_data);
+
   Double1D slice(int start, [int end]) =>
       new Double1D(_data.sublist(start, end));
+
+  double get first => _data.first;
+
+  double get last => _data.last;
+
+  int count(double v, {double absTol: 0.0}) {
+    final double vLow = v - absTol;
+    final double vHigh = v + absTol;
+    int ret = 0;
+    for(double item in _data) {
+      if(item > vLow && item < vHigh) ret++;
+    }
+    return ret;
+  }
 
   double get min {
     double ret;
@@ -626,5 +642,24 @@ class Double1DView extends Object
       if ((_data[i] - v).abs() > absTol) return false;
     }
     return true;
+  }
+
+  Double1D unique() {
+    final ret = new LinkedHashSet<double>();
+    for (double v in _data) {
+      if (!ret.contains(v)) ret.add(v);
+    }
+    return new Double1D(ret);
+  }
+
+  Int1D uniqueIndices() {
+    final ret = new LinkedHashMap<double, int>();
+    for (int i = 0; i < _data.length; i++) {
+      double v = _data[i];
+      if (!ret.containsKey(v)) {
+        ret[v] = i;
+      }
+    }
+    return new Int1D(ret.values);
   }
 }

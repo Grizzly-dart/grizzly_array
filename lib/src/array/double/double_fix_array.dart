@@ -300,7 +300,7 @@ class Double1DFix extends Double1DView implements Numeric1DFix<double> {
       }
       return this;
     }
-    return new Double1DFix(this).floorToDouble();
+    return new Double1DFix(this.iterable).floorToDouble();
   }
 
   Double1DFix ceilToDouble({bool self: false}) {
@@ -310,7 +310,14 @@ class Double1DFix extends Double1DView implements Numeric1DFix<double> {
       }
       return this;
     }
-    return new Double1DFix(this).ceilToDouble();
+    return new Double1DFix(this.iterable).ceilToDouble();
+  }
+
+  void sort({bool descending: false}) {
+    if (!descending)
+      _data.sort();
+    else
+      _data.sort((double a, double b) => b.compareTo(a));
   }
 
   Double1DView _view;

@@ -62,6 +62,11 @@ class Bool2DCol extends Object
       inner._data[i].insert(index, v);
     }
   }
+
+  @override
+  void sort({bool descending: false}) {
+    for(int i = 0; i < length; i++) this[i].sort(descending: descending);
+  }
 }
 
 class Bool2DColFix extends Object
@@ -87,6 +92,11 @@ class Bool2DColFix extends Object
     for (int i = 0; i < inner.numRows; i++) {
       inner[i][index] = col.elementAt(i);
     }
+  }
+
+  @override
+  void sort({bool descending: false}) {
+    for(int i = 0; i < length; i++) this[i].sort(descending: descending);
   }
 }
 
@@ -126,6 +136,11 @@ class Bool2DRow extends Object
   void insert(int index, Iterable<bool> row) => inner.insert(index, row);
 
   void insertScalar(int index, bool v) => inner.insertScalar(index, v);
+
+  @override
+  void sort({bool descending: false}) {
+    for(int i = 0; i < length; i++) inner[i].sort(descending: descending);
+  }
 }
 
 class Bool2DRowFix extends Object
@@ -142,6 +157,11 @@ class Bool2DRowFix extends Object
   Bool1DFix operator [](int row) => inner[row];
 
   operator []=(int index, Iterable<bool> row) => inner[index] = row;
+
+  @override
+  void sort({bool descending: false}) {
+    for(int i = 0; i < length; i++) inner[i].sort(descending: descending);
+  }
 }
 
 class Bool2DRowView extends Object
@@ -182,7 +202,7 @@ abstract class Bool2DAxisMixin implements Axis2DView<bool> {
   /// Minimum along y-axis
   Bool1D get min {
     final ret = new Bool1D.sized(length);
-    for (int i = 0; i < length; i++) {
+     for (int i = 0; i < length; i++) {
       ret[i] = this[i].min;
     }
     return ret;
@@ -193,6 +213,15 @@ abstract class Bool2DAxisMixin implements Axis2DView<bool> {
     final ret = new Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].max;
+    }
+    return ret;
+  }
+
+  @override
+  Iterable<Array<bool>> unique() {
+    final ret = new List<Array<bool>>(length);
+    for (int i = 0; i < length; i++) {
+      ret[i] = this[i].unique();
     }
     return ret;
   }

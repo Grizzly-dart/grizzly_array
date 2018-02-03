@@ -11,7 +11,11 @@ class String1DViewLazy extends String1DView {
 }
 
 class String2DCol extends Object
-    with String2DAxisMixin
+    with
+        String2DAxisMixin,
+        AxisMixin<String>,
+        AxisFixMixin<String>,
+        AxisViewMixin<String>
     implements Axis2D<String>, String2DColFix {
   final String2D inner;
 
@@ -65,7 +69,7 @@ class String2DCol extends Object
 }
 
 class String2DColFix extends Object
-    with String2DAxisMixin
+    with String2DAxisMixin, AxisFixMixin<String>, AxisViewMixin<String>
     implements Axis2DFix<String>, String2DColView {
   final String2DFix inner;
 
@@ -91,7 +95,7 @@ class String2DColFix extends Object
 }
 
 class String2DColView extends Object
-    with String2DAxisMixin
+    with String2DAxisMixin, AxisViewMixin<String>
     implements Axis2DView<String> {
   final String2DView inner;
 
@@ -105,7 +109,11 @@ class String2DColView extends Object
 }
 
 class String2DRow extends Object
-    with String2DAxisMixin
+    with
+        String2DAxisMixin,
+        AxisMixin<String>,
+        AxisFixMixin<String>,
+        AxisViewMixin<String>
     implements Axis2D<String>, String2DRowFix {
   final String2D inner;
 
@@ -129,7 +137,7 @@ class String2DRow extends Object
 }
 
 class String2DRowFix extends Object
-    with String2DAxisMixin
+    with String2DAxisMixin, AxisFixMixin<String>, AxisViewMixin<String>
     implements Axis2DFix<String>, String2DRowView {
   final String2DFix inner;
 
@@ -145,7 +153,7 @@ class String2DRowFix extends Object
 }
 
 class String2DRowView extends Object
-    with String2DAxisMixin
+    with String2DAxisMixin, AxisViewMixin<String>
     implements Axis2DView<String> {
   final String2DView inner;
 

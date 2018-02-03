@@ -1,7 +1,7 @@
 part of grizzly.series.array;
 
 class Bool1D extends Bool1DFix implements Array<bool> {
-  Bool1D(Iterable<bool> data) : super(data);
+  Bool1D([Iterable<bool> data = const <bool>[]]) : super(data);
 
   Bool1D.make(List<bool> data) : super.make(data);
 
@@ -33,6 +33,14 @@ class Bool1D extends Bool1DFix implements Array<bool> {
 
   @override
   void insert(int index, bool a) => _data.insert(index, a);
+
+  void mask(Array<bool> mask) {
+    if(mask.length != _data.length) throw new Exception('Length mismatch!');
+
+    for(int i = length - 1; i >= 0; i--) {
+      if(!mask[i]) _data.removeAt(i);
+    }
+  }
 
   Bool1DFix _fixed;
   Bool1DFix get fixed => _fixed ??= new Bool1DFix.make(_data);

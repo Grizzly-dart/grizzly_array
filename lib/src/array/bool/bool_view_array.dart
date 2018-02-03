@@ -1,8 +1,6 @@
 part of grizzly.series.array;
 
-class Bool1DView extends Object
-    with IterableMixin<bool>
-    implements ArrayView<bool> {
+class Bool1DView extends Object implements ArrayView<bool>, BoolArrayView {
   List<bool> _data;
 
   Bool1DView(Iterable<bool> data) : _data = new List<bool>.from(data);
@@ -41,11 +39,29 @@ class Bool1DView extends Object
 
   Iterator<bool> get iterator => _data.iterator;
 
+  int get length => _data.length;
+
   Index1D get shape => new Index1D(_data.length);
 
   bool operator [](int i) => _data[i];
 
+  Bool1D clone() => new Bool1D(_data);
+
   Bool1D slice(int start, [int end]) => new Bool1D(_data.sublist(start, end));
+
+  bool get first => _data.first;
+
+  bool get last => _data.last;
+
+  int count(bool v) {
+    int ret = 0;
+    if (v) {
+      for (bool item in _data) if (item) ret++;
+    } else {
+      for (bool item in _data) if (!item) ret--;
+    }
+    return ret;
+  }
 
   bool get min {
     bool min;
@@ -158,6 +174,25 @@ class Bool1DView extends Object
       ret[i][0] = _data[i];
     }
     return ret;
+  }
+
+  Bool1D unique() {
+    final ret = new LinkedHashSet<bool>();
+    for (bool v in _data) {
+      if (!ret.contains(v)) ret.add(v);
+    }
+    return new Bool1D(ret);
+  }
+
+  Int1D uniqueIndices() {
+    final ret = new LinkedHashMap<bool, int>();
+    for (int i = 0; i < _data.length; i++) {
+      bool v = _data[i];
+      if (!ret.containsKey(v)) {
+        ret[v] = i;
+      }
+    }
+    return new Int1D(ret.values);
   }
 
   bool operator ==(final other) {

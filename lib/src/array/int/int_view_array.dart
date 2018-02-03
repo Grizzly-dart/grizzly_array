@@ -1,11 +1,9 @@
 part of grizzly.series.array;
 
-class Int1DView extends Object
-    with IterableMixin<int>
-    implements Numeric1DView<int> {
+class Int1DView implements Numeric1DView<int> {
   Int32List _data;
 
-  Int1DView(Iterable<int> data) : _data = new Int32List.fromList(data);
+  Int1DView(Iterable<int> data) : _data = new Int32List.fromList(data.toList());
 
   Int1DView.make(this._data);
 
@@ -39,11 +37,27 @@ class Int1DView extends Object
 
   Iterator<int> get iterator => _data.iterator;
 
+  int get length => _data.length;
+
   Index1D get shape => new Index1D(_data.length);
 
   int operator [](int i) => _data[i];
 
+  Int1D clone() => new Int1D(_data);
+
   Int1D slice(int start, [int end]) => new Int1D(_data.sublist(start, end));
+
+  int get first => _data.first;
+
+  int get last => _data.last;
+
+  int count(int v) {
+    int ret = 0;
+    for(int item in _data) {
+      if(v != item) ret++;
+    }
+    return ret;
+  }
 
   int get min {
     int ret;
@@ -626,4 +640,23 @@ class Int1DView extends Object
 
   @override
   int get hashCode => _data.hashCode;
+
+  Int1D unique() {
+    final ret = new LinkedHashSet<int>();
+    for (int v in _data) {
+      if(!ret.contains(v)) ret.add(v);
+    }
+    return new Int1D(ret);
+  }
+
+  Int1D uniqueIndices() {
+    final ret = new LinkedHashMap<int, int>();
+    for (int i = 0; i < _data.length; i++) {
+      int v = _data[i];
+      if(!ret.containsKey(v)) {
+        ret[v] = i;
+      }
+    }
+    return new Int1D(ret.values);
+  }
 }

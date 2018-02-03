@@ -34,6 +34,14 @@ class String1D extends String1DFix implements Array<String> {
   @override
   void insert(int index, String a) => _data.insert(index, a);
 
+  void mask(Array<bool> mask) {
+    if(mask.length != _data.length) throw new Exception('Length mismatch!');
+
+    for(int i = length - 1; i >= 0; i--) {
+      if(!mask[i]) _data.removeAt(i);
+    }
+  }
+
   String1DFix _fixed;
   String1DFix get fixed => _fixed ??= new String1DFix.make(_data);
 }

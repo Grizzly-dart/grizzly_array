@@ -11,7 +11,11 @@ class Double1DViewLazy extends Double1DView {
 }
 
 class Double2DCol extends Object
-    with Double2DAxisMixin
+    with
+        Double2DAxisMixin,
+        AxisMixin<double>,
+        AxisFixMixin<double>,
+        AxisViewMixin<double>
     implements Numeric2DAxis<double>, Double2DColFix {
   final Double2D inner;
 
@@ -65,7 +69,7 @@ class Double2DCol extends Object
 }
 
 class Double2DColFix extends Object
-    with Double2DAxisMixin
+    with Double2DAxisMixin, AxisFixMixin<double>, AxisViewMixin<double>
     implements Numeric2DAxisFix<double>, Double2DColView {
   final Double2DFix inner;
 
@@ -91,7 +95,7 @@ class Double2DColFix extends Object
 }
 
 class Double2DColView extends Object
-    with Double2DAxisMixin
+    with Double2DAxisMixin, AxisViewMixin<double>
     implements Numeric2DAxisView<double> {
   final Double2DView inner;
 
@@ -105,7 +109,11 @@ class Double2DColView extends Object
 }
 
 class Double2DRow extends Object
-    with Double2DAxisMixin
+    with
+        Double2DAxisMixin,
+        AxisMixin<double>,
+        AxisFixMixin<double>,
+        AxisViewMixin<double>
     implements Numeric2DAxis<double>, Double2DRowFix {
   final Double2D inner;
 
@@ -129,7 +137,7 @@ class Double2DRow extends Object
 }
 
 class Double2DRowFix extends Object
-    with Double2DAxisMixin
+    with Double2DAxisMixin, AxisFixMixin<double>, AxisViewMixin<double>
     implements Numeric2DAxisFix<double>, Double2DRowView {
   final Double2DFix inner;
 
@@ -145,7 +153,7 @@ class Double2DRowFix extends Object
 }
 
 class Double2DRowView extends Object
-    with Double2DAxisMixin
+    with Double2DAxisMixin, AxisViewMixin<double>
     implements Numeric2DAxisView<double> {
   final Double2DView inner;
 

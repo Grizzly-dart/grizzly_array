@@ -38,6 +38,13 @@ class String1DFix extends String1DView implements ArrayFix<String> {
     for (int i = 0; i < length; i++) _data[i] = other.elementAt(i);
   }
 
+  void sort({bool descending: false}) {
+    if (!descending)
+      _data.sort();
+    else
+      _data.sort((String a, String b) => b.compareTo(a));
+  }
+
   String1DView _view;
   String1DView get view => _view ??= new String1DView.make(_data);
 

@@ -1,8 +1,6 @@
 part of grizzly.series.array;
 
-class String1DView extends Object
-    with IterableMixin<String>
-    implements ArrayView<String> {
+class String1DView extends Object implements ArrayView<String> {
   List<String> _data;
 
   String1DView(Iterable<String> data) : _data = new List<String>.from(data);
@@ -41,12 +39,28 @@ class String1DView extends Object
 
   Iterator<String> get iterator => _data.iterator;
 
+  int get length => _data.length;
+
   Index1D get shape => new Index1D(_data.length);
 
   String operator [](int i) => _data[i];
 
+  String1D clone() => new String1D(_data);
+
   String1D slice(int start, [int end]) =>
       new String1D(_data.sublist(start, end));
+
+  String get first => _data.first;
+
+  String get last => _data.last;
+
+  int count(String v) {
+    int ret = 0;
+    for(String item in _data) {
+      if(v != item) ret++;
+    }
+    return ret;
+  }
 
   String get min {
     String ret;
@@ -158,6 +172,25 @@ class String1DView extends Object
   }
 
   String1DView get view => this;
+
+  String1D unique() {
+    final ret = new LinkedHashSet<String>();
+    for (String v in _data) {
+      if(!ret.contains(v)) ret.add(v);
+    }
+    return new String1D(ret);
+  }
+
+  Int1D uniqueIndices() {
+    final ret = new LinkedHashMap<String, int>();
+    for (int i = 0; i < _data.length; i++) {
+      String v = _data[i];
+      if(!ret.containsKey(v)) {
+        ret[v] = i;
+      }
+    }
+    return new Int1D(ret.values);
+  }
 
   /* TODO
   @override

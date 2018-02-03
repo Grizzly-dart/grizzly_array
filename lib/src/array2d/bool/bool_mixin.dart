@@ -174,6 +174,12 @@ abstract class Bool2DMixin implements Array2DView<bool> {
     return ret;
   }
 
+
+  @override
+  Array<bool> unique() {
+    throw new UnimplementedError();
+  }
+
   String toString() {
     final sb = new StringBuffer();
     //TODO print as table

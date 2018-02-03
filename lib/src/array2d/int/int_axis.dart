@@ -40,7 +40,11 @@ class Int1DViewLazy extends Int1DView {
 }
 
 class Int2DCol extends Object
-    with IntAxis2DViewMixin
+    with
+        IntAxis2DViewMixin,
+        AxisMixin<int>,
+        AxisFixMixin<int>,
+        AxisViewMixin<int>
     implements Numeric2DAxis<int>, Int2DColFix {
   final Int2D inner;
 
@@ -94,7 +98,7 @@ class Int2DCol extends Object
 }
 
 class Int2DColFix extends Object
-    with IntAxis2DViewMixin
+    with IntAxis2DViewMixin, AxisFixMixin<int>, AxisViewMixin<int>
     implements Numeric2DAxisFix<int>, Int2DColView {
   final Int2DFix inner;
 
@@ -120,7 +124,7 @@ class Int2DColFix extends Object
 }
 
 class Int2DColView extends Object
-    with IntAxis2DViewMixin
+    with IntAxis2DViewMixin, AxisViewMixin<int>
     implements Numeric2DAxisView<int> {
   final Int2DView inner;
 
@@ -134,7 +138,11 @@ class Int2DColView extends Object
 }
 
 class Int2DRow extends Object
-    with IntAxis2DViewMixin
+    with
+        IntAxis2DViewMixin,
+        AxisFixMixin<int>,
+        AxisMixin<int>,
+        AxisViewMixin<int>
     implements Numeric2DAxis<int>, Int2DRowFix {
   final Int2D inner;
 
@@ -158,7 +166,7 @@ class Int2DRow extends Object
 }
 
 class Int2DRowFix extends Object
-    with IntAxis2DViewMixin
+    with IntAxis2DViewMixin, AxisFixMixin<int>, AxisViewMixin<int>
     implements Numeric2DAxisFix<int>, Int2DRowView {
   final Int2DFix inner;
 
@@ -174,7 +182,7 @@ class Int2DRowFix extends Object
 }
 
 class Int2DRowView extends Object
-    with IntAxis2DViewMixin
+    with IntAxis2DViewMixin, AxisViewMixin<int>
     implements Numeric2DAxisView<int> {
   final Int2DView inner;
 

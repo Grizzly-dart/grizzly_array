@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Double2DView extends Object
-    with Double2DMixin
+    with Double2DMixin, Array2DViewMixin<double>
     implements Numeric2DView<double> {
   final List<Double1DView> _data;
 

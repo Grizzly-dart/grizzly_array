@@ -307,6 +307,13 @@ class Int1DFix extends Int1DView implements Numeric1DFix<int> {
     return ret;
   }
 
+  void sort({bool descending: false}) {
+    if (!descending)
+      _data.sort();
+    else
+      _data.sort((int a, int b) => b.compareTo(a));
+  }
+
   Int1DView _view;
   Int1DView get view => _view ??= new Int1DView.make(_data);
 
