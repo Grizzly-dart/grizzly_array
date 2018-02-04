@@ -58,7 +58,7 @@ abstract class Double2DMixin {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new Double2D.make(list);
+    return new Double2D.own(list);
   }
 
   double get min {

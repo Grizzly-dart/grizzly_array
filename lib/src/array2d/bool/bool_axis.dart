@@ -43,23 +43,11 @@ class Bool2DCol extends Object
     }
   }
 
-  void addScalar(bool v) {
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].add(v);
-    }
-  }
-
   void insert(int index, Iterable<bool> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
       inner._data[i].insert(index, col.elementAt(i));
-    }
-  }
-
-  void insertScalar(int index, bool v) {
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, v);
     }
   }
 
@@ -131,11 +119,7 @@ class Bool2DRow extends Object
 
   void add(Iterable<bool> row) => inner.add(row);
 
-  void addScalar(bool v) => inner.addScalar(v);
-
   void insert(int index, Iterable<bool> row) => inner.insert(index, row);
-
-  void insertScalar(int index, bool v) => inner.insertScalar(index, v);
 
   @override
   void sort({bool descending: false}) {

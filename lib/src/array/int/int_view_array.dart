@@ -1,11 +1,16 @@
-part of grizzly.series.array;
+part of grizzly.series.array.int;
 
-class Int1DView implements Numeric1DView<int> {
-  Int32List _data;
+class Int1DView extends Object
+    with Int1DViewMixin, Array1DViewMixin<int>
+    implements Numeric1DView<int> {
+  final List<int> _data;
 
   Int1DView(Iterable<int> data) : _data = new Int32List.fromList(data.toList());
 
-  Int1DView.make(this._data);
+  /// Creates [Int1DView] from [_data] and also takes ownership of it. It is
+  /// efficient than other ways of creating [Int1DView] because it involves no
+  /// copying.
+  Int1DView.own(this._data);
 
   Int1DView.sized(int length, {int data: 0}) : _data = new Int32List(length) {
     for (int i = 0; i < length; i++) {
@@ -13,12 +18,10 @@ class Int1DView implements Numeric1DView<int> {
     }
   }
 
-  factory Int1DView.shapedLike(Iterable d, {int data: 0}) =>
+  factory Int1DView.shapedLike(ArrayView d, {int data: 0}) =>
       new Int1DView.sized(d.length, data: data);
 
-  Int1DView.single(int data) : _data = new Int32List(1) {
-    _data[0] = data;
-  }
+  Int1DView.single(int data) : _data = new Int32List.fromList(<int>[data]);
 
   Int1DView.gen(int length, int maker(int index))
       : _data = new Int32List(length) {
@@ -27,211 +30,15 @@ class Int1DView implements Numeric1DView<int> {
     }
   }
 
-  Int1DView makeView(Iterable<int> newData) => new Int1DView(newData);
-
-  Int1DFix makeFix(Iterable<int> newData) => new Int1DFix(newData);
-
-  Int1D makeArray(Iterable<int> newData) => new Int1D(newData);
-
   Iterable<int> get iterable => _data;
 
   Iterator<int> get iterator => _data.iterator;
 
   int get length => _data.length;
 
-  Index1D get shape => new Index1D(_data.length);
-
   int operator [](int i) => _data[i];
 
-  Int1D clone() => new Int1D(_data);
-
   Int1D slice(int start, [int end]) => new Int1D(_data.sublist(start, end));
-
-  int get first => _data.first;
-
-  int get last => _data.last;
-
-  int count(int v) {
-    int ret = 0;
-    for(int item in _data) {
-      if(v != item) ret++;
-    }
-    return ret;
-  }
-
-  int get min {
-    int ret;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      if (ret == null || d < ret) ret = d;
-    }
-    return ret;
-  }
-
-  int get max {
-    int ret;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      if (ret == null || d > ret) ret = d;
-    }
-    return ret;
-  }
-
-  Extent<int> get extent {
-    int min;
-    int max;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      if (max == null || d > max) max = d;
-      if (min == null || d < min) min = d;
-    }
-    return new Extent<int>(min, max);
-  }
-
-  int get argMin {
-    int ret;
-    int min;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      if (min == null || d < min) {
-        min = d;
-        ret = i;
-      }
-    }
-    return ret;
-  }
-
-  int get argMax {
-    int ret;
-    int max;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      if (max == null || d > max) {
-        max = d;
-        ret = i;
-      }
-    }
-    return ret;
-  }
-
-  IntPair<int> pairAt(int index) => intPair<int>(index, _data[index]);
-
-  Iterable<IntPair<int>> enumerate() =>
-      Ranger.indices(_data.length).map((i) => intPair<int>(i, _data[i]));
-
-  int get ptp {
-    int min;
-    int max;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      if (max == null || d > max) max = d;
-      if (min == null || d < min) min = d;
-    }
-
-    if (min == null) return null;
-    return max - min;
-  }
-
-  double get mean {
-    if (_data.length == 0) return 0.0;
-
-    int sum = 0;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      sum += d;
-    }
-    return sum / _data.length;
-  }
-
-  int get sum {
-    int sum = 0;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      sum += d;
-    }
-    return sum;
-  }
-
-  int get prod {
-    int prod = 1;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) continue;
-      prod *= d;
-    }
-    return prod;
-  }
-
-  double average(Iterable<num> weights) {
-    if (weights.length != length) {
-      throw new Exception('Weights have mismatching length!');
-    }
-    if (_data.length == 0) return 0.0;
-
-    double sum = 0.0;
-    num denom = 0.0;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      final num w = weights.elementAt(i);
-      if (d == null) continue;
-      if (w == null) continue;
-      sum += d * w;
-      denom += w;
-    }
-    return sum / denom;
-  }
-
-  Int1D get cumsum {
-    final ret = new Int1D(new Int32List(_data.length));
-    int sum = 0;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) {
-        ret[i] = sum;
-        continue;
-      }
-      sum += d;
-      ret[i] = sum;
-    }
-    return ret;
-  }
-
-  Int1D get cumprod {
-    final ret = new Int1D(new Int32List(_data.length));
-    int prod = 1;
-    for (int i = 0; i < _data.length; i++) {
-      final int d = _data[i];
-      if (d == null) {
-        ret[i] = prod;
-        continue;
-      }
-      prod *= d;
-      ret[i] = prod;
-    }
-    return ret;
-  }
-
-  double get variance {
-    if (length == 0) return 0.0;
-
-    final double mean = this.mean;
-    double ret = 0.0;
-    for (int i = 0; i < length; i++) {
-      final double val = _data[i] - mean;
-      ret += val * val;
-    }
-    return ret / length;
-  }
-
-  double get std => math.sqrt(variance);
 
   Int1DFix operator +(/* num | Iterable<num> */ other) => addition(other);
 
@@ -368,7 +175,7 @@ class Int1DView implements Numeric1DView<int> {
     return ret;
   }
 
-  Double1D operator /(/* num | Iterable<num> */ other) {
+  Double1DFix operator /(/* num | Iterable<num> */ other) {
     if (other is Int1D) {
       if (other.length != length) {
         throw new Exception('Length mismatch!');
@@ -461,202 +268,8 @@ class Int1DView implements Numeric1DView<int> {
     return ret;
   }
 
-  Int1D operator -() {
-    final ret = new Int1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = -_data[i];
-    return ret;
-  }
-
-  Double1D sqrt() {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = math.sqrt(_data[i]);
-    return ret;
-  }
-
-  @override
-  Double1D get log {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = math.log(_data[i]);
-    return ret;
-  }
-
-  @override
-  Double1D get log10 {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = math.log(_data[i]) / math.LN10;
-    return ret;
-  }
-
-  @override
-  Double1D logN(double n) {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = math.log(_data[i]) / math.log(n);
-    return ret;
-  }
-
-  @override
-  Double1D get exp {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = math.exp(_data[i]);
-    return ret;
-  }
-
-  /// Returns a new  [Int1D] containing first [count] elements of this array
-  ///
-  /// If the length of the array is shorter than [count], all elements are
-  /// returned
-  Int1D head([int count = 10]) {
-    if (length <= count) return makeArray(_data);
-    return makeArray(_data.sublist(0, count));
-  }
-
-  /// Returns a new  [Int1D] containing last [count] elements of this array
-  ///
-  /// If the length of the array is shorter than [count], all elements are
-  /// returned
-  Int1D tail([int count = 10]) {
-    if (length <= count) return makeArray(_data);
-    return makeArray(_data.sublist(length - count));
-  }
-
-  /// Returns a new  [Array] containing random [count] elements of this array
-  ///
-  /// If the length of the array is shorter than [count], all elements are
-  /// returned
-  Int1D sample([int count = 10]) => makeArray(_sample<int>(_data, count));
-
-  Int2D to2D() => new Int2D.make([new Int1D(_data)]);
-
-  Int2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new Int2D.repeatCol(_data, repeat + 1);
-    } else {
-      return new Int2D.repeatRow(_data, repeat + 1);
-    }
-  }
-
-  Int2D get transpose {
-    final ret = new Int2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = _data[i];
-    }
-    return ret;
-  }
-
-  int dot(Iterable<num> other) {
-    if (length != other.length) throw new Exception('Lengths must match!');
-
-    num ret = 0;
-    for (int i = 0; i < length; i++) {
-      ret += _data[i] * other.elementAt(i);
-    }
-    return ret.toInt();
-  }
-
-  Double1D get toDouble {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) {
-      ret[i] = _data[i].toDouble();
-    }
-    return ret;
-  }
-
-  bool operator ==(other) {
-    if (other is! Array<int>) return false;
-
-    if (other is Array<int>) {
-      if (length != other.length) return false;
-      for (int i = 0; i < length; i++) {
-        if (_data[i] != other[i]) return false;
-      }
-      return true;
-    }
-
-    return false;
-  }
-
   Int1DView get view => this;
-
-  /* TODO
-  @override
-  IntSeries<int> valueCounts(
-      {bool sortByValue: false,
-      bool ascending: false,
-      bool dropNull: false,
-      dynamic name: ''}) {
-    final groups = new Map<int, List<int>>();
-
-    for (int i = 0; i < length; i++) {
-      final int v = _data[i];
-      if (!groups.containsKey(v)) groups[v] = <int>[0];
-      groups[v][0]++;
-    }
-
-    final ret = new IntSeries<int>.fromMap(groups, name: name);
-
-    // Sort
-    if (sortByValue) {
-      ret.sortByIndex(ascending: ascending, inplace: true);
-    } else {
-      ret.sortByValue(ascending: ascending, inplace: true);
-    }
-
-    return ret;
-  }
-  */
-
-  double cov(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
-    if (length == 0) return 0.0;
-    final double meanX = mean;
-    final double meanY = y.mean;
-    double sum = 0.0;
-    for (int i = 0; i < length; i++) {
-      sum += (_data[i] - meanX) * (y[i] - meanY);
-    }
-    return sum / length;
-  }
-
-  Double1D covMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
-    final double meanX = mean;
-    final Double1D meanY = y.col.mean;
-    Double1D sum = new Double1D.sized(y.numCols);
-    for (int i = 0; i < length; i++) {
-      sum += (y.col[i] - meanY) * (_data[i] - meanX);
-    }
-    return sum / length;
-  }
-
-  double corrcoef(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
-    return cov(y) / (std * y.std);
-  }
-
-  Double1D corrcoefMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
-    return covMatrix(y) / (y.std * std);
-  }
 
   @override
   int get hashCode => _data.hashCode;
-
-  Int1D unique() {
-    final ret = new LinkedHashSet<int>();
-    for (int v in _data) {
-      if(!ret.contains(v)) ret.add(v);
-    }
-    return new Int1D(ret);
-  }
-
-  Int1D uniqueIndices() {
-    final ret = new LinkedHashMap<int, int>();
-    for (int i = 0; i < _data.length; i++) {
-      int v = _data[i];
-      if(!ret.containsKey(v)) {
-        ret[v] = i;
-      }
-    }
-    return new Int1D(ret.values);
-  }
 }

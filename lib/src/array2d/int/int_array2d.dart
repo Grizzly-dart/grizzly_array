@@ -1,6 +1,8 @@
 part of grizzly.series.array2d;
 
-class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
+class Int2D extends Object
+    with Int2DMixin, Array2DViewMixin<int>
+    implements Numeric2D<int>, Int2DFix {
   final List<Int1D> _data;
 
   Int2D(Iterable<Iterable<int>> data) : _data = <Int1D>[] {
@@ -18,12 +20,26 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
     }
   }
 
-  factory Int2D.from(Int2D data) => new Int2D(data.iterable);
+  Int2D.from(Iterable<Int1DView> data) : _data = new List<Int1D>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (Int1DView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
 
-  factory Int2D.fromArrays(Iterable<Array<int>> data) =>
-      new Int2D(data.map((a) => a.iterable));
+      for (Int1DView item in data) {
+        _data.add(item.clone());
+      }
+    }
+  }
 
-  Int2D.make(this._data);
+  factory Int2D.copy(Int2D data) => new Int2D(data.iterable);
+
+  Int2D.own(this._data) {
+    // TODO check that all rows are of same length
+  }
 
   Int2D.sized(int rows, int columns, {int data: 0})
       : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns));
@@ -35,27 +51,27 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
   factory Int2D.shapedLike(Array2DView like, {int data: 0}) =>
       new Int2D.sized(like.numRows, like.numCols, data: data);
 
-  Int2D.repeatRow(Iterable<int> row, [int numRows = 1])
+  Int2D.repeatRow(ArrayView<int> row, [int numRows = 1])
       : _data = new List<Int1D>(numRows) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D(row);
+      _data[i] = new Int1D.copy(row);
     }
   }
 
-  Int2D.repeatCol(Iterable<int> column, [int numCols = 1])
+  Int2D.repeatCol(ArrayView<int> column, [int numCols = 1])
       : _data = new List<Int1D>(column.length) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.sized(numCols, data: column.elementAt(i));
+      _data[i] = new Int1D.sized(numCols, data: column[i]);
     }
   }
 
-  Int2D.aRow(Iterable<int> row) : _data = new List<Int1D>(1) {
-    _data[0] = new Int1D(row);
+  Int2D.aRow(ArrayView<int> row) : _data = new List<Int1D>(1) {
+    _data[0] = new Int1D.copy(row);
   }
 
-  Int2D.aCol(Iterable<int> column) : _data = new List<Int1D>(column.length) {
+  Int2D.aCol(ArrayView<int> column) : _data = new List<Int1D>(column.length) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.single(column.elementAt(i));
+      _data[i] = new Int1D.single(column[i]);
     }
   }
 
@@ -91,7 +107,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Int1D(v));
     }
-    return new Int2D.make(rows);
+    return new Int2D.own(rows);
   }
 
   factory Int2D.genCols(int numCols, Iterable<int> colMaker(int index)) {
@@ -127,7 +143,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Int1D(v));
     }
-    return new Int2D.make(rows);
+    return new Int2D.own(rows);
   }
 
   static Int2D buildCols<T>(Iterable<T> iterable, Iterable<int> colMaker(T v)) {
@@ -175,33 +191,30 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
 
   Int2DRow get row => _row ??= new Int2DRow(this);
 
+  @override
+  Iterable<ArrayFix<int>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<int>> get cols => new ColsListFix<int>(this);
+
   Int1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final /* Iterable<int> | ArrayView<int> */ val) {
+  operator []=(final int i, ArrayView<int> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
-    Iterable<int> v;
-    if (val is ArrayView<int>) {
-      v = val.iterable;
-    } else if (val is Iterable<int>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
-    }
-
     if (numRows == 0) {
-      final arr = new Int1D(v);
+      final arr = new Int1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
+    if (val.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Int1D(v);
+    final arr = new Int1D.copy(val);
 
     if (i == numRows) {
       _data.add(arr);
@@ -233,23 +246,17 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
   }
 
   @override
-  void add(Iterable<int> row) => this[numRows] = row;
+  void add(ArrayView<int> row) => this[numRows] = row;
 
   @override
-  void addScalar(int v) => this[numRows] = new List.filled(numCols, v);
+  void addScalar(int v) => _data.add(new Int1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, Iterable<int> row) {
+  void insert(int index, ArrayView<int> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
-    _data.insert(index, new Int1D(row));
-  }
-
-  @override
-  void insertScalar(int index, int v) {
-    if (index > numRows) throw new RangeError.range(index, 0, numRows);
-    _data.insert(index, new Int1D.sized(numCols, data: v));
+    _data.insert(index, new Int1D.copy(row));
   }
 
   void clip({int min, int max}) {
@@ -299,7 +306,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
 
   Int2D operator +(/* int | Iterable<int> | Numeric2DArray */ other) {
     if (other is int) {
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] += other;
@@ -309,7 +316,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
     } else if (other is Iterable<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] + other;
       }
@@ -317,7 +324,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
     } else if (other is Numeric2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] + other[r];
       }
@@ -329,7 +336,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
 
   Int2D operator -(/* int | Iterable<int> | Numeric2DArray */ other) {
     if (other is int) {
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] -= other;
@@ -339,7 +346,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
     } else if (other is Iterable<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] - other;
       }
@@ -347,7 +354,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
     } else if (other is Numeric2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] - other[r];
       }
@@ -359,7 +366,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
 
   Int2D operator *(/* int | Iterable<int> | Numeric2DArray */ other) {
     if (other is int) {
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] *= other;
@@ -369,7 +376,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
     } else if (other is Iterable<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D.from(this);
+      Int2D ret = new Int2D.copy(this);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] * other;
       }
@@ -395,7 +402,7 @@ class Int2D extends Object with Int2DMixin implements Numeric2D<int>, Int2DFix {
 
   Int2DFix _fixed;
 
-  Int2DFix get fixed => _fixed ??= new Int2DFix.make(_data);
+  Int2DFix get fixed => _fixed ??= new Int2DFix._takeOwnership(_data);
 
   Int2D addition(/* int | Iterable<int> | Int2DArray */ other,
       {bool self: false}) {

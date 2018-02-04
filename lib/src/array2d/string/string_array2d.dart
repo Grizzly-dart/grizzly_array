@@ -244,20 +244,11 @@ class String2D extends Object
   void add(Iterable<String> row) => this[numRows] = row;
 
   @override
-  void addScalar(String v) => this[numRows] = new List.filled(numCols, v);
-
-  @override
   void insert(int index, Iterable<String> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
     _data.insert(index, new String1D(row));
-  }
-
-  @override
-  void insertScalar(int index, String v) {
-    if (index > numRows) throw new RangeError.range(index, 0, numRows);
-    _data.insert(index, new String1D.sized(numCols, data: v));
   }
 
   String2DView _view;

@@ -8,12 +8,17 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array/array.dart';
 
 part 'common/array2d_mixin.dart';
+part 'common/list.dart';
+part 'common/row.dart';
+part 'common/col.dart';
 
 part 'int/int_mixin.dart';
 part 'int/int_array2d.dart';
 part 'int/int_fix_array2d.dart';
 part 'int/int_view_array2d.dart';
 part 'int/int_axis.dart';
+part 'int/int_row.dart';
+part 'int/int_col.dart';
 
 part 'double/double_mixin.dart';
 part 'double/double_array2d.dart';

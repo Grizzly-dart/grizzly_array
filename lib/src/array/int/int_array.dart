@@ -1,18 +1,52 @@
-part of grizzly.series.array;
+library grizzly.series.array.int;
 
-class Int1D extends Int1DFix implements Numeric1D<int> {
-  Int1D(Iterable<int> data) : super(data);
+import 'dart:math' as math;
+import 'dart:typed_data';
+import 'package:grizzly_primitives/grizzly_primitives.dart';
+import 'package:grizzly_array/src/array2d/array2d.dart';
+import '../array.dart';
+import '../common/common.dart';
 
-  Int1D.make(Int32List data) : super.make(data);
+part 'int_fix_array.dart';
+part 'int_view_array.dart';
+part 'int_mixin.dart';
 
-  Int1D.sized(int length, {int data: 0}) : super.sized(length, data: data);
+class Int1D extends Object
+    with Int1DViewMixin, IntFixMixin, Array1DViewMixin<int>
+    implements Numeric1D<int>, Int1DFix {
+  List<int> _data;
 
-  Int1D.shapedLike(Iterable d, {int data: 0})
-      : super.sized(d.length, data: data);
+  Int1D([Iterable<int> data = const <int>[]])
+      : _data = new List<int>.from(data);
 
-  Int1D.single(int data) : super.single(data);
+  Int1D.copy(ArrayView<int> other) : _data = new List<int>.from(other.iterable);
 
-  Int1D.gen(int length, int maker(int index)) : super.gen(length, maker);
+  /// Creates [Int1D] from [_data] and also takes ownership of it. It is
+  /// efficient than other ways of creating [Int1D] because it involves no
+  /// copying.
+  Int1D.own(this._data);
+
+  Int1D.sized(int length, {int data: 0})
+      : _data = new List<int>.filled(length, data);
+
+  Int1D.shapedLike(ArrayView d, {int data: 0})
+      : _data = new List<int>.filled(d.length, data);
+
+  Int1D.single(int data) : _data = <int>[data];
+
+  Int1D.gen(int length, int maker(int index)) : _data = new List<int>(length) {
+    for (int i = 0; i < length; i++) {
+      _data[i] = maker(i);
+    }
+  }
+
+  Iterable<int> get iterable => _data;
+
+  Iterator<int> get iterator => _data.iterator;
+
+  int get length => _data.length;
+
+  int operator [](int i) => _data[i];
 
   operator []=(int i, int val) {
     if (i > _data.length) {
@@ -27,19 +61,13 @@ class Int1D extends Int1DFix implements Numeric1D<int> {
     _data[i] = val;
   }
 
-  @override
-  void add(int a) {
-    _data = new Int32List.fromList(_data.toList()..add(a));
-    if (_view != null) _view._data = _data;
-    if (_fixed != null) _fixed._data = _data;
-  }
+  Int1D slice(int start, [int end]) => new Int1D(_data.sublist(start, end));
 
   @override
-  void insert(int index, int a) {
-    _data = new Int32List.fromList(_data.toList()..insert(index, a));
-    if (_view != null) _view._data = _data;
-    if (_fixed != null) _fixed._data = _data;
-  }
+  void add(int a) => _data.add(a);
+
+  @override
+  void insert(int index, int a) => _data.insert(index, a);
 
   Int1D operator +(/* num | Iterable<num> */ other) => addition(other);
 
@@ -283,20 +311,30 @@ class Int1D extends Int1DFix implements Numeric1D<int> {
     return ret;
   }
 
+  void sort({bool descending: false}) {
+    if (!descending)
+      _data.sort();
+    else
+      _data.sort((int a, int b) => b.compareTo(a));
+  }
+
   void mask(Array<bool> mask) {
-    if(mask.length != _data.length) throw new Exception('Length mismatch!');
+    if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     int retLength = mask.count(true);
     final ret = new Int32List(retLength);
     int idx = 0;
-    for(int i = 0; i < mask.length; i++) {
-      if(mask[i]) ret[idx++] = _data[i];
+    for (int i = 0; i < mask.length; i++) {
+      if (mask[i]) ret[idx++] = _data[i];
     }
     _data = ret;
   }
 
+  Int1DView _view;
+  Int1DView get view => _view ??= new Int1DView.own(_data);
+
   Int1DFix _fixed;
-  Int1DFix get fixed => _fixed ??= new Int1DFix.make(_data);
+  Int1DFix get fixed => _fixed ??= new Int1DFix.own(_data);
 
   String toString() => _data.toString();
 }

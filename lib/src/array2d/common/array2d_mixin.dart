@@ -1,6 +1,10 @@
 part of grizzly.series.array2d;
 
 abstract class Array2DViewMixin<E> implements Array2DView<E> {
+  Index2D get shape => new Index2D(numRows, numCols);
+
+  bool get isSquare => numRows == numCols;
+
   @override
   Array<E> unique() {
     final ret = new LinkedHashSet<E>();
@@ -10,6 +14,21 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
       }
     }
     return makeArray(ret);
+  }
+
+  Array2D<E> head([int count = 10]) {
+    // TODO
+    throw new UnimplementedError();
+  }
+
+  Array2D<E> tail([int count = 10]) {
+    //TODO
+    throw new UnimplementedError();
+  }
+
+  Array2D<E> sample([int count = 10]) {
+    //TODO
+    throw new UnimplementedError();
   }
 }
 

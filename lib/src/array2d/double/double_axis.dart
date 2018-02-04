@@ -47,23 +47,11 @@ class Double2DCol extends Object
     }
   }
 
-  void addScalar(double v) {
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].add(v);
-    }
-  }
-
   void insert(int index, Iterable<double> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
       inner._data[i].insert(index, col.elementAt(i));
-    }
-  }
-
-  void insertScalar(int index, double v) {
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, v);
     }
   }
 }
@@ -129,11 +117,7 @@ class Double2DRow extends Object
 
   void add(Iterable<double> row) => inner.add(row);
 
-  void addScalar(double v) => inner.addScalar(v);
-
   void insert(int index, Iterable<double> row) => inner.insert(index, row);
-
-  void insertScalar(int index, double v) => inner.insertScalar(index, v);
 }
 
 class Double2DRowFix extends Object

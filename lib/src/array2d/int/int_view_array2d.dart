@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Int2DView extends Object
-    with Int2DMixin
+    with Int2DMixin, Array2DViewMixin<int>
     implements Numeric2DView<int>, Array2DView<int> {
   final List<Int1DView> _data;
 
@@ -176,6 +176,12 @@ class Int2DView extends Object
   Int2DRowView get row => _row ??= new Int2DRowView(this);
 
   Int2DView get view => this;
+
+  @override
+  Iterable<ArrayView<int>> get rows => _data;
+
+  @override
+  Iterable<ArrayView<int>> get cols => new ColsListView<int>(this);
 
   Int2D addition(/* int | Iterable<int> | Int2DArray */ other) => this + other;
 

@@ -8,13 +8,8 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 
 import 'package:grizzly_array/src/array2d/array2d.dart';
 
-part 'int/int_array.dart';
-part 'int/int_fix_array.dart';
-part 'int/int_view_array.dart';
-
-part 'double/double_array.dart';
-part 'double/double_view_array.dart';
-part 'double/double_fix_array.dart';
+export 'int/int_array.dart';
+export 'double/double_array.dart';
 
 part 'bool/bool_array.dart';
 part 'bool/bool_fix_array.dart';
@@ -23,8 +18,6 @@ part 'bool/bool_view_array.dart';
 part 'string/string_array.dart';
 part 'string/string_fix_array.dart';
 part 'string/string_view_array.dart';
-
-part 'sample.dart';
 
 //TODO DateTime
 //TODO String

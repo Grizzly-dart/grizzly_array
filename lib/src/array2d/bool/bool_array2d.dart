@@ -243,20 +243,11 @@ class Bool2D extends Object
   void add(Iterable<bool> row) => this[numRows] = row;
 
   @override
-  void addScalar(bool v) => this[numRows] = new List.filled(numCols, v);
-
-  @override
   void insert(int index, Iterable<bool> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
     _data.insert(index, new Bool1D(row));
-  }
-
-  @override
-  void insertScalar(int index, bool v) {
-    if (index > numRows) throw new RangeError.range(index, 0, numRows);
-    _data.insert(index, new Bool1D.sized(numCols, data: v));
   }
 
   Bool2DView _view;

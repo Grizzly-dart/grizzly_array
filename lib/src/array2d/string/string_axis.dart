@@ -47,23 +47,11 @@ class String2DCol extends Object
     }
   }
 
-  void addScalar(String v) {
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].add(v);
-    }
-  }
-
   void insert(int index, Iterable<String> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
       inner._data[i].insert(index, col.elementAt(i));
-    }
-  }
-
-  void insertScalar(int index, String v) {
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, v);
     }
   }
 }
@@ -129,11 +117,7 @@ class String2DRow extends Object
 
   void add(Iterable<String> row) => inner.add(row);
 
-  void addScalar(String v) => inner.addScalar(v);
-
   void insert(int index, Iterable<String> row) => inner.insert(index, row);
-
-  void insertScalar(int index, String v) => inner.insertScalar(index, v);
 }
 
 class String2DRowFix extends Object

@@ -1,8 +1,11 @@
-part of grizzly.series.array;
+
+import 'dart:math' as math;
+import 'dart:collection';
+import 'package:grizzly_primitives/grizzly_primitives.dart';
 
 final math.Random _rand = new math.Random();
 
-List<E> _sample<E>(Iterable<E> population, int k) {
+List<E> sampler<E>(ArrayView<E> population, int k) {
   final int n = population.length;
 
   if (k < 0 || k > n)
@@ -12,7 +15,7 @@ List<E> _sample<E>(Iterable<E> population, int k) {
   final samples = new List<E>(k);
 
   if (n < 1000) {
-    final unpicked = new List<E>.from(population);
+    final unpicked = population.clone();
     for (int i = 0; i < k; i++) {
       final sampleIdx = _rand.nextInt(n - i);
       samples[i] = unpicked[sampleIdx];
@@ -29,7 +32,7 @@ List<E> _sample<E>(Iterable<E> population, int k) {
         return newIdx;
       }();
       picked.add(sampleIdx);
-      samples[i] = population.elementAt(sampleIdx);
+      samples[i] = population[sampleIdx];
     }
   }
 

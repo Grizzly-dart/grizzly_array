@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Int2DFix extends Object
-    with Int2DMixin
+    with Int2DMixin, Array2DViewMixin<int>
     implements Numeric2DFix<int>, Int2DView {
   final List<Int1DFix> _data;
 
@@ -20,7 +20,23 @@ class Int2DFix extends Object
     }
   }
 
-  Int2DFix.make(this._data);
+  Int2DFix.copy(Iterable<Int1DView> data)
+      : _data = new List<Int1DFix>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (Int1DView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (Int1DView item in data) {
+        _data.add(item.clone());
+      }
+    }
+  }
+
+  Int2DFix._takeOwnership(this._data);
 
   Int2DFix.sized(int rows, int columns, {int data: 0})
       : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns));
@@ -88,7 +104,7 @@ class Int2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Int1DFix(v));
     }
-    return new Int2DFix.make(rows);
+    return new Int2DFix._takeOwnership(rows);
   }
 
   factory Int2DFix.genCols(int numCols, Iterable<int> colMaker(int index)) {
@@ -125,7 +141,7 @@ class Int2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Int1DFix(v));
     }
-    return new Int2DFix.make(rows);
+    return new Int2DFix._takeOwnership(rows);
   }
 
   static Int2DFix buildCols<T>(
@@ -174,33 +190,30 @@ class Int2DFix extends Object
 
   Int2DRowFix get row => _row ??= new Int2DRowFix(this);
 
+  @override
+  Iterable<ArrayFix<int>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<int>> get cols => new ColsListFix<int>(this);
+
   Int1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, /* Iterable<int> | ArrayView<int> */ val) {
+  operator []=(final int i, ArrayView<int> val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
-    Iterable<int> v;
-    if (val is ArrayView<int>) {
-      v = val.iterable;
-    } else if (val is Iterable<int>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
-    }
-
     if (numRows == 0) {
-      final arr = new Int1D(v);
+      final arr = new Int1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
+    if (val.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Int1D(v);
+    final arr = new Int1D.copy(val);
 
     _data[i] = arr;
   }

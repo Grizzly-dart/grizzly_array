@@ -59,11 +59,5 @@ class Double2DColumns implements NumericArray2DColumns<double> {
       inner._data[i].insert(index, col.elementAt(i));
     }
   }
-
-  void insertScalar(int index, double v) {
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, v);
-    }
-  }
 }
 */

@@ -1,19 +1,16 @@
 part of grizzly.series.array2d;
 
-abstract class Int2DMixin {
+abstract class Int2DMixin implements Numeric2DView<int> {
   List<Int1DView> get _data;
-
-  Int2DColView get col;
-
-  Int2DRowView get row;
-
-  Int2DView get view;
 
   Int2DView makeView(Iterable<Iterable<int>> newData) => new Int2DView(newData);
 
   Int2DFix makeFix(Iterable<Iterable<int>> newData) => new Int2DFix(newData);
 
   Int2D make(Iterable<Iterable<int>> newData) => new Int2D(newData);
+
+  @override
+  Array<int> makeArray(Iterable<int> newData) => new Int1D(newData);
 
   Iterable<Iterable<int>> get iterable => _data.map((a) => a.iterable);
 
@@ -25,10 +22,6 @@ abstract class Int2DMixin {
   }
 
   int get numRows => _data.length;
-
-  Index2D get shape => new Index2D(numRows, numCols);
-
-  bool get isSquare => numRows == numCols;
 
   Int1DView operator [](int i) => _data[i];
 
@@ -56,7 +49,7 @@ abstract class Int2DMixin {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new Int2D.make(list);
+    return new Int2D.own(list);
   }
 
   int get min {
@@ -171,7 +164,7 @@ abstract class Int2DMixin {
 
   Int2D operator +(/* int | Iterable<int> | Int2DArray */ other) {
     if (other is int) {
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] += other;
@@ -181,7 +174,7 @@ abstract class Int2DMixin {
     } else if (other is Iterable<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] + other;
       }
@@ -189,7 +182,7 @@ abstract class Int2DMixin {
     } else if (other is Int2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] + other[r];
       }
@@ -201,7 +194,7 @@ abstract class Int2DMixin {
 
   Int2D operator -(/* int | Iterable<int> | Int2DArray */ other) {
     if (other is int) {
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] -= other;
@@ -211,7 +204,7 @@ abstract class Int2DMixin {
     } else if (other is Iterable<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] - other;
       }
@@ -219,7 +212,7 @@ abstract class Int2DMixin {
     } else if (other is Int2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] - other[r];
       }
@@ -231,7 +224,7 @@ abstract class Int2DMixin {
 
   Int2D operator *(/* int | Iterable<int> | Int2DArray */ other) {
     if (other is int) {
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] *= other;
@@ -241,7 +234,7 @@ abstract class Int2DMixin {
     } else if (other is Iterable<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] * other;
       }
@@ -249,7 +242,7 @@ abstract class Int2DMixin {
     } else if (other is Int2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] * other[r];
       }
@@ -281,7 +274,7 @@ abstract class Int2DMixin {
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
       Double2D ret = new Double2D.shaped(shape);
       for (int r = 0; r < numRows; r++) {
-        ret[r] = _data[r] ~/ other[r];
+        ret[r] = _data[r] / other[r];
       }
       return ret;
     }
@@ -291,7 +284,7 @@ abstract class Int2DMixin {
 
   Int2D operator ~/(/* int | Iterable<int> | Int2DArray */ other) {
     if (other is int) {
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] ~/= other;
@@ -301,7 +294,7 @@ abstract class Int2DMixin {
     } else if (other is Iterable<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] ~/ other;
       }
@@ -309,7 +302,7 @@ abstract class Int2DMixin {
     } else if (other is Int2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D(_data);
+      Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] ~/ other[r];
       }
@@ -418,21 +411,6 @@ abstract class Int2DMixin {
     sb.writeln(']');
 
     return sb.toString();
-  }
-
-  Array2D<int> head([int count = 10]) {
-    // TODO
-    throw new UnimplementedError();
-  }
-
-  Array2D<int> tail([int count = 10]) {
-    //TODO
-    throw new UnimplementedError();
-  }
-
-  Array2D<int> sample([int count = 10]) {
-    //TODO
-    throw new UnimplementedError();
   }
 
   double get variance {
