@@ -1,20 +1,6 @@
 part of grizzly.series.array.double;
 
 abstract class DoubleFixMixin implements Numeric1DFix<double> {
-  /// Sets all elements in the array to given value [v]
-  void set(double v) {
-    for (int i = 0; i < length; i++) {
-      this[i] = v;
-    }
-  }
-
-  void assign(Iterable<double> other) {
-    if (other.length != length)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-
-    for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
-  }
-
   @override
   void clip({double min, double max}) {
     if (min != null && max != null) {
@@ -60,14 +46,17 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
   }
 
   Double1DFix logNSelf(double n) {
-    for (int i = 0; i < length; i++)
-      this[i] = math.log(this[i]) / math.log(n);
+    for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.log(n);
     return this;
   }
 }
 
 class Double1DFix extends Object
-    with Array1DViewMixin<double>, Double1DViewMixin, DoubleFixMixin
+    with
+        Array1DViewMixin<double>,
+        Double1DViewMixin,
+        DoubleFixMixin,
+        Array1DFixMixin<double>
     implements Numeric1DFix<double>, Double1DView {
   final List<double> _data;
 

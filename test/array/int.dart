@@ -76,7 +76,7 @@ void main() {
 
     test('mask', () {
       print(int1D([1, 5, 2, 4, 3])
-          ..mask(bool1D([false, true, false, true, false])));
+        ..mask(bool1D([false, true, false, true, false])));
     });
   });
 }

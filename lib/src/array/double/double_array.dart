@@ -12,7 +12,11 @@ part 'double_fix_array.dart';
 part 'double_mixin.dart';
 
 class Double1D extends Object
-    with Array1DViewMixin<double>, Double1DViewMixin, DoubleFixMixin
+    with
+        Array1DViewMixin<double>,
+        Double1DViewMixin,
+        DoubleFixMixin,
+        Array1DFixMixin<double>
     implements Numeric1D<double>, Double1DFix {
   List<double> _data;
 

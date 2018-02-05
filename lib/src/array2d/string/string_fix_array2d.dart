@@ -191,9 +191,9 @@ class String2DFix extends Object
     }
 
     Iterable<String> v;
-    if(val is ArrayView<String>) {
+    if (val is ArrayView<String>) {
       v = val.iterable;
-    } else if(val is Iterable<String>) {
+    } else if (val is Iterable<String>) {
       v = val;
     } else {
       throw new ArgumentError.value(val, 'val', 'Unknown type!');

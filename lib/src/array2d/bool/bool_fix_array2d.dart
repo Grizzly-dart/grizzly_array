@@ -191,9 +191,9 @@ class Bool2DFix extends Object
     }
 
     Iterable<bool> v;
-    if(val is ArrayView<bool>) {
+    if (val is ArrayView<bool>) {
       v = val.iterable;
-    } else if(val is Iterable<bool>) {
+    } else if (val is Iterable<bool>) {
       v = val;
     } else {
       throw new ArgumentError.value(val, 'val', 'Unknown type!');

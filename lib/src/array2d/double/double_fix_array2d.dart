@@ -355,7 +355,7 @@ class Double2DFix extends Object
   }
 
   Double2D subtract(/* int | Iterable<int> | Numeric2DArray */ other,
-          {bool self: false}) {
+      {bool self: false}) {
     if (!self) return this - other;
 
     if (other is num) {
@@ -385,7 +385,7 @@ class Double2DFix extends Object
   }
 
   Double2D multiply(/* int | Iterable<int> | Numeric2DArray */ other,
-          {bool self: false}) {
+      {bool self: false}) {
     if (!self) return this * other;
 
     if (other is num) {
@@ -415,7 +415,7 @@ class Double2DFix extends Object
   }
 
   Double2D divide(/* int | Iterable<int> | Numeric2DArray */ other,
-          {bool self: false}) {
+      {bool self: false}) {
     if (!self) return this / other;
 
     if (other is num) {
@@ -445,7 +445,7 @@ class Double2DFix extends Object
   }
 
   Int2D truncDiv(/* int | Iterable<int> | Int2DArray */ other,
-          {bool self: false}) {
+      {bool self: false}) {
     if (!self) return this ~/ other;
 
     throw new Exception('self not allowed!');

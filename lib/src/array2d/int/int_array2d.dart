@@ -42,7 +42,8 @@ class Int2D extends Object
   }
 
   Int2D.sized(int rows, int columns, {int data: 0})
-      : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns));
+      : _data = new List<Int1D>.generate(
+            rows, (_) => new Int1D.sized(columns, data: data));
 
   Int2D.shaped(Index2D shape, {int data: 0})
       : _data = new List<Int1D>.generate(

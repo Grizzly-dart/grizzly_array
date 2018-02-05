@@ -20,7 +20,28 @@ class String2D extends Object
     }
   }
 
-  String2D.make(this._data);
+  String2D.from(Iterable<ArrayView<String>> data)
+      : _data = new List<String1D>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (ArrayView<String> item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (ArrayView<String> item in data) {
+        _data.add(item.clone());
+      }
+    }
+  }
+
+  factory String2D.copy(Array2DView<String> data) =>
+      new String2D(data.iterable);
+
+  String2D.own(this._data) {
+    // TODO check that all rows are of same length
+  }
 
   String2D.sized(int numRows, int numCols, {String data: ''})
       : _data = new List<String1D>.generate(
@@ -41,28 +62,28 @@ class String2D extends Object
     return ret;
   }
 
-  String2D.repeatRow(Iterable<String> row, [int numRows = 1])
+  String2D.repeatRow(ArrayView<String> row, [int numRows = 1])
       : _data = new List<String1D>(numRows) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new String1D(row);
+      _data[i] = new String1D.copy(row);
     }
   }
 
-  String2D.repeatCol(Iterable<String> column, [int numCols = 1])
+  String2D.repeatCol(ArrayView<String> column, [int numCols = 1])
       : _data = new List<String1D>(column.length) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new String1D.sized(numCols, data: column.elementAt(i));
+      _data[i] = new String1D.sized(numCols, data: column[i]);
     }
   }
 
-  String2D.aRow(Iterable<String> row) : _data = new List<String1D>(1) {
-    _data[0] = new String1D(row);
+  String2D.aRow(ArrayView<String> row) : _data = new List<String1D>(1) {
+    _data[0] = new String1D.copy(row);
   }
 
-  String2D.aCol(Iterable<String> column)
+  String2D.aCol(ArrayView<String> column)
       : _data = new List<String1D>(column.length) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new String1D.single(column.elementAt(i));
+      _data[i] = new String1D.single(column[i]);
     }
   }
 
@@ -98,7 +119,7 @@ class String2D extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new String1D(v));
     }
-    return new String2D.make(rows);
+    return new String2D.own(rows);
   }
 
   factory String2D.genCols(int numCols, Iterable<String> colMaker(int index)) {
@@ -135,7 +156,7 @@ class String2D extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new String1D(v));
     }
-    return new String2D.make(rows);
+    return new String2D.own(rows);
   }
 
   static String2D buildCols<T>(
@@ -185,7 +206,8 @@ class String2D extends Object
 
   String1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final /* Iterable<String> | ArrayView<String> */ val) {
+  operator []=(
+      final int i, final /* Iterable<String> | ArrayView<String> */ val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }

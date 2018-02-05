@@ -12,7 +12,11 @@ part 'int_view_array.dart';
 part 'int_mixin.dart';
 
 class Int1D extends Object
-    with Int1DViewMixin, IntFixMixin, Array1DViewMixin<int>
+    with
+        Int1DViewMixin,
+        IntFixMixin,
+        Array1DViewMixin<int>,
+        Array1DFixMixin<int>
     implements Numeric1D<int>, Int1DFix {
   List<int> _data;
 

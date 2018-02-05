@@ -53,7 +53,7 @@ class Bool2DCol extends Object
 
   @override
   void sort({bool descending: false}) {
-    for(int i = 0; i < length; i++) this[i].sort(descending: descending);
+    for (int i = 0; i < length; i++) this[i].sort(descending: descending);
   }
 }
 
@@ -84,7 +84,7 @@ class Bool2DColFix extends Object
 
   @override
   void sort({bool descending: false}) {
-    for(int i = 0; i < length; i++) this[i].sort(descending: descending);
+    for (int i = 0; i < length; i++) this[i].sort(descending: descending);
   }
 }
 
@@ -123,7 +123,7 @@ class Bool2DRow extends Object
 
   @override
   void sort({bool descending: false}) {
-    for(int i = 0; i < length; i++) inner[i].sort(descending: descending);
+    for (int i = 0; i < length; i++) inner[i].sort(descending: descending);
   }
 }
 
@@ -144,7 +144,7 @@ class Bool2DRowFix extends Object
 
   @override
   void sort({bool descending: false}) {
-    for(int i = 0; i < length; i++) inner[i].sort(descending: descending);
+    for (int i = 0; i < length; i++) inner[i].sort(descending: descending);
   }
 }
 
@@ -186,7 +186,7 @@ abstract class Bool2DAxisMixin implements Axis2DView<bool> {
   /// Minimum along y-axis
   Bool1D get min {
     final ret = new Bool1D.sized(length);
-     for (int i = 0; i < length; i++) {
+    for (int i = 0; i < length; i++) {
       ret[i] = this[i].min;
     }
     return ret;

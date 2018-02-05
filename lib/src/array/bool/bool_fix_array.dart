@@ -1,19 +1,40 @@
-part of grizzly.series.array;
+part of grizzly.series.array.bool;
 
-class Bool1DFix extends Bool1DView implements ArrayFix<bool> {
-  Bool1DFix(Iterable<bool> data) : super(data);
+class Bool1DFix extends Object
+    with Bool1DViewMixin, Array1DViewMixin<bool>, Array1DFixMixin<bool>
+    implements ArrayFix<bool>, Bool1DView {
+  final List<bool> _data;
 
-  Bool1DFix.make(List<bool> data) : super.make(data);
+  Bool1DFix(Iterable<bool> data)
+      : _data = new List<bool>.from(data, growable: false);
+
+  Bool1DFix.copy(ArrayView<bool> other)
+      : _data = new List<bool>.from(other.iterable);
+
+  Bool1DFix.own(this._data);
 
   Bool1DFix.sized(int length, {bool data: false})
-      : super.sized(length, data: data);
+      : _data = new List<bool>.filled(length, data, growable: false);
 
-  Bool1DFix.single(bool data) : super.single(data);
+  factory Bool1DFix.shapedLike(Iterable d, {bool data: false}) =>
+      new Bool1DFix.sized(d.length, data: data);
 
-  Bool1DFix.shapedLike(Iterable d, {bool data: false})
-      : super.sized(d.length, data: data);
+  Bool1DFix.single([bool data = false]) : _data = <bool>[data];
 
-  Bool1DFix.gen(int length, bool maker(int index)) : super.gen(length, maker);
+  Bool1DFix.gen(int length, bool maker(int index))
+      : _data = new List<bool>(length) {
+    for (int i = 0; i < length; i++) {
+      _data[i] = maker(i);
+    }
+  }
+
+  Iterable<bool> get iterable => _data;
+
+  Iterator<bool> get iterator => _data.iterator;
+
+  int get length => _data.length;
+
+  bool operator [](int i) => _data[i];
 
   operator []=(int i, bool val) {
     if (i > _data.length) {
@@ -23,19 +44,7 @@ class Bool1DFix extends Bool1DView implements ArrayFix<bool> {
     _data[i] = val;
   }
 
-  /// Sets all elements in the array to given value [v]
-  void set(bool v) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = v;
-    }
-  }
-
-  void assign(Iterable<bool> other) {
-    if (other.length != length)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-
-    for (int i = 0; i < length; i++) _data[i] = other.elementAt(i);
-  }
+  Bool1D slice(int start, [int end]) => new Bool1D(_data.sublist(start, end));
 
   void sort({bool descending: false}) {
     if (!descending)
@@ -45,7 +54,7 @@ class Bool1DFix extends Bool1DView implements ArrayFix<bool> {
   }
 
   Bool1DView _view;
-  Bool1DView get view => _view ??= new Bool1DView.make(_data);
+  Bool1DView get view => _view ??= new Bool1DView.own(_data);
 
   Bool1DFix get fixed => this;
 }

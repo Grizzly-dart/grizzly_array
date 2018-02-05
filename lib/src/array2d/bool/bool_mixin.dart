@@ -57,7 +57,7 @@ abstract class Bool2DMixin implements Array2DView<bool> {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new Bool2D.make(list);
+    return new Bool2D.own(list);
   }
 
   bool get min {
@@ -173,7 +173,6 @@ abstract class Bool2DMixin implements Array2DView<bool> {
     }
     return ret;
   }
-
 
   @override
   Array<bool> unique() {

@@ -58,7 +58,7 @@ abstract class String2DMixin implements Array2DView<String> {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new String2D.make(list);
+    return new String2D.own(list);
   }
 
   String get min {

@@ -1,20 +1,76 @@
-part of grizzly.series.array;
+part of grizzly.series.array.string;
 
-class String1DFix extends String1DView implements ArrayFix<String> {
-  String1DFix(Iterable<String> data) : super(data);
+abstract class String1DFixMixin implements ArrayFix<String>, StringFixArray {
+  void toLowerCase() {
+    for (int i = 0; i < length; i++) {
+      this[i] = this[i].toLowerCase();
+    }
+  }
 
-  String1DFix.make(List<String> data) : super.make(data);
+  void toUpperCase() {
+    for (int i = 0; i < length; i++) {
+      this[i] = this[i].toUpperCase();
+    }
+  }
+
+  void trim() {
+    for (int i = 0; i < length; i++) {
+      this[i] = this[i].trim();
+    }
+  }
+
+  void trimLeft() {
+    for (int i = 0; i < length; i++) {
+      this[i] = this[i].trimLeft();
+    }
+  }
+
+  void trimRight() {
+    for (int i = 0; i < length; i++) {
+      this[i] = this[i].trimRight();
+    }
+  }
+}
+
+class String1DFix extends Object
+    with
+        String1DViewMixin,
+        Array1DViewMixin<String>,
+        Array1DFixMixin<String>,
+        String1DFixMixin
+    implements ArrayFix<String>, String1DView, StringFixArray {
+  List<String> _data;
+
+  String1DFix(Iterable<String> data)
+      : _data = new List<String>.from(data, growable: false);
+
+  String1DFix.copy(ArrayView<String> other)
+      : _data = new List<String>.from(other.iterable);
+
+  String1DFix.own(this._data);
 
   String1DFix.sized(int length, {String data: ''})
-      : super.sized(length, data: data);
+      : _data = new List<String>.filled(length, data, growable: false);
 
-  String1DFix.single(String data) : super.single(data);
+  factory String1DFix.shapedLike(Iterable d, {String data: ''}) =>
+      new String1DFix.sized(d.length, data: data);
 
-  String1DFix.shapedLike(Iterable d, {String data: ''})
-      : super.sized(d.length, data: data);
+  String1DFix.single(String data) : _data = <String>[data];
 
   String1DFix.gen(int length, String maker(int index))
-      : super.gen(length, maker);
+      : _data = new List<String>(length) {
+    for (int i = 0; i < length; i++) {
+      _data[i] = maker(i);
+    }
+  }
+
+  Iterable<String> get iterable => _data;
+
+  Iterator<String> get iterator => _data.iterator;
+
+  int get length => _data.length;
+
+  String operator [](int i) => _data[i];
 
   operator []=(int i, String val) {
     if (i > _data.length) {
@@ -24,19 +80,8 @@ class String1DFix extends String1DView implements ArrayFix<String> {
     _data[i] = val;
   }
 
-  /// Sets all elements in the array to given value [v]
-  void set(String v) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = v;
-    }
-  }
-
-  void assign(Iterable<String> other) {
-    if (other.length != length)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-
-    for (int i = 0; i < length; i++) _data[i] = other.elementAt(i);
-  }
+  String1D slice(int start, [int end]) =>
+      new String1D(_data.sublist(start, end));
 
   void sort({bool descending: false}) {
     if (!descending)

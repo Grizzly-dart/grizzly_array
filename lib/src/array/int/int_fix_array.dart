@@ -1,20 +1,6 @@
 part of grizzly.series.array.int;
 
 abstract class IntFixMixin implements Numeric1DFix<int> {
-  /// Sets all elements in the array to given value [v]
-  void set(int v) {
-    for (int i = 0; i < length; i++) {
-      this[i] = v;
-    }
-  }
-
-  void assign(Iterable<int> other) {
-    if (other.length != length)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-
-    for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
-  }
-
   @override
   void clip({int min, int max}) {
     if (min != null && max != null) {
@@ -46,7 +32,11 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
 }
 
 class Int1DFix extends Object
-    with Int1DViewMixin, IntFixMixin, Array1DViewMixin<int>
+    with
+        Int1DViewMixin,
+        IntFixMixin,
+        Array1DViewMixin<int>,
+        Array1DFixMixin<int>
     implements Numeric1DFix<int>, Int1DView {
   final List<int> _data;
 

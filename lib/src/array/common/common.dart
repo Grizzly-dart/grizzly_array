@@ -96,3 +96,19 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
   }
   */
 }
+
+abstract class Array1DFixMixin<E> implements ArrayFix<E> {
+  /// Sets all elements in the array to given value [v]
+  void set(E v) {
+    for (int i = 0; i < length; i++) {
+      this[i] = v;
+    }
+  }
+
+  void assign(ArrayView<E> other) {
+    if (other.length != length)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+
+    for (int i = 0; i < length; i++) this[i] = other[i];
+  }
+}

@@ -20,7 +20,27 @@ class Bool2D extends Object
     }
   }
 
-  Bool2D.make(this._data);
+  Bool2D.from(Iterable<Bool1DView> data)
+      : _data = new List<Bool1D>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (Bool1DView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (Bool1DView item in data) {
+        _data.add(item.clone());
+      }
+    }
+  }
+
+  factory Bool2D.copy(Bool2D data) => new Bool2D(data.iterable);
+
+  Bool2D.own(this._data) {
+    // TODO check that all rows are of same length
+  }
 
   Bool2D.sized(int numRows, int numCols, {bool data: false})
       : _data = new List<Bool1D>.generate(
@@ -41,27 +61,28 @@ class Bool2D extends Object
     return ret;
   }
 
-  Bool2D.repeatRow(Iterable<bool> row, [int numRows = 1])
+  Bool2D.repeatRow(ArrayView<bool> row, [int numRows = 1])
       : _data = new List<Bool1D>(numRows) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1D(row);
+      _data[i] = new Bool1D.copy(row);
     }
   }
 
-  Bool2D.repeatCol(Iterable<bool> column, [int numCols = 1])
+  Bool2D.repeatCol(ArrayView<bool> column, [int numCols = 1])
       : _data = new List<Bool1D>(column.length) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1D.sized(numCols, data: column.elementAt(i));
+      _data[i] = new Bool1D.sized(numCols, data: column[i]);
     }
   }
 
-  Bool2D.aRow(Iterable<bool> row) : _data = new List<Bool1D>(1) {
-    _data[0] = new Bool1D(row);
+  Bool2D.aRow(ArrayView<bool> row) : _data = new List<Bool1D>(1) {
+    _data[0] = new Bool1D.copy(row);
   }
 
-  Bool2D.aCol(Iterable<bool> column) : _data = new List<Bool1D>(column.length) {
+  Bool2D.aCol(ArrayView<bool> column)
+      : _data = new List<Bool1D>(column.length) {
     for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1D.single(column.elementAt(i));
+      _data[i] = new Bool1D.single(column[i]);
     }
   }
 
@@ -97,7 +118,7 @@ class Bool2D extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Bool1D(v));
     }
-    return new Bool2D.make(rows);
+    return new Bool2D.own(rows);
   }
 
   factory Bool2D.genCols(int numCols, Iterable<bool> colMaker(int index)) {
@@ -134,7 +155,7 @@ class Bool2D extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Bool1D(v));
     }
-    return new Bool2D.make(rows);
+    return new Bool2D.own(rows);
   }
 
   static Bool2D buildCols<T>(
