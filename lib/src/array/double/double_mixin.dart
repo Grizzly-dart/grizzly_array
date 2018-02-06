@@ -391,4 +391,13 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     }
     return ret;
   }
+
+  @override
+  Double1D pickByIndices(ArrayView<int> indices) {
+    final ret = new Double1D.sized(indices.length);
+    for(int i = 0; i < indices.length; i++) {
+      ret[i] = this[indices[i]];
+    }
+    return ret;
+  }
 }

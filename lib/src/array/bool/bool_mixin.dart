@@ -144,4 +144,13 @@ abstract class Bool1DViewMixin implements ArrayView<bool> {
     }
     return false;
   }
+
+  @override
+  Bool1D pickByIndices(ArrayView<int> indices) {
+    final ret = new Bool1D.sized(indices.length);
+    for(int i = 0; i < indices.length; i++) {
+      ret[i] = this[indices[i]];
+    }
+    return ret;
+  }
 }

@@ -1,11 +1,8 @@
 library grizzly.series.array.common;
 
-import 'dart:math' as math;
 import 'dart:collection';
-import 'dart:typed_data';
 import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
-import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
 import '../sample.dart';
 
@@ -20,6 +17,8 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
   E get first => iterable.first;
 
   E get last => iterable.last;
+
+  Iterable<int> get i => Ranger.indices(length);
 
   int count(E v) {
     int ret = 0;
