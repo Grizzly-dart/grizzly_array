@@ -39,7 +39,6 @@ class Int2DCol extends Object
     }
   }
 
-
   @override
   void addScalar(int v) {
     for (int i = 0; i < inner.numRows; i++) {

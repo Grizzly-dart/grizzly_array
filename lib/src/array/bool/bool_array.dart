@@ -3,6 +3,7 @@ library grizzly.series.array.bool;
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../common/common.dart';
+import '../array.dart';
 
 part 'bool_fix_array.dart';
 part 'bool_view_array.dart';
@@ -24,7 +25,7 @@ class Bool1D extends Object
   Bool1D.sized(int length, {bool data: false})
       : _data = new List<bool>.filled(length, data);
 
-  factory Bool1D.shapedLike(Iterable d, {bool data: false}) =>
+  factory Bool1D.shapedLike(ArrayView d, {bool data: false}) =>
       new Bool1D.sized(d.length, data: data);
 
   Bool1D.single(bool data) : _data = <bool>[data];

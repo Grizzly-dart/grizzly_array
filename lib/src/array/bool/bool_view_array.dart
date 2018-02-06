@@ -19,7 +19,7 @@ class Bool1DView extends Object
     }
   }
 
-  factory Bool1DView.shapedLike(Iterable d, {bool data: false}) =>
+  factory Bool1DView.shapedLike(ArrayView d, {bool data: false}) =>
       new Bool1DView.sized(d.length, data: data);
 
   Bool1DView.single(bool data) : _data = new List<bool>(1) {

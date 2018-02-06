@@ -221,4 +221,13 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     }
     return ret;
   }
+
+  @override
+  String1D pickByIndices(ArrayView<int> indices) {
+    final ret = new String1D.sized(indices.length);
+    for (int i = 0; i < indices.length; i++) {
+      ret[i] = this[indices[i]];
+    }
+    return ret;
+  }
 }

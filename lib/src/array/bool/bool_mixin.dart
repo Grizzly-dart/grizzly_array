@@ -95,6 +95,31 @@ abstract class Bool1DViewMixin implements ArrayView<bool> {
     }
   }
 
+  Int1D toIntArray({int trueVal: 1, int falseVal: 0}) {
+    final ret = new Int1D.shapedLike(this);
+    for(int i = 0; i < length; i++) {
+      if(this[i]) {
+        ret[i] = trueVal;
+      } else {
+        ret[i] = falseVal;
+      }
+    }
+    return ret;
+  }
+
+  String1D toStringArray(
+      {String trueVal: 'True', String falseVal: 'False'}) {
+    final ret = new String1D.shapedLike(this);
+    for(int i = 0; i < length; i++) {
+      if(this[i]) {
+        ret[i] = trueVal;
+      } else {
+        ret[i] = falseVal;
+      }
+    }
+    return ret;
+  }
+
   bool operator ==(final other) {
     if (other is! Array<bool>) return false;
 
@@ -148,7 +173,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool> {
   @override
   Bool1D pickByIndices(ArrayView<int> indices) {
     final ret = new Bool1D.sized(indices.length);
-    for(int i = 0; i < indices.length; i++) {
+    for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices[i]];
     }
     return ret;
