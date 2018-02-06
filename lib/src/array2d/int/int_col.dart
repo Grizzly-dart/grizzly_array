@@ -39,6 +39,14 @@ class Int2DCol extends Object
     }
   }
 
+
+  @override
+  void addScalar(int v) {
+    for (int i = 0; i < inner.numRows; i++) {
+      inner._data[i].add(v);
+    }
+  }
+
   void insert(int index, ArrayView<int> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
@@ -46,6 +54,10 @@ class Int2DCol extends Object
       inner._data[i].insert(index, col[i]);
     }
   }
+
+  Iterable<Int1DFix> get iterable => inner.cols;
+
+  Iterator<Int1DFix> get iterator => iterable.iterator;
 }
 
 class Int2DColFix extends Object
@@ -73,6 +85,10 @@ class Int2DColFix extends Object
       inner[i][index] = col[i];
     }
   }
+
+  Iterable<Int1DFix> get iterable => inner.cols;
+
+  Iterator<Int1DFix> get iterator => iterable.iterator;
 }
 
 class Int2DColView extends Object
@@ -88,13 +104,7 @@ class Int2DColView extends Object
 
   Int1DView operator [](int col) => new Int1DViewLazy(inner, col);
 
-  @override
-  Iterator<Int1DView> get iterator {
-    // TODO
-  }
+  Iterable<Int1DView> get iterable => inner.cols;
 
-  @override
-  Iterable<Int1DView> get iterable {
-    // TODO
-  }
+  Iterator<Int1DView> get iterator => iterable.iterator;
 }
