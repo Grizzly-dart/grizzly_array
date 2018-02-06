@@ -322,7 +322,7 @@ class Int1D extends Object
       _data.sort((int a, int b) => b.compareTo(a));
   }
 
-  void mask(Array<bool> mask) {
+  void mask(ArrayView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     int retLength = mask.count(true);
@@ -332,6 +332,37 @@ class Int1D extends Object
       if (mask[i]) ret[idx++] = _data[i];
     }
     _data = ret;
+  }
+
+  void removeAt(int pos) => _data.removeAt(pos);
+
+  void removeAtMany(ArrayView<int> pos) {
+    final poss = pos.unique()..sort(descending: true);
+    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+
+    for (int pos in poss.iterable) {
+      _data.removeAt(pos);
+    }
+  }
+
+  void removeRange(int start, [int end]) {
+    _data.removeRange(start, end ?? length);
+  }
+
+  void remove(int value, {bool onlyFirst: false}) {
+    if (onlyFirst) {
+      _data.remove(value);
+    } else {
+      for (int i = length - 1; i >= 0; i--) {
+        if (_data[i] == value) removeAt(i);
+      }
+    }
+  }
+
+  void removeMany(ArrayView<int> values) {
+    for (int i = length - 1; i >= 0; i--) {
+      if (values.contains(_data[i])) removeAt(i);
+    }
   }
 
   Int1DView _view;

@@ -42,7 +42,71 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  int count(double v, {double absTol: 0.0}) {
+  Bool1D operator <(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if(other is num) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] < other;
+      }
+    } else if(other is Numeric1D) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] < other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator <=(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if(other is num) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] <= other;
+      }
+    } else if(other is Numeric1D) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] <= other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator >(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if(other is num) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] > other;
+      }
+    } else if(other is Numeric1D) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] > other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator >=(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if(other is num) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] >= other;
+      }
+    } else if(other is Numeric1D) {
+      for(int i = 0; i < length; i++) {
+        ret[i] = this[i] >= other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  int count(double v, {double absTol: 1e-8}) {
     final double vLow = v - absTol;
     final double vHigh = v + absTol;
     int ret = 0;
@@ -399,5 +463,15 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
       ret[i] = this[indices[i]];
     }
     return ret;
+  }
+
+  @override
+  bool contains(double value, {double absTol: 1e-8}) {
+    double vLow = value - absTol;
+    double vHigh = value + absTol;
+    for(double el in iterable) {
+      if(el > vLow && el < vHigh) return true;
+    }
+    return false;
   }
 }

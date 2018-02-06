@@ -11,7 +11,7 @@ part 'bool_mixin.dart';
 
 class Bool1D extends Object
     with Bool1DViewMixin, Array1DViewMixin<bool>, Array1DFixMixin<bool>
-    implements Array<bool>, Bool1DFix {
+    implements Array<bool>, Bool1DFix, BoolArray {
   List<bool> _data;
 
   Bool1D([Iterable<bool> data = const <bool>[]])
@@ -73,11 +73,42 @@ class Bool1D extends Object
       _data.sort((bool a, bool b) => b ? 1 : 0);
   }
 
-  void mask(Array<bool> mask) {
+  void mask(ArrayView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
       if (!mask[i]) _data.removeAt(i);
+    }
+  }
+
+  void removeAt(int pos) => _data.removeAt(pos);
+
+  void removeAtMany(ArrayView<int> pos) {
+    final poss = pos.unique()..sort(descending: true);
+    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+
+    for (int pos in poss.iterable) {
+      _data.removeAt(pos);
+    }
+  }
+
+  void removeRange(int start, [int end]) {
+    _data.removeRange(start, end ?? length);
+  }
+
+  void remove(bool value, {bool onlyFirst: false}) {
+    if (onlyFirst) {
+      _data.remove(value);
+    } else {
+      for (int i = length - 1; i >= 0; i--) {
+        if (_data[i] == value) removeAt(i);
+      }
+    }
+  }
+
+  void removeMany(ArrayView<bool> values) {
+    for (int i = length - 1; i >= 0; i--) {
+      if (values.contains(_data[i])) removeAt(i);
     }
   }
 

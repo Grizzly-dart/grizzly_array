@@ -230,4 +230,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     }
     return ret;
   }
+
+  @override
+  bool contains(String value) => iterable.contains(value);
 }

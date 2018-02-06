@@ -281,7 +281,7 @@ class Double1D extends Object
       _data.sort((double a, double b) => b.compareTo(a));
   }
 
-  void mask(Array<bool> mask) {
+  void mask(ArrayView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     int retLength = mask.count(true);
@@ -293,12 +293,44 @@ class Double1D extends Object
     _data = ret;
   }
 
-  void maskByPos(Array<int> pos) {
+  void removeAt(int pos) => _data.removeAt(pos);
+
+  void removeAtMany(ArrayView<int> pos) {
     final poss = pos.unique()..sort(descending: true);
     if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
 
     for (int pos in poss.iterable) {
       _data.removeAt(pos);
+    }
+  }
+
+  void removeRange(int start, [int end]) {
+    _data.removeRange(start, end ?? length);
+  }
+
+  void remove(double value, {bool onlyFirst: false, double absTol: 1e-8}) {
+    double vLow = value - absTol;
+    double vHigh = value + absTol;
+    if (onlyFirst) {
+      for (int i = 0; i < length; i++) {
+        if (_data[i] > vLow && _data[i] < vHigh) {
+          removeAt(i);
+          break;
+        }
+      }
+    } else {
+      for (int i = length - 1; i >= 0; i--) {
+        if (_data[i] > vLow && _data[i] < vHigh) removeAt(i);
+      }
+    }
+  }
+
+  void removeMany(covariant Numeric1DView<double> values,
+      {double absTol: 1e-8}) {
+    final Numeric1DView<double> vLow = values - absTol;
+    final Numeric1DView<double> vHigh = values - absTol;
+    for (int i = length - 1; i >= 0; i--) {
+      if ((vLow < _data[i]).isTrue && (vHigh > _data[i]).isTrue) removeAt(i);
     }
   }
 
