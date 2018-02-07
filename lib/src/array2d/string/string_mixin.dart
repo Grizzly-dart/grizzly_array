@@ -17,6 +17,9 @@ abstract class String2DMixin implements Array2DView<String> {
 
   String2D make(Iterable<Iterable<String>> newData) => new String2D(newData);
 
+  @override
+  Array<String> makeArray(Iterable<String> newData) => new String1D(newData);
+
   Iterable<Iterable<String>> get iterable => _data.map((a) => a.iterable);
 
   Iterator<ArrayView<String>> get iterator => _data.iterator;
@@ -168,29 +171,4 @@ abstract class String2DMixin implements Array2DView<String> {
 
     return sb.toString();
   }
-
-/* TODO
-  IntSeries<String> valueCounts(
-      {bool sortByValue: false,
-      bool ascending: false,
-      bool dropNull: false,
-      dynamic name: ''}) {
-    final groups = new Map<String, List<int>>();
-    for (int r = 0; r < numRows; r++) {
-      for (int c = 0; c < numCols; c++) {
-        final String v = _data[r][c];
-        if (!groups.containsKey(v)) groups[v] = <int>[0];
-        groups[v][0]++;
-      }
-    }
-    final ret = new IntSeries<String>.fromMap(groups, name: name);
-    // Sort
-    if (sortByValue) {
-      ret.sortByIndex(ascending: ascending, inplace: true);
-    } else {
-      ret.sortByValue(ascending: ascending, inplace: true);
-    }
-    return ret;
-  }
-  */
 }

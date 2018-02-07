@@ -44,12 +44,12 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   Bool1D operator <(/* Numeric1D | num */ other) {
     final ret = new Bool1D.sized(length);
-    if(other is num) {
-      for(int i = 0; i < length; i++) {
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] < other;
       }
-    } else if(other is Numeric1D) {
-      for(int i = 0; i < length; i++) {
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] < other[i];
       }
     } else {
@@ -60,12 +60,12 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   Bool1D operator <=(/* Numeric1D | num */ other) {
     final ret = new Bool1D.sized(length);
-    if(other is num) {
-      for(int i = 0; i < length; i++) {
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] <= other;
       }
-    } else if(other is Numeric1D) {
-      for(int i = 0; i < length; i++) {
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] <= other[i];
       }
     } else {
@@ -76,12 +76,12 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   Bool1D operator >(/* Numeric1D | num */ other) {
     final ret = new Bool1D.sized(length);
-    if(other is num) {
-      for(int i = 0; i < length; i++) {
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] > other;
       }
-    } else if(other is Numeric1D) {
-      for(int i = 0; i < length; i++) {
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] > other[i];
       }
     } else {
@@ -92,12 +92,12 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   Bool1D operator >=(/* Numeric1D | num */ other) {
     final ret = new Bool1D.sized(length);
-    if(other is num) {
-      for(int i = 0; i < length; i++) {
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] >= other;
       }
-    } else if(other is Numeric1D) {
-      for(int i = 0; i < length; i++) {
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
         ret[i] = this[i] >= other[i];
       }
     } else {
@@ -380,7 +380,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  Double1D get toDouble => clone();
+  Double1D get toDouble => new Double1D.copy(this);
 
   Double2D repeat({int repeat: 1, bool transpose: false}) {
     if (!transpose) {
@@ -448,7 +448,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  Int1D toInt() {
+  Int1D get toInt {
     final ret = new Int1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].toInt();
@@ -469,8 +469,8 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   bool contains(double value, {double absTol: 1e-8}) {
     double vLow = value - absTol;
     double vHigh = value + absTol;
-    for(double el in iterable) {
-      if(el > vLow && el < vHigh) return true;
+    for (double el in iterable) {
+      if (el > vLow && el < vHigh) return true;
     }
     return false;
   }

@@ -35,7 +35,11 @@ class Int2D extends Object
     }
   }
 
-  factory Int2D.copy(Int2D data) => new Int2D(data.iterable);
+  Int2D.copy(Array2DView<int> data) : _data = new List<Int1D>(data.numRows) {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = data[i].clone();
+    }
+  }
 
   Int2D.own(this._data) {
     // TODO check that all rows are of same length
@@ -202,7 +206,7 @@ class Int2D extends Object
 
   operator []=(final int i, ArrayView<int> val) {
     if (i > numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
+      throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
@@ -211,9 +215,7 @@ class Int2D extends Object
       return;
     }
 
-    if (val.length != numCols) {
-      throw new Exception('Invalid size!');
-    }
+    if (val.length != numCols) throw new Exception('Invalid size!');
 
     final arr = new Int1D.copy(val);
 

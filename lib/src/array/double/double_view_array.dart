@@ -11,11 +11,7 @@ class Double1DView extends Object
   Double1DView.own(this._data);
 
   Double1DView.sized(int length, {double data: 0.0})
-      : _data = new Float64List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = data;
-    }
-  }
+      : _data = new List<double>.filled(length, data);
 
   factory Double1DView.shapedLike(Iterable d, {double data: 0.0}) =>
       new Double1DView.sized(d.length, data: data);

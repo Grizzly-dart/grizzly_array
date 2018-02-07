@@ -15,20 +15,21 @@ class String1D extends Object
         Array1DViewMixin<String>,
         Array1DFixMixin<String>,
         String1DFixMixin
-    implements Array<String>, String1DFix {
+    implements StringArray, String1DFix {
   List<String> _data;
 
-  String1D(Iterable<String> data) : _data = new List<String>.from(data);
+  String1D([Iterable<String> data = const []])
+      : _data = new List<String>.from(data);
 
   String1D.copy(ArrayView<String> other)
       : _data = new List<String>.from(other.iterable);
 
   String1D.own(this._data);
 
-  String1D.sized(int length, {String data: ''})
+  String1D.sized(int length, {String data})
       : _data = new List<String>.filled(length, data);
 
-  factory String1D.shapedLike(ArrayView d, {String data: ''}) =>
+  factory String1D.shapedLike(ArrayView d, {String data}) =>
       new String1D.sized(d.length, data: data);
 
   String1D.single(String data) : _data = <String>[data];
@@ -117,7 +118,7 @@ class String1D extends Object
   }
 
   String1DView _view;
-  String1DView get view => _view ??= new String1DView.make(_data);
+  String1DView get view => _view ??= new String1DView.own(_data);
 
   String1DFix _fixed;
   String1DFix get fixed => _fixed ??= new String1DFix.own(_data);

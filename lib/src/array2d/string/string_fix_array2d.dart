@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2DFix extends Object
-    with String2DMixin
+    with String2DMixin, Array2DViewMixin<String>
     implements Array2DFix<String>, String2DView {
   final List<String1DFix> _data;
 
@@ -185,31 +185,20 @@ class String2DFix extends Object
 
   String1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, /* Iterable<String> | ArrayView<String> */ val) {
+  operator []=(final int i, ArrayView<String> val) {
     if (i >= numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
-    }
-
-    Iterable<String> v;
-    if (val is ArrayView<String>) {
-      v = val.iterable;
-    } else if (val is Iterable<String>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+      throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
-      final arr = new String1D(v);
+      final arr = new String1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
-      throw new Exception('Invalid size!');
-    }
+    if (val.length != numCols) throw new Exception('Invalid size!');
 
-    final arr = new String1D(v);
+    final arr = new String1D.copy(val);
 
     _data[i] = arr;
   }
@@ -238,6 +227,12 @@ class String2DFix extends Object
   String2DView _view;
 
   String2DView get view => _view ??= new String2DView.make(_data);
+
+  @override
+  Iterable<ArrayFix<String>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<String>> get cols => new ColsListFix<String>(this);
 
   String2DFix get fixed => this;
 }

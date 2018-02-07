@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2DFix extends Object
-    with Bool2DMixin
+    with Bool2DMixin, Array2DViewMixin<bool>
     implements Array2DFix<bool>, Bool2DView {
   final List<Bool1DFix> _data;
 
@@ -185,31 +185,22 @@ class Bool2DFix extends Object
 
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, /* Iterable<bool> | ArrayView<bool> */ val) {
+  operator []=(final int i, ArrayView<bool> val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
-    Iterable<bool> v;
-    if (val is ArrayView<bool>) {
-      v = val.iterable;
-    } else if (val is Iterable<bool>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
-    }
-
     if (numRows == 0) {
-      final arr = new Bool1D(v);
+      final arr = new Bool1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
+    if (val.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Bool1D(v);
+    final arr = new Bool1D.copy(val);
 
     _data[i] = arr;
   }
@@ -240,4 +231,10 @@ class Bool2DFix extends Object
   Bool2DView get view => _view ??= new Bool2DView.make(_data);
 
   Bool2DFix get fixed => this;
+
+  @override
+  Iterable<ArrayFix<bool>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<bool>> get cols => new ColsListFix<bool>(this);
 }

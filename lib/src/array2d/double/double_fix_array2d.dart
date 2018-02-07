@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Double2DFix extends Object
-    with Double2DMixin
+    with Double2DMixin, Array2DViewMixin<double>
     implements Numeric2DFix<double>, Double2DView {
   final List<Double1DFix> _data;
 
@@ -202,31 +202,22 @@ class Double2DFix extends Object
 
   Double1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, /* Iterable<double> | ArrayView<double> */ val) {
+  operator []=(final int i, ArrayView<double> val) {
     if (i >= numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
-    }
-
-    Iterable<double> v;
-    if (val is ArrayView<double>) {
-      v = val.iterable;
-    } else if (val is Iterable<double>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+      throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
-      final arr = new Double1D(v);
+      final arr = new Double1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
+    if (val.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Double1D(v);
+    final arr = new Double1D.copy(val);
 
     _data[i] = arr;
   }
@@ -450,4 +441,10 @@ class Double2DFix extends Object
 
     throw new Exception('self not allowed!');
   }
+
+  @override
+  Iterable<ArrayFix<double>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<double>> get cols => new ColsListFix<double>(this);
 }

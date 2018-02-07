@@ -49,10 +49,10 @@ class String1DFix extends Object
 
   String1DFix.own(this._data);
 
-  String1DFix.sized(int length, {String data: ''})
+  String1DFix.sized(int length, {String data})
       : _data = new List<String>.filled(length, data, growable: false);
 
-  factory String1DFix.shapedLike(Iterable d, {String data: ''}) =>
+  factory String1DFix.shapedLike(Iterable d, {String data}) =>
       new String1DFix.sized(d.length, data: data);
 
   String1DFix.single(String data) : _data = <String>[data];
@@ -91,7 +91,7 @@ class String1DFix extends Object
   }
 
   String1DView _view;
-  String1DView get view => _view ??= new String1DView.make(_data);
+  String1DView get view => _view ??= new String1DView.own(_data);
 
   String1DFix get fixed => this;
 }

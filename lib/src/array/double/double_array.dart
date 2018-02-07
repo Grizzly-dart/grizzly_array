@@ -20,7 +20,7 @@ class Double1D extends Object
     implements Numeric1D<double>, Double1DFix {
   List<double> _data;
 
-  Double1D(Iterable<double> data)
+  Double1D([Iterable<double> data = const []])
       : _data = new Float64List.fromList(data.toList());
 
   Double1D.copy(ArrayView<double> other)
@@ -29,11 +29,7 @@ class Double1D extends Object
   Double1D.own(this._data);
 
   Double1D.sized(int length, {double data: 0.0})
-      : _data = new List<double>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = data;
-    }
-  }
+      : _data = new List<double>.filled(length, data);
 
   factory Double1D.shapedLike(Iterable d, {double data: 0.0}) =>
       new Double1D.sized(d.length, data: data);
@@ -48,7 +44,7 @@ class Double1D extends Object
   }
 
   factory Double1D.fromNum(iterable) {
-    if (iterable is Numeric1DView) {
+    if (iterable is ArrayView<num>) {
       final list = new Double1D.sized(iterable.length);
       for (int i = 0; i < iterable.length; i++)
         list[i] = iterable[i].toDouble();

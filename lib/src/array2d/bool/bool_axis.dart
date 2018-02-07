@@ -1,170 +1,6 @@
 part of grizzly.series.array2d;
 
-class Bool1DFixLazy extends Bool1DFix {
-  Bool1DFixLazy(Bool2DFix inner, int colIndex)
-      : super(new ColList<bool>(inner, colIndex));
-}
-
-class Bool1DViewLazy extends Bool1DView {
-  Bool1DViewLazy(Bool2DView inner, int colIndex)
-      : super(new ColList<bool>(inner, colIndex));
-}
-
-class Bool2DCol extends Object
-    with Bool2DAxisMixin
-    implements Axis2D<bool>, Bool2DColFix {
-  final Bool2D inner;
-
-  Bool2DCol(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  Bool1DFix operator [](int col) => new Bool1DFixLazy(inner, col);
-
-  operator []=(int index, Iterable<bool> col) {
-    if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-
-  void add(Iterable<bool> col) {
-    if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].add(col.elementAt(i));
-    }
-  }
-
-  void insert(int index, Iterable<bool> col) {
-    if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, col.elementAt(i));
-    }
-  }
-
-  @override
-  void sort({bool descending: false}) {
-    for (int i = 0; i < length; i++) this[i].sort(descending: descending);
-  }
-}
-
-class Bool2DColFix extends Object
-    with Bool2DAxisMixin
-    implements Axis2DFix<bool>, Bool2DColView {
-  final Bool2DFix inner;
-
-  Bool2DColFix(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  Bool1DFix operator [](int col) => new Bool1DFixLazy(inner, col);
-
-  operator []=(int index, Iterable<bool> col) {
-    if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-
-  @override
-  void sort({bool descending: false}) {
-    for (int i = 0; i < length; i++) this[i].sort(descending: descending);
-  }
-}
-
-class Bool2DColView extends Object
-    with Bool2DAxisMixin
-    implements Axis2DView<bool> {
-  final Bool2DView inner;
-
-  Bool2DColView(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  Bool1DView operator [](int col) => new Bool1DViewLazy(inner, col);
-}
-
-class Bool2DRow extends Object
-    with Bool2DAxisMixin
-    implements Axis2D<bool>, Bool2DRowFix {
-  final Bool2D inner;
-
-  Bool2DRow(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  Bool1DFix operator [](int row) => inner[row];
-
-  operator []=(int index, Iterable<bool> row) => inner[index] = row;
-
-  void add(Iterable<bool> row) => inner.add(row);
-
-  void insert(int index, Iterable<bool> row) => inner.insert(index, row);
-
-  @override
-  void sort({bool descending: false}) {
-    for (int i = 0; i < length; i++) inner[i].sort(descending: descending);
-  }
-}
-
-class Bool2DRowFix extends Object
-    with Bool2DAxisMixin
-    implements Axis2DFix<bool>, Bool2DRowView {
-  final Bool2DFix inner;
-
-  Bool2DRowFix(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  Bool1DFix operator [](int row) => inner[row];
-
-  operator []=(int index, Iterable<bool> row) => inner[index] = row;
-
-  @override
-  void sort({bool descending: false}) {
-    for (int i = 0; i < length; i++) inner[i].sort(descending: descending);
-  }
-}
-
-class Bool2DRowView extends Object
-    with Bool2DAxisMixin
-    implements Axis2DView<bool> {
-  final Bool2DView inner;
-
-  Bool2DRowView(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  Bool1DView operator [](int row) => inner[row];
-}
-
-abstract class Bool2DAxisMixin implements Axis2DView<bool> {
-  Bool1DView operator [](int r);
-
+abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
   Double1D get mean {
     if (length == 0) return new Double1D.sized(0);
     final ret = new Double1D.sized(length);
@@ -202,11 +38,19 @@ abstract class Bool2DAxisMixin implements Axis2DView<bool> {
   }
 
   @override
-  Iterable<Array<bool>> unique() {
-    final ret = new List<Array<bool>>(length);
-    for (int i = 0; i < length; i++) {
-      ret[i] = this[i].unique();
-    }
+  ArrayView<int> get argMax {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMax;
     return ret;
   }
+
+  @override
+  ArrayView<int> get argMin {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMin;
+    return ret;
+  }
+
+  @override
+  BoolArray makeArray(Iterable<bool> newData) => new Bool1D(newData);
 }

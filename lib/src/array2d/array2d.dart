@@ -25,18 +25,24 @@ part 'double/double_array2d.dart';
 part 'double/double_fix_array2d.dart';
 part 'double/double_axis.dart';
 part 'double/double_view_array2d.dart';
+part 'double/double_row.dart';
+part 'double/double_col.dart';
 
 part 'bool/bool_mixin.dart';
 part 'bool/bool_array2d.dart';
 part 'bool/bool_fix_array2d.dart';
 part 'bool/bool_axis.dart';
 part 'bool/bool_view_array2d.dart';
+part 'bool/bool_row.dart';
+part 'bool/bool_col.dart';
 
 part 'string/string_mixin.dart';
 part 'string/string_array2d.dart';
 part 'string/string_fix_array2d.dart';
 part 'string/string_axis.dart';
 part 'string/string_view_array2d.dart';
+part 'string/string_row.dart';
+part 'string/string_col.dart';
 
 part 'double_array2d.dart';
 
@@ -51,9 +57,9 @@ Double2D array2D(
     }
   } else if (data is Iterable<double>) {
     if (!transpose) {
-      return new Double2D.aRow(data);
+      return new Double2D([data]);
     } else {
-      return new Double2D.aCol(data);
+      return new Double2D.columns([data]);
     }
   } else if (data is Index2D) {
     if (!transpose) {
@@ -78,9 +84,9 @@ Int2D int2D(/* Iterable<Iterable<int>> | Iterable<int> | Index2D */ data,
     }
   } else if (data is Iterable<int>) {
     if (!transpose) {
-      return new Int2D.aRow(data);
+      return new Int2D([data]);
     } else {
-      return new Int2D.aCol(data);
+      return new Int2D.columns([data]);
     }
   } else if (data is Index2D) {
     if (!transpose) {

@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2DView extends Object
-    with String2DMixin
+    with String2DMixin, Array2DViewMixin<String>
     implements Array2DView<String> {
   final List<String1DView> _data;
 
@@ -184,6 +184,12 @@ class String2DView extends Object
   covariant String2DRowView _row;
 
   String2DRowView get row => _row ??= new String2DRowView(this);
+
+  @override
+  Iterable<ArrayView<String>> get rows => _data;
+
+  @override
+  Iterable<ArrayView<String>> get cols => new ColsListView<String>(this);
 
   String2DView get view => this;
 }

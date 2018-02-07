@@ -10,147 +10,7 @@ class Double1DViewLazy extends Double1DView {
       : super(new ColList<double>(inner, colIndex));
 }
 
-class Double2DCol extends Object
-    with
-        Double2DAxisMixin,
-        AxisMixin<double>,
-        AxisFixMixin<double>,
-        AxisViewMixin<double>
-    implements Numeric2DAxis<double>, Double2DColFix {
-  final Double2D inner;
-
-  Double2DCol(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  Double1DFix operator [](int col) => new Double1DFixLazy(inner, col);
-
-  operator []=(int index, Iterable<double> col) {
-    if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-
-  void add(Iterable<double> col) {
-    if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].add(col.elementAt(i));
-    }
-  }
-
-  void insert(int index, Iterable<double> col) {
-    if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, col.elementAt(i));
-    }
-  }
-}
-
-class Double2DColFix extends Object
-    with Double2DAxisMixin, AxisFixMixin<double>, AxisViewMixin<double>
-    implements Numeric2DAxisFix<double>, Double2DColView {
-  final Double2DFix inner;
-
-  Double2DColFix(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  Double1DFix operator [](int col) => new Double1DFixLazy(inner, col);
-
-  operator []=(int index, Iterable<double> col) {
-    if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-}
-
-class Double2DColView extends Object
-    with Double2DAxisMixin, AxisViewMixin<double>
-    implements Numeric2DAxisView<double> {
-  final Double2DView inner;
-
-  Double2DColView(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  Double1DView operator [](int col) => new Double1DViewLazy(inner, col);
-}
-
-class Double2DRow extends Object
-    with
-        Double2DAxisMixin,
-        AxisMixin<double>,
-        AxisFixMixin<double>,
-        AxisViewMixin<double>
-    implements Numeric2DAxis<double>, Double2DRowFix {
-  final Double2D inner;
-
-  Double2DRow(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  Double1DFix operator [](int row) => inner[row];
-
-  operator []=(int index, Iterable<double> row) => inner[index] = row;
-
-  void add(Iterable<double> row) => inner.add(row);
-
-  void insert(int index, Iterable<double> row) => inner.insert(index, row);
-}
-
-class Double2DRowFix extends Object
-    with Double2DAxisMixin, AxisFixMixin<double>, AxisViewMixin<double>
-    implements Numeric2DAxisFix<double>, Double2DRowView {
-  final Double2DFix inner;
-
-  Double2DRowFix(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  Double1DFix operator [](int row) => inner[row];
-
-  operator []=(int index, Iterable<double> row) => inner[index] = row;
-}
-
-class Double2DRowView extends Object
-    with Double2DAxisMixin, AxisViewMixin<double>
-    implements Numeric2DAxisView<double> {
-  final Double2DView inner;
-
-  Double2DRowView(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  Double1DView operator [](int row) => inner[row];
-}
-
-abstract class Double2DAxisMixin implements Numeric2DAxisView<double> {
+abstract class DoubleAxis2DViewMixin implements Numeric2DAxisView<double> {
   Double1D get mean {
     if (length == 0) return new Double1D.sized(0);
 
@@ -217,6 +77,107 @@ abstract class Double2DAxisMixin implements Numeric2DAxisView<double> {
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].variance;
     }
+    return ret;
+  }
+
+  @override
+  ArrayView<int> get argMax {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMax;
+    return ret;
+  }
+
+  @override
+  ArrayView<int> get argMin {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMin;
+    return ret;
+  }
+
+  @override
+  Array<double> makeArray(Iterable<double> newData) => new Double1D(newData);
+}
+
+abstract class Double2DRowViewMixin implements Numeric2DAxisView<double> {
+  Numeric2D<double> operator +(Numeric1DView<double> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] + other;
+    return ret;
+  }
+
+  Numeric2D<double> operator -(Numeric1DView<double> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] - other;
+    return ret;
+  }
+
+  Numeric2D<double> operator *(Numeric1DView<double> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] * other;
+    return ret;
+  }
+
+  Numeric2D<double> operator /(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] / other;
+    return ret;
+  }
+
+  Numeric2D<int> operator ~/(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] ~/ other;
+    return ret;
+  }
+}
+
+abstract class Double2DColViewMixin implements Numeric2DAxisView<double> {
+  Numeric2D<double> operator +(Numeric1DView<double> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] + other;
+    return ret;
+  }
+
+  Numeric2D<double> operator -(Numeric1DView<double> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] - other;
+    return ret;
+  }
+
+  Numeric2D<double> operator *(Numeric1DView<double> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] * other;
+    return ret;
+  }
+
+  Numeric2D<double> operator /(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] / other;
+    return ret;
+  }
+
+  Numeric2D<int> operator ~/(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] ~/ other;
     return ret;
   }
 }

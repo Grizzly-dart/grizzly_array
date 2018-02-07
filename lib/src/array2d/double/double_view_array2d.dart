@@ -215,4 +215,10 @@ class Double2DView extends Object
       this / other;
 
   Int2D truncDiv(/* int | Iterable<int> | Int2DArray */ other) => this ~/ other;
+
+  @override
+  Iterable<ArrayView<double>> get rows => _data;
+
+  @override
+  Iterable<ArrayView<double>> get cols => new ColsListView<double>(this);
 }

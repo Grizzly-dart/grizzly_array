@@ -66,11 +66,7 @@ class Double1DFix extends Object
   Double1DFix.own(this._data);
 
   Double1DFix.sized(int length, {double data: 0.0})
-      : _data = new Float64List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = data;
-    }
-  }
+      : _data = new List<double>.filled(length, data);
 
   factory Double1DFix.shapedLike(Iterable d, {double data: 0.0}) =>
       new Double1DFix.sized(d.length, data: data);

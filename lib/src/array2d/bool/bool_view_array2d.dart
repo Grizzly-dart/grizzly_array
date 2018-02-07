@@ -1,6 +1,8 @@
 part of grizzly.series.array2d;
 
-class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
+class Bool2DView extends Object
+    with Bool2DMixin, Array2DViewMixin<bool>
+    implements Array2DView<bool> {
   final List<Bool1DView> _data;
 
   Bool2DView(Iterable<Iterable<bool>> data) : _data = <Bool1D>[] {
@@ -180,4 +182,10 @@ class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
   Bool2DRowView get row => _row ??= new Bool2DRowView(this);
 
   Bool2DView get view => this;
+
+  @override
+  Iterable<ArrayView<bool>> get rows => _data;
+
+  @override
+  Iterable<ArrayView<bool>> get cols => new ColsListView<bool>(this);
 }

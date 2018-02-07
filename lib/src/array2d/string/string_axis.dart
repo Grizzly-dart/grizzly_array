@@ -1,158 +1,6 @@
 part of grizzly.series.array2d;
 
-class String1DFixLazy extends String1DFix {
-  String1DFixLazy(String2DFix inner, int colIndex)
-      : super(new ColList<String>(inner, colIndex));
-}
-
-class String1DViewLazy extends String1DView {
-  String1DViewLazy(String2DView inner, int colIndex)
-      : super(new ColList<String>(inner, colIndex));
-}
-
-class String2DCol extends Object
-    with
-        String2DAxisMixin,
-        AxisMixin<String>,
-        AxisFixMixin<String>,
-        AxisViewMixin<String>
-    implements Axis2D<String>, String2DColFix {
-  final String2D inner;
-
-  String2DCol(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  String1DFix operator [](int col) => new String1DFixLazy(inner, col);
-
-  operator []=(int index, Iterable<String> col) {
-    if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-
-  void add(Iterable<String> col) {
-    if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].add(col.elementAt(i));
-    }
-  }
-
-  void insert(int index, Iterable<String> col) {
-    if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
-    for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, col.elementAt(i));
-    }
-  }
-}
-
-class String2DColFix extends Object
-    with String2DAxisMixin, AxisFixMixin<String>, AxisViewMixin<String>
-    implements Axis2DFix<String>, String2DColView {
-  final String2DFix inner;
-
-  String2DColFix(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  String1DFix operator [](int col) => new String1DFixLazy(inner, col);
-
-  operator []=(int index, Iterable<String> col) {
-    if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-}
-
-class String2DColView extends Object
-    with String2DAxisMixin, AxisViewMixin<String>
-    implements Axis2DView<String> {
-  final String2DView inner;
-
-  String2DColView(this.inner);
-
-  int get length => inner.numCols;
-
-  int get otherDLength => inner.numRows;
-
-  String1DView operator [](int col) => new String1DViewLazy(inner, col);
-}
-
-class String2DRow extends Object
-    with
-        String2DAxisMixin,
-        AxisMixin<String>,
-        AxisFixMixin<String>,
-        AxisViewMixin<String>
-    implements Axis2D<String>, String2DRowFix {
-  final String2D inner;
-
-  String2DRow(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  String1DFix operator [](int row) => inner[row];
-
-  operator []=(int index, Iterable<String> row) => inner[index] = row;
-
-  void add(Iterable<String> row) => inner.add(row);
-
-  void insert(int index, Iterable<String> row) => inner.insert(index, row);
-}
-
-class String2DRowFix extends Object
-    with String2DAxisMixin, AxisFixMixin<String>, AxisViewMixin<String>
-    implements Axis2DFix<String>, String2DRowView {
-  final String2DFix inner;
-
-  String2DRowFix(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  String1DFix operator [](int row) => inner[row];
-
-  operator []=(int index, Iterable<String> row) => inner[index] = row;
-}
-
-class String2DRowView extends Object
-    with String2DAxisMixin, AxisViewMixin<String>
-    implements Axis2DView<String> {
-  final String2DView inner;
-
-  String2DRowView(this.inner);
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  String1DView operator [](int row) => inner[row];
-}
-
-abstract class String2DAxisMixin implements Axis2DView<String> {
-  String1DView operator [](int r);
-
+abstract class String2DAxisMixin implements StringAxis2DView {
   /// Minimum along y-axis
   String1D get min {
     final ret = new String1D.sized(length);
@@ -170,4 +18,21 @@ abstract class String2DAxisMixin implements Axis2DView<String> {
     }
     return ret;
   }
+
+  @override
+  ArrayView<int> get argMax {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMax;
+    return ret;
+  }
+
+  @override
+  ArrayView<int> get argMin {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMin;
+    return ret;
+  }
+
+  @override
+  StringArray makeArray(Iterable<String> newData) => new String1D(newData);
 }

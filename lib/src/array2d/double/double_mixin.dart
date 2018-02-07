@@ -1,13 +1,7 @@
 part of grizzly.series.array2d;
 
-abstract class Double2DMixin {
+abstract class Double2DMixin implements Numeric2DView<double> {
   List<Double1DView> get _data;
-
-  Double2DColView get col;
-
-  Double2DRowView get row;
-
-  Double2DView get view;
 
   Double2DView makeView(Iterable<Iterable<double>> newData) =>
       new Double2DView(newData);
@@ -17,9 +11,8 @@ abstract class Double2DMixin {
 
   Double2D make(Iterable<Iterable<double>> newData) => new Double2D(newData);
 
-  Iterable<Iterable<double>> get iterable => _data.map((a) => a.iterable);
-
-  Iterator<ArrayView<double>> get iterator => _data.iterator;
+  @override
+  Array<double> makeArray(Iterable<double> newData) => new Double1D(newData);
 
   int get numCols {
     if (numRows == 0) return 0;
@@ -32,7 +25,7 @@ abstract class Double2DMixin {
 
   bool get isSquare => numRows == numCols;
 
-  Double1DView operator [](int i) => _data[i].view;
+  Double1DView operator [](int i) => _data[i];
 
   Double2D slice(Index2D start, [Index2D end]) {
     final Index2D myShape = shape;
@@ -199,7 +192,7 @@ abstract class Double2DMixin {
 
   Double2D operator +(/* num | Iterable<num> | Numeric2DArray */ other) {
     if (other is num) {
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] += other;
@@ -209,7 +202,7 @@ abstract class Double2DMixin {
     } else if (other is Iterable<num>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] + other;
       }
@@ -217,7 +210,7 @@ abstract class Double2DMixin {
     } else if (other is Numeric2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] + other[r];
       }
@@ -229,7 +222,7 @@ abstract class Double2DMixin {
 
   Double2D operator -(/* num | Iterable<num> | Numeric2DArray */ other) {
     if (other is num) {
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] -= other;
@@ -239,7 +232,7 @@ abstract class Double2DMixin {
     } else if (other is Iterable<num>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] - other;
       }
@@ -247,7 +240,7 @@ abstract class Double2DMixin {
     } else if (other is Numeric2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] - other[r];
       }
@@ -259,7 +252,7 @@ abstract class Double2DMixin {
 
   Double2D operator *(/* num | Iterable<num> | Numeric2DArray */ other) {
     if (other is num) {
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] *= other;
@@ -269,7 +262,7 @@ abstract class Double2DMixin {
     } else if (other is Iterable<num>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] * other;
       }
@@ -291,7 +284,7 @@ abstract class Double2DMixin {
 
   Double2D operator /(/* num | Iterable<num> | Numeric2DArray */ other) {
     if (other is num) {
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           ret[r][c] /= other;
@@ -301,7 +294,7 @@ abstract class Double2DMixin {
     } else if (other is Iterable<num>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
         ret[r] = ret[r] / other;
       }
@@ -309,9 +302,9 @@ abstract class Double2DMixin {
     } else if (other is Numeric2D) {
       if (shape != other.shape)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D(_data);
+      Double2D ret = new Double2D.from(_data);
       for (int r = 0; r < numRows; r++) {
-        ret[r] = _data[r] ~/ other[r];
+        ret[r] = _data[r] / other[r];
       }
       return ret;
     }
@@ -437,7 +430,7 @@ abstract class Double2DMixin {
     return ret;
   }
 
-  Double2D get toDouble => new Double2D(_data);
+  Double2D get toDouble => new Double2D.from(_data);
 
   String toString() {
     final sb = new StringBuffer();
@@ -469,31 +462,6 @@ abstract class Double2DMixin {
   }
 
   double get std => math.sqrt(variance);
-
-  /* TODO
-  IntSeries<double> valueCounts(
-      {bool sortByValue: false,
-      bool ascending: false,
-      bool dropNull: false,
-      dynamic name: ''}) {
-    final groups = new Map<double, List<int>>();
-    for (int r = 0; r < numRows; r++) {
-      for (int c = 0; c < numCols; c++) {
-        final double v = _data[r][c];
-        if (!groups.containsKey(v)) groups[v] = <int>[0];
-        groups[v][0]++;
-      }
-    }
-    final ret = new IntSeries<double>.fromMap(groups, name: name);
-    // Sort
-    if (sortByValue) {
-      ret.sortByIndex(ascending: ascending, inplace: true);
-    } else {
-      ret.sortByValue(ascending: ascending, inplace: true);
-    }
-    return ret;
-  }
-  */
 
   Double2D get covMatrix {
     final ret = new Double2D.sized(numCols, numCols);

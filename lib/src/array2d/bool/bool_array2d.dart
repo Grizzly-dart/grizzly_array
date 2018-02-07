@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2D extends Object
-    with Bool2DMixin
+    with Bool2DMixin, Array2DViewMixin<bool>
     implements Array2D<bool>, Bool2DFix {
   final List<Bool1D> _data;
 
@@ -36,7 +36,11 @@ class Bool2D extends Object
     }
   }
 
-  factory Bool2D.copy(Bool2D data) => new Bool2D(data.iterable);
+  Bool2D.copy(Array2DView<bool> data) : _data = new List<Bool1D>(data.numRows) {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = data[i].clone();
+    }
+  }
 
   Bool2D.own(this._data) {
     // TODO check that all rows are of same length
@@ -205,31 +209,22 @@ class Bool2D extends Object
 
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final /* Iterable<bool> | ArrayView<bool> */ val) {
+  operator []=(final int i, final ArrayView<bool> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
-    Iterable<bool> v;
-    if (val is ArrayView<bool>) {
-      v = val.iterable;
-    } else if (val is Iterable<bool>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
-    }
-
     if (numRows == 0) {
-      final arr = new Bool1D(v);
+      final arr = new Bool1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
+    if (val.length != numCols) {
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Bool1D(v);
+    final arr = new Bool1D.copy(val);
 
     if (i == numRows) {
       _data.add(arr);
@@ -261,14 +256,17 @@ class Bool2D extends Object
   }
 
   @override
-  void add(Iterable<bool> row) => this[numRows] = row;
+  void add(ArrayView<bool> row) => this[numRows] = row;
 
   @override
-  void insert(int index, Iterable<bool> row) {
+  void addScalar(bool v) => _data.add(new Bool1D.sized(numCols, data: v));
+
+  @override
+  void insert(int index, ArrayView<bool> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
-    _data.insert(index, new Bool1D(row));
+    _data.insert(index, new Bool1D.copy(row));
   }
 
   Bool2DView _view;
@@ -278,4 +276,10 @@ class Bool2D extends Object
   Bool2DFix _fixed;
 
   Bool2DFix get fixed => _fixed ??= new Bool2DFix.make(_data);
+
+  @override
+  Iterable<ArrayFix<bool>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<bool>> get cols => new ColsListFix<bool>(this);
 }

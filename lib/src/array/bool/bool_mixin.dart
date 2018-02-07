@@ -97,8 +97,8 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
 
   Int1D toIntArray({int trueVal: 1, int falseVal: 0}) {
     final ret = new Int1D.shapedLike(this);
-    for(int i = 0; i < length; i++) {
-      if(this[i]) {
+    for (int i = 0; i < length; i++) {
+      if (this[i]) {
         ret[i] = trueVal;
       } else {
         ret[i] = falseVal;
@@ -107,11 +107,10 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
     return ret;
   }
 
-  String1D toStringArray(
-      {String trueVal: 'True', String falseVal: 'False'}) {
+  String1D toStringArray({String trueVal: 'True', String falseVal: 'False'}) {
     final ret = new String1D.shapedLike(this);
-    for(int i = 0; i < length; i++) {
-      if(this[i]) {
+    for (int i = 0; i < length; i++) {
+      if (this[i]) {
         ret[i] = trueVal;
       } else {
         ret[i] = falseVal;
@@ -175,7 +174,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
 
   @override
   BoolArrayView operator |(Array<bool> other) {
-    if(length != other.length) throw new Exception("Lengths don't match!");
+    if (length != other.length) throw new Exception("Lengths don't match!");
     final ret = new Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i] || other[i];
@@ -185,7 +184,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
 
   @override
   BoolArrayView operator &(Array<bool> other) {
-    if(length != other.length) throw new Exception("Lengths don't match!");
+    if (length != other.length) throw new Exception("Lengths don't match!");
     final ret = new Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i] && other[i];
