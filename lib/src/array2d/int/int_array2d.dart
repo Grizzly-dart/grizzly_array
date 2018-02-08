@@ -188,9 +188,6 @@ class Int2D extends Object
     return ret;
   }
 
-  @override
-  Iterator<Int1D> get iterator => _data.iterator;
-
   covariant Int2DCol _col;
 
   Int2DCol get col => _col ??= new Int2DCol(this);

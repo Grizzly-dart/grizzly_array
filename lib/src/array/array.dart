@@ -1,10 +1,6 @@
 library grizzly.series.array;
 
-import 'dart:math' as math;
-import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
-
-import 'package:grizzly_array/src/array2d/array2d.dart';
 
 import 'int/int_array.dart';
 import 'double/double_array.dart';

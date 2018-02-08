@@ -181,9 +181,6 @@ class Int2DFix extends Object
     return ret;
   }
 
-  @override
-  Iterator<Int1DFix> get iterator => _data.iterator;
-
   covariant Int2DColFix _col;
 
   Int2DColFix get col => _col ??= new Int2DColFix(this);

@@ -75,7 +75,7 @@ class ColsListFix<T> extends Object
   void operator []=(int index, ArrayFix<T> value) {
     // TODO check range
     if (inner is Array2DFix<T>) {
-      (inner as Array2DFix<T>).col[index] = value;
+      inner.col[index] = value;
     } else {
       throw new UnsupportedError('Array2DView is not modifiable!');
     }

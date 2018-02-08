@@ -166,9 +166,6 @@ class Int2DView extends Object
     return ret.view;
   }
 
-  @override
-  Iterator<Int1DView> get iterator => _data.iterator;
-
   Int2DColView _col;
 
   Int2DColView get col => _col ??= new Int2DColView(this);
