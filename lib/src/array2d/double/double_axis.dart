@@ -1,15 +1,5 @@
 part of grizzly.series.array2d;
 
-class Double1DFixLazy extends Double1DFix {
-  Double1DFixLazy(Double2DFix inner, int colIndex)
-      : super(new ColList<double>(inner, colIndex));
-}
-
-class Double1DViewLazy extends Double1DView {
-  Double1DViewLazy(Double2DView inner, int colIndex)
-      : super(new ColList<double>(inner, colIndex));
-}
-
 abstract class DoubleAxis2DViewMixin implements Numeric2DAxisView<double> {
   Double1D get mean {
     if (length == 0) return new Double1D.sized(0);
