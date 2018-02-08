@@ -21,7 +21,7 @@ class String2D extends Object
   }
 
   String2D.from(Iterable<ArrayView<String>> data)
-      : _data = new List<String1D>(data.length) {
+      : _data = new List<String1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
       for (ArrayView<String> item in data) {
@@ -37,8 +37,8 @@ class String2D extends Object
   }
 
   String2D.copy(Array2DView<String> data)
-      : _data = new List<String1D>(data.numRows) {
-    for(int i = 0; i < data.numRows; i++) {
+      : _data = new List<String1D>()..length = data.numRows {
+    for (int i = 0; i < data.numRows; i++) {
       _data[i] = data[i].clone();
     }
   }
@@ -67,25 +67,26 @@ class String2D extends Object
   }
 
   String2D.repeatRow(ArrayView<String> row, [int numRows = 1])
-      : _data = new List<String1D>(numRows) {
+      : _data = new List<String1D>()..length = numRows {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.copy(row);
     }
   }
 
   String2D.repeatCol(ArrayView<String> column, [int numCols = 1])
-      : _data = new List<String1D>(column.length) {
+      : _data = new List<String1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.sized(numCols, data: column[i]);
     }
   }
 
-  String2D.aRow(ArrayView<String> row) : _data = new List<String1D>(1) {
+  String2D.aRow(ArrayView<String> row)
+      : _data = new List<String1D>()..length = 1 {
     _data[0] = new String1D.copy(row);
   }
 
   String2D.aCol(ArrayView<String> column)
-      : _data = new List<String1D>(column.length) {
+      : _data = new List<String1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.single(column[i]);
     }

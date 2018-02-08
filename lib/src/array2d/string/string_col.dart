@@ -56,7 +56,7 @@ class String2DColFix extends Object
         ColFixMixin<String>,
         AxisFixMixin<String>,
         AxisViewMixin<String>,
-String2DAxisMixin
+        String2DAxisMixin
     implements Axis2DFix<String>, String2DColView {
   final String2DFix inner;
 

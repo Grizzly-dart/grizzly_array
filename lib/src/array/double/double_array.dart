@@ -1,7 +1,6 @@
 library grizzly.series.array.double;
 
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
@@ -21,15 +20,15 @@ class Double1D extends Object
   List<double> _data;
 
   Double1D([Iterable<double> data = const []])
-      : _data = new Float64List.fromList(data.toList());
+      : _data = new List<double>.from(data);
 
   Double1D.copy(ArrayView<double> other)
-      : _data = new List<double>.from(other.iterable);
+      : _data = new List<double>.from(other.asIterable);
 
   Double1D.own(this._data);
 
   Double1D.sized(int length, {double data: 0.0})
-      : _data = new List<double>.filled(length, data);
+      : _data = new List<double>.filled(length, data, growable: true);
 
   factory Double1D.shapedLike(Iterable d, {double data: 0.0}) =>
       new Double1D.sized(d.length, data: data);
@@ -37,11 +36,7 @@ class Double1D extends Object
   Double1D.single(double data) : _data = new List<double>.from(<double>[data]);
 
   Double1D.gen(int length, double maker(int index))
-      : _data = new List<double>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<double>.generate(length, maker);
 
   factory Double1D.fromNum(iterable) {
     if (iterable is ArrayView<num>) {
@@ -59,7 +54,7 @@ class Double1D extends Object
     throw new UnsupportedError('Unknown type!');
   }
 
-  Iterable<double> get iterable => _data;
+  Iterable<double> get asIterable => _data;
 
   Iterator<double> get iterator => _data.iterator;
 
@@ -281,7 +276,7 @@ class Double1D extends Object
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     int retLength = mask.count(true);
-    final ret = new Float64List(retLength);
+    final ret = new List<double>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
       if (mask[i]) ret[idx++] = _data[i];
@@ -295,7 +290,7 @@ class Double1D extends Object
     final poss = pos.unique()..sort(descending: true);
     if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
 
-    for (int pos in poss.iterable) {
+    for (int pos in poss.asIterable) {
       _data.removeAt(pos);
     }
   }

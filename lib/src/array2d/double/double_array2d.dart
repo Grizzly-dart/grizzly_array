@@ -21,7 +21,7 @@ class Double2D extends Object
   }
 
   Double2D.from(Iterable<ArrayView<double>> data)
-      : _data = new List<Double1D>(data.length) {
+      : _data = new List<Double1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Double1DView item in data) {
@@ -37,7 +37,7 @@ class Double2D extends Object
   }
 
   Double2D.copy(Array2DView<double> data)
-      : _data = new List<Double1D>(data.numRows) {
+      : _data = new List<Double1D>()..length = data.numRows {
     for (int i = 0; i < data.numRows; i++) {
       _data[i] = data[i].clone();
     }
@@ -88,25 +88,26 @@ class Double2D extends Object
   }
 
   Double2D.repeatRow(ArrayView<double> row, [int numRows = 1])
-      : _data = new List<Double1D>(numRows) {
+      : _data = new List<Double1D>()..length = numRows {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Double1D.copy(row);
     }
   }
 
   Double2D.repeatCol(ArrayView<double> column, [int numCols = 1])
-      : _data = new List<Double1D>(column.length) {
+      : _data = new List<Double1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Double1D.sized(numCols, data: column[i]);
     }
   }
 
-  Double2D.aRow(ArrayView<double> row) : _data = new List<Double1D>(1) {
+  Double2D.aRow(ArrayView<double> row)
+      : _data = new List<Double1D>()..length = 1 {
     _data[0] = new Double1D.copy(row);
   }
 
   Double2D.aCol(ArrayView<double> column)
-      : _data = new List<Double1D>(column.length) {
+      : _data = new List<Double1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Double1D.single(column[i]);
     }

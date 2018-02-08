@@ -39,11 +39,13 @@ class Int2DFix extends Object
   Int2DFix._takeOwnership(this._data);
 
   Int2DFix.sized(int rows, int columns, {int data: 0})
-      : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns));
+      : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns),
+            growable: false);
 
   Int2DFix.shaped(Index2D shape, {int data: 0})
       : _data = new List<Int1D>.generate(
-            shape.row, (_) => new Int1D.sized(shape.col, data: data));
+            shape.row, (_) => new Int1D.sized(shape.col, data: data),
+            growable: false);
 
   factory Int2DFix.shapedLike(Array2DView like, {int data: 0}) =>
       new Int2DFix.sized(like.numRows, like.numCols, data: data);

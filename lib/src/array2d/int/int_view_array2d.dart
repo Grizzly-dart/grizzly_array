@@ -23,11 +23,13 @@ class Int2DView extends Object
   Int2DView.make(this._data);
 
   Int2DView.sized(int rows, int columns, {int data: 0})
-      : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns));
+      : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns),
+            growable: false);
 
   Int2DView.shaped(Index2D shape, {int data: 0})
       : _data = new List<Int1D>.generate(
-            shape.row, (_) => new Int1D.sized(shape.col, data: data));
+            shape.row, (_) => new Int1D.sized(shape.col, data: data),
+            growable: false);
 
   factory Int2DView.shapedLike(Array2DView like, {int data: 0}) =>
       new Int2DView.sized(like.numRows, like.numCols, data: data);

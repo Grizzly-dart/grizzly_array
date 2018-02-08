@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class Bool2DMixin implements Array2DView<bool> {
+abstract class Bool2DViewMixin implements Array2DView<bool> {
   List<Bool1DView> get _data;
 
   Bool2DColView get col;

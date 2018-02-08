@@ -110,7 +110,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     final double vLow = v - absTol;
     final double vHigh = v + absTol;
     int ret = 0;
-    for (double item in iterable) {
+    for (double item in asIterable) {
       if (item > vLow && item < vHigh) ret++;
     }
     return ret;
@@ -254,7 +254,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   }
 
   Double1D get cumsum {
-    final Double1D ret = new Double1D(new Float64List(length));
+    final Double1D ret = new Double1D.sized(length);
     double sum = 0.0;
     for (int i = 0; i < length; i++) {
       final double d = this[i];
@@ -269,7 +269,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   }
 
   Double1D get cumprod {
-    final Double1D ret = new Double1D(new Float64List(length));
+    final Double1D ret = new Double1D.sized(length);
     double prod = 1.0;
     for (int i = 0; i < length; i++) {
       final double d = this[i];
@@ -469,7 +469,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   bool contains(double value, {double absTol: 1e-8}) {
     double vLow = value - absTol;
     double vHigh = value + absTol;
-    for (double el in iterable) {
+    for (double el in asIterable) {
       if (el > vLow && el < vHigh) return true;
     }
     return false;

@@ -6,7 +6,7 @@ class Double1DView extends Object
   final List<double> _data;
 
   Double1DView(Iterable<double> iterable)
-      : _data = new Float64List.fromList(iterable.toList());
+      : _data = new List<double>.from(iterable);
 
   Double1DView.own(this._data);
 
@@ -16,19 +16,14 @@ class Double1DView extends Object
   factory Double1DView.shapedLike(Iterable d, {double data: 0.0}) =>
       new Double1DView.sized(d.length, data: data);
 
-  Double1DView.single(double data) : _data = new Float64List(1) {
-    _data[0] = data;
-  }
+  Double1DView.single(double data)
+      : _data = new List<double>.from([data], growable: false);
 
   Double1DView.gen(int length, double maker(int index))
-      : _data = new Float64List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<double>.generate(length, maker, growable: false);
 
   factory Double1DView.fromNum(Iterable<num> iterable) {
-    final list = new Float64List(iterable.length);
+    final list = new List<double>(iterable.length);
     final Iterator<num> ite = iterable.iterator;
     ite.moveNext();
     for (int i = 0; i < list.length; i++) {
@@ -38,7 +33,7 @@ class Double1DView extends Object
     return new Double1DView.own(list);
   }
 
-  Iterable<double> get iterable => _data;
+  Iterable<double> get asIterable => _data;
 
   Iterator<double> get iterator => _data.iterator;
 

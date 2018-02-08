@@ -8,7 +8,7 @@ class String1DView extends Object
   String1DView(Iterable<String> data) : _data = new List<String>.from(data);
 
   String1DView.copy(ArrayView<String> other)
-      : _data = new List<String>.from(other.iterable);
+      : _data = new List<String>.from(other.asIterable);
 
   String1DView.own(this._data);
 
@@ -23,13 +23,9 @@ class String1DView extends Object
   }
 
   String1DView.gen(int length, String maker(int index))
-      : _data = new List<String>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<String>.generate(length, maker, growable: false);
 
-  Iterable<String> get iterable => _data;
+  Iterable<String> get asIterable => _data;
 
   Iterator<String> get iterator => _data.iterator;
 

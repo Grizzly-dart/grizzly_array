@@ -163,7 +163,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     return ret;
   }
 
-  String join([String separator = ""]) => iterable.join(separator);
+  String join([String separator = ""]) => asIterable.join(separator);
 
   Array<int> get lengths {
     final ret = new Int1D.sized(length);
@@ -232,5 +232,5 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   }
 
   @override
-  bool contains(String value) => iterable.contains(value);
+  bool contains(String value) => asIterable.contains(value);
 }

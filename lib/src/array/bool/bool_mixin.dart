@@ -161,7 +161,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   }
 
   @override
-  bool contains(bool value) => iterable.contains(value);
+  bool contains(bool value) => asIterable.contains(value);
 
   @override
   BoolArrayView operator ~() {

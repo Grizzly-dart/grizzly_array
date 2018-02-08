@@ -135,7 +135,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   Int1D get cumsum {
-    final ret = new Int1D(new Int32List(length));
+    final ret = new Int1D.sized(length);
     int sum = 0;
     for (int i = 0; i < length; i++) {
       final int d = this[i];
@@ -150,7 +150,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   Int1D get cumprod {
-    final ret = new Int1D(new Int32List(length));
+    final ret = new Int1D.sized(length);
     int prod = 1;
     for (int i = 0; i < length; i++) {
       final int d = this[i];
@@ -371,5 +371,5 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   @override
-  bool contains(int value) => iterable.contains(value);
+  bool contains(int value) => asIterable.contains(value);
 }

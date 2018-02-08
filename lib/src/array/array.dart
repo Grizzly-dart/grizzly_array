@@ -1,8 +1,6 @@
 library grizzly.series.array;
 
 import 'dart:math' as math;
-import 'dart:collection';
-import 'dart:typed_data';
 import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 

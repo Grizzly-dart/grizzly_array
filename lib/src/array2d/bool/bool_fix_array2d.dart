@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2DFix extends Object
-    with Bool2DMixin, Array2DViewMixin<bool>
+    with Bool2DViewMixin, Array2DViewMixin<bool>
     implements Array2DFix<bool>, Bool2DView {
   final List<Bool1DFix> _data;
 
@@ -24,11 +24,13 @@ class Bool2DFix extends Object
 
   Bool2DFix.sized(int numRows, int numCols, {bool data: false})
       : _data = new List<Bool1D>.generate(
-            numRows, (_) => new Bool1D.sized(numCols, data: data));
+            numRows, (_) => new Bool1D.sized(numCols, data: data),
+            growable: false);
 
   Bool2DFix.shaped(Index2D shape, {bool data: false})
       : _data = new List<Bool1D>.generate(
-            shape.row, (_) => new Bool1D.sized(shape.col, data: data));
+            shape.row, (_) => new Bool1D.sized(shape.col, data: data),
+            growable: false);
 
   factory Bool2DFix.shapedLike(Array2DView like, {bool data: false}) =>
       new Bool2DFix.sized(like.numRows, like.numCols, data: data);

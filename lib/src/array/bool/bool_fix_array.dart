@@ -1,7 +1,7 @@
 part of grizzly.series.array.bool;
 
 class Bool1DFix extends Object
-    with Bool1DViewMixin, Array1DViewMixin<bool>, Array1DFixMixin<bool>
+    with Array1DViewMixin<bool>, Array1DFixMixin<bool>, Bool1DViewMixin
     implements ArrayFix<bool>, Bool1DView {
   final List<bool> _data;
 
@@ -9,12 +9,12 @@ class Bool1DFix extends Object
       : _data = new List<bool>.from(data, growable: false);
 
   Bool1DFix.copy(ArrayView<bool> other)
-      : _data = new List<bool>.from(other.iterable);
+      : _data = new List<bool>.from(other.asIterable);
 
   Bool1DFix.own(this._data);
 
   Bool1DFix.sized(int length, {bool data: false})
-      : _data = new List<bool>.filled(length, data, growable: false);
+      : _data = new List<bool>.filled(length, data);
 
   factory Bool1DFix.shapedLike(Iterable d, {bool data: false}) =>
       new Bool1DFix.sized(d.length, data: data);
@@ -22,13 +22,9 @@ class Bool1DFix extends Object
   Bool1DFix.single([bool data = false]) : _data = <bool>[data];
 
   Bool1DFix.gen(int length, bool maker(int index))
-      : _data = new List<bool>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<bool>.generate(length, maker, growable: false);
 
-  Iterable<bool> get iterable => _data;
+  Iterable<bool> get asIterable => _data;
 
   Iterator<bool> get iterator => _data.iterator;
 

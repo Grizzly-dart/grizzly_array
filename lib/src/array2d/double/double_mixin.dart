@@ -273,7 +273,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
       final ret = new Double2D.sized(numRows, other.numCols);
       for (int r = 0; r < ret.numRows; r++) {
         for (int c = 0; c < ret.numCols; c++) {
-          ret[r][c] = _data[r].dot(other.col[c].iterable);
+          ret[r][c] = _data[r].dot(other.col[c].asIterable);
         }
       }
       return ret;
@@ -482,7 +482,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
   bool isAllClose(Numeric2D v, {double absTol: 1e-8}) {
     if (v.shape != shape) return false;
     for (int i = 0; i < numRows; i++) {
-      if (_data[i].isAllClose(v[i].iterable)) return false;
+      if (_data[i].isAllClose(v[i].asIterable)) return false;
     }
     return true;
   }

@@ -1,37 +1,5 @@
 part of grizzly.series.array.int;
 
-class LengthMismatch implements Exception {
-  final int expected;
-
-  final int found;
-
-  final String subject;
-
-  const LengthMismatch({this.expected, this.found, this.subject});
-
-  String toString() {
-    final sb = new StringBuffer();
-
-    sb.write('Length mismatch');
-
-    if (subject != null) sb.write(' for $subject');
-
-    if (expected != null) {
-      sb.write('! Expected $expected');
-
-      if (found != null) {
-        sb.write(' found $found');
-      }
-    }
-
-    sb.write('!');
-    return sb.toString();
-  }
-}
-
-LengthMismatch lengthMismatch({int expected, int found, String subject}) =>
-    new LengthMismatch(expected: expected, found: found, subject: subject);
-
 void checkLengths(ArrayView expected, ArrayView found, {String subject}) {
   if (expected.length != found.length)
     new LengthMismatch(
@@ -43,32 +11,27 @@ class Int1DView extends Object
     implements Numeric1DView<int> {
   final List<int> _data;
 
-  Int1DView(Iterable<int> data) : _data = new Int32List.fromList(data.toList());
+  Int1DView(Iterable<int> data)
+      : _data = new List<int>.from(data, growable: false);
 
   /// Creates [Int1DView] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1DView] because it involves no
   /// copying.
   Int1DView.own(this._data);
 
-  Int1DView.sized(int length, {int data: 0}) : _data = new Int32List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = data;
-    }
-  }
+  Int1DView.sized(int length, {int data: 0})
+      : _data = new List<int>.filled(length, data);
 
   factory Int1DView.shapedLike(ArrayView d, {int data: 0}) =>
       new Int1DView.sized(d.length, data: data);
 
-  Int1DView.single(int data) : _data = new Int32List.fromList(<int>[data]);
+  Int1DView.single(int data)
+      : _data = new List<int>.from(<int>[data], growable: false);
 
   Int1DView.gen(int length, int maker(int index))
-      : _data = new Int32List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<int>.generate(length, maker, growable: false);
 
-  Iterable<int> get iterable => _data;
+  Iterable<int> get asIterable => _data;
 
   Iterator<int> get iterator => _data.iterator;
 

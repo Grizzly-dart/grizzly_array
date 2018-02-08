@@ -20,7 +20,8 @@ class Int2D extends Object
     }
   }
 
-  Int2D.from(Iterable<Int1DView> data) : _data = new List<Int1D>(data.length) {
+  Int2D.from(Iterable<Int1DView> data)
+      : _data = new List<Int1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Int1DView item in data) {
@@ -35,7 +36,8 @@ class Int2D extends Object
     }
   }
 
-  Int2D.copy(Array2DView<int> data) : _data = new List<Int1D>(data.numRows) {
+  Int2D.copy(Array2DView<int> data)
+      : _data = new List<Int1D>()..length = data.numRows {
     for (int i = 0; i < data.numRows; i++) {
       _data[i] = data[i].clone();
     }
@@ -57,24 +59,25 @@ class Int2D extends Object
       new Int2D.sized(like.numRows, like.numCols, data: data);
 
   Int2D.repeatRow(ArrayView<int> row, [int numRows = 1])
-      : _data = new List<Int1D>(numRows) {
+      : _data = new List<Int1D>()..length = numRows {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Int1D.copy(row);
     }
   }
 
   Int2D.repeatCol(ArrayView<int> column, [int numCols = 1])
-      : _data = new List<Int1D>(column.length) {
+      : _data = new List<Int1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Int1D.sized(numCols, data: column[i]);
     }
   }
 
-  Int2D.aRow(ArrayView<int> row) : _data = new List<Int1D>(1) {
+  Int2D.aRow(ArrayView<int> row) : _data = new List<Int1D>()..length = 1 {
     _data[0] = new Int1D.copy(row);
   }
 
-  Int2D.aCol(ArrayView<int> column) : _data = new List<Int1D>(column.length) {
+  Int2D.aCol(ArrayView<int> column)
+      : _data = new List<Int1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Int1D.single(column[i]);
     }
@@ -390,7 +393,7 @@ class Int2D extends Object
       final ret = new Int2D.sized(numRows, other.numCols);
       for (int r = 0; r < ret.numRows; r++) {
         for (int c = 0; c < ret.numCols; c++) {
-          ret[r][c] = _data[r].dot(other.col[c].iterable);
+          ret[r][c] = _data[r].dot(other.col[c].asIterable);
         }
       }
       return ret;

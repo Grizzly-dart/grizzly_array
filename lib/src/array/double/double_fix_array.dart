@@ -61,7 +61,7 @@ class Double1DFix extends Object
   final List<double> _data;
 
   Double1DFix(Iterable<double> data)
-      : _data = new Float64List.fromList(data.toList());
+      : _data = new List<double>.from(data, growable: false);
 
   Double1DFix.own(this._data);
 
@@ -72,14 +72,10 @@ class Double1DFix extends Object
       new Double1DFix.sized(d.length, data: data);
 
   Double1DFix.single(double data)
-      : _data = new Float64List.fromList(<double>[data]);
+      : _data = new List<double>.from(<double>[data], growable: false);
 
   Double1DFix.gen(int length, double maker(int index))
-      : _data = new Float64List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<double>.generate(length, maker, growable: false);
 
   factory Double1DFix.fromNum(iterable) {
     if (iterable is Numeric1DView) {
@@ -97,7 +93,7 @@ class Double1DFix extends Object
     throw new UnsupportedError('Unknown type!');
   }
 
-  Iterable<double> get iterable => _data;
+  Iterable<double> get asIterable => _data;
 
   Iterator<double> get iterator => _data.iterator;
 
@@ -317,7 +313,7 @@ class Double1DFix extends Object
       }
       return this;
     }
-    return new Double1DFix(this.iterable).floorToDouble();
+    return new Double1DFix(this.asIterable).floorToDouble();
   }
 
   Double1DFix ceilToDouble({bool self: false}) {
@@ -327,7 +323,7 @@ class Double1DFix extends Object
       }
       return this;
     }
-    return new Double1DFix(this.iterable).ceilToDouble();
+    return new Double1DFix(this.asIterable).ceilToDouble();
   }
 
   void sort({bool descending: false}) {

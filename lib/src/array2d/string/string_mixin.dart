@@ -20,7 +20,7 @@ abstract class String2DMixin implements Array2DView<String> {
   @override
   Array<String> makeArray(Iterable<String> newData) => new String1D(newData);
 
-  Iterable<Iterable<String>> get iterable => _data.map((a) => a.iterable);
+  Iterable<Iterable<String>> get iterable => _data.map((a) => a.asIterable);
 
   Iterator<ArrayView<String>> get iterator => _data.iterator;
 

@@ -24,11 +24,13 @@ class Double2DView extends Object
 
   Double2DView.sized(int numRows, int numCols, {double data: 0.0})
       : _data = new List<Double1D>.generate(
-            numRows, (_) => new Double1D.sized(numCols, data: data));
+            numRows, (_) => new Double1D.sized(numCols, data: data),
+            growable: false);
 
   Double2DView.shaped(Index2D shape, {double data: 0.0})
       : _data = new List<Double1D>.generate(
-            shape.row, (_) => new Double1D.sized(shape.col, data: data));
+            shape.row, (_) => new Double1D.sized(shape.col, data: data),
+            growable: false);
 
   factory Double2DView.shapedLike(Array2DView like, {double data: 0.0}) =>
       new Double2DView.sized(like.numRows, like.numCols, data: data);

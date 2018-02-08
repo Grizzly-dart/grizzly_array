@@ -24,11 +24,13 @@ class String2DView extends Object
 
   String2DView.sized(int numRows, int numCols, {String data: ''})
       : _data = new List<String1D>.generate(
-            numRows, (_) => new String1D.sized(numCols, data: data));
+            numRows, (_) => new String1D.sized(numCols, data: data),
+            growable: false);
 
   String2DView.shaped(Index2D shape, {String data: ''})
       : _data = new List<String1D>.generate(
-            shape.row, (_) => new String1D.sized(shape.col, data: data));
+            shape.row, (_) => new String1D.sized(shape.col, data: data),
+            growable: false);
 
   factory String2DView.shapedLike(Array2DView like, {String data: ''}) =>
       new String2DView.sized(like.numRows, like.numCols, data: data);

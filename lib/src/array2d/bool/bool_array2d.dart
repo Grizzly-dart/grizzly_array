@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2D extends Object
-    with Bool2DMixin, Array2DViewMixin<bool>
+    with Bool2DViewMixin, Array2DViewMixin<bool>
     implements Array2D<bool>, Bool2DFix {
   final List<Bool1D> _data;
 
@@ -21,7 +21,7 @@ class Bool2D extends Object
   }
 
   Bool2D.from(Iterable<Bool1DView> data)
-      : _data = new List<Bool1D>(data.length) {
+      : _data = new List<Bool1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Bool1DView item in data) {
@@ -36,7 +36,8 @@ class Bool2D extends Object
     }
   }
 
-  Bool2D.copy(Array2DView<bool> data) : _data = new List<Bool1D>(data.numRows) {
+  Bool2D.copy(Array2DView<bool> data)
+      : _data = new List<Bool1D>()..length = data.numRows {
     for (int i = 0; i < data.numRows; i++) {
       _data[i] = data[i].clone();
     }
@@ -66,25 +67,25 @@ class Bool2D extends Object
   }
 
   Bool2D.repeatRow(ArrayView<bool> row, [int numRows = 1])
-      : _data = new List<Bool1D>(numRows) {
+      : _data = new List<Bool1D>()..length = numRows {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.copy(row);
     }
   }
 
   Bool2D.repeatCol(ArrayView<bool> column, [int numCols = 1])
-      : _data = new List<Bool1D>(column.length) {
+      : _data = new List<Bool1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.sized(numCols, data: column[i]);
     }
   }
 
-  Bool2D.aRow(ArrayView<bool> row) : _data = new List<Bool1D>(1) {
+  Bool2D.aRow(ArrayView<bool> row) : _data = new List<Bool1D>()..length = 1 {
     _data[0] = new Bool1D.copy(row);
   }
 
   Bool2D.aCol(ArrayView<bool> column)
-      : _data = new List<Bool1D>(column.length) {
+      : _data = new List<Bool1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.single(column[i]);
     }
