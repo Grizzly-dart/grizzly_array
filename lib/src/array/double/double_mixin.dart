@@ -474,4 +474,11 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     }
     return false;
   }
+
+  @override
+  Double1DFix abs() {
+    final ret = new Double1D.sized(length);
+    for (int i = 0; i < length; i++) ret[i] = this[i].abs();
+    return ret;
+  }
 }

@@ -8,12 +8,15 @@ class Double1DView extends Object
   Double1DView(Iterable<double> iterable)
       : _data = new List<double>.from(iterable);
 
+  Double1DView.copy(IterView<double> other)
+      : _data = new List<double>.from(other.asIterable, growable: false);
+
   Double1DView.own(this._data);
 
   Double1DView.sized(int length, {double data: 0.0})
       : _data = new List<double>.filled(length, data);
 
-  factory Double1DView.shapedLike(Iterable d, {double data: 0.0}) =>
+  factory Double1DView.shapedLike(IterView d, {double data: 0.0}) =>
       new Double1DView.sized(d.length, data: data);
 
   Double1DView.single(double data)

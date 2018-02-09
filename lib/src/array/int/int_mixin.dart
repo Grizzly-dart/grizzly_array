@@ -372,4 +372,10 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
 
   @override
   bool contains(int value) => asIterable.contains(value);
+
+  Int1D abs() {
+    final ret = new Int1D.sized(length);
+    for (int i = 0; i < length; i++) ret[i] = this[i].abs();
+    return ret;
+  }
 }

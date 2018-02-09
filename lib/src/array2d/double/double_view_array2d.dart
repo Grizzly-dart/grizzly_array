@@ -5,7 +5,7 @@ class Double2DView extends Object
     implements Numeric2DView<double> {
   final List<Double1DView> _data;
 
-  Double2DView(Iterable<Iterable<double>> data) : _data = <Double1D>[] {
+  Double2DView(Iterable<Iterable<double>> data) : _data = <Double1DFix>[] {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Iterable<double> item in data) {
@@ -17,69 +17,6 @@ class Double2DView extends Object
       for (Iterable<double> item in data) {
         _data.add(new Double1D(item));
       }
-    }
-  }
-
-  Double2DView.make(this._data);
-
-  Double2DView.sized(int numRows, int numCols, {double data: 0.0})
-      : _data = new List<Double1D>.generate(
-            numRows, (_) => new Double1D.sized(numCols, data: data),
-            growable: false);
-
-  Double2DView.shaped(Index2D shape, {double data: 0.0})
-      : _data = new List<Double1D>.generate(
-            shape.row, (_) => new Double1D.sized(shape.col, data: data),
-            growable: false);
-
-  factory Double2DView.shapedLike(Array2DView like, {double data: 0.0}) =>
-      new Double2DView.sized(like.numRows, like.numCols, data: data);
-
-  factory Double2DView.diagonal(Iterable<double> diagonal) {
-    final ret = new Double2DFix.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
-    }
-    return ret.view;
-  }
-
-  Double2DView.fromNum(Iterable<Iterable<num>> data) : _data = <Double1D>[] {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (Iterable<num> item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
-
-      for (Iterable<num> item in data) {
-        _data.add(new Double1D.fromNum(item));
-      }
-    }
-  }
-
-  Double2DView.repeatRow(Iterable<double> row, [int numRows = 1])
-      : _data = new List<Double1D>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D(row);
-    }
-  }
-
-  Double2DView.repeatCol(Iterable<double> column, [int numCols = 1])
-      : _data = new List<Double1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.sized(numCols, data: column.elementAt(i));
-    }
-  }
-
-  Double2DView.aRow(Iterable<double> row) : _data = new List<Double1D>(1) {
-    _data[0] = new Double1D(row);
-  }
-
-  Double2DView.aCol(Iterable<double> column)
-      : _data = new List<Double1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.single(column.elementAt(i));
     }
   }
 
@@ -105,6 +42,99 @@ class Double2DView extends Object
     return ret;
   }
 
+  Double2DView.from(Iterable<IterView<double>> data)
+      : _data = new List<Double1DView>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (IterView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        IterView<double> item = data.elementAt(i);
+        _data[i] = new Double1DView.copy(item);
+      }
+    }
+  }
+
+  Double2DView.copy(Array2DView<double> data)
+      : _data = new List<Double1DView>(data.numRows) {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = new Double1DView.copy(data[i]);
+    }
+  }
+
+  Double2DView.own(this._data) {
+    // TODO check that all rows are of same length
+  }
+
+  Double2DView.sized(int numRows, int numCols, {double data: 0.0})
+      : _data = new List<Double1DFix>.generate(
+            numRows, (_) => new Double1D.sized(numCols, data: data),
+            growable: false);
+
+  Double2DView.shaped(Index2D shape, {double data: 0.0})
+      : _data = new List<Double1DFix>.generate(
+            shape.row, (_) => new Double1D.sized(shape.col, data: data),
+            growable: false);
+
+  factory Double2DView.shapedLike(Array2DView like, {double data: 0.0}) =>
+      new Double2DView.sized(like.numRows, like.numCols, data: data);
+
+  factory Double2DView.diagonal(Iterable<double> diagonal) {
+    final ret = new List<Double1DView>(diagonal.length);
+    for (int i = 0; i < diagonal.length; i++) {
+      final row = new List<double>.filled(diagonal.length, 0.0);
+      row[i] = diagonal.elementAt(i);
+      ret[i] = new Double1DView.own(row);
+    }
+    return new Double2DView.own(ret);
+  }
+
+  Double2DView.fromNum(Iterable<Iterable<num>> data)
+      : _data = new List<Double1DView>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (Iterable<num> item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        Iterable<num> item = data.elementAt(i);
+        _data[i] = new Double1DView.fromNum(item);
+      }
+    }
+  }
+
+  Double2DView.repeatRow(IterView<double> row, [int numRows = 1])
+      : _data = new List<Double1DView>(numRows) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Double1DView.copy(row);
+    }
+  }
+
+  Double2DView.repeatCol(IterView<double> column, [int numCols = 1])
+      : _data = new List<Double1DView>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Double1DView.sized(numCols, data: column[i]);
+    }
+  }
+
+  Double2DView.aRow(IterView<double> row) : _data = new List<Double1DFix>(1) {
+    _data[0] = new Double1DView.copy(row);
+  }
+
+  Double2DView.aCol(IterView<double> column)
+      : _data = new List<Double1DView>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Double1DView.single(column[i]);
+    }
+  }
+
   factory Double2DView.genRows(
       int numRows, Iterable<double> rowMaker(int index)) {
     final rows = <Double1DView>[];
@@ -116,7 +146,7 @@ class Double2DView extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Double1DView(v));
     }
-    return new Double2DView.make(rows);
+    return new Double2DView.own(rows);
   }
 
   factory Double2DView.genCols(
@@ -154,7 +184,7 @@ class Double2DView extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Double1DView(v));
     }
-    return new Double2DView.make(rows);
+    return new Double2DView.own(rows);
   }
 
   static Double2DView buildCols<T>(

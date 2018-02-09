@@ -22,7 +22,7 @@ class Int1D extends Object
   Int1D([Iterable<int> data = const <int>[]])
       : _data = new List<int>.from(data);
 
-  Int1D.copy(ArrayView<int> other)
+  Int1D.copy(IterView<int> other)
       : _data = new List<int>.from(other.asIterable);
 
   /// Creates [Int1D] from [_data] and also takes ownership of it. It is
@@ -33,7 +33,7 @@ class Int1D extends Object
   Int1D.sized(int length, {int data: 0})
       : _data = new List<int>.filled(length, data, growable: true);
 
-  Int1D.shapedLike(ArrayView d, {int data: 0})
+  Int1D.shapedLike(IterView d, {int data: 0})
       : _data = new List<int>.filled(d.length, data);
 
   Int1D.single(int data) : _data = <int>[data];

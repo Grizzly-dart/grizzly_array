@@ -29,7 +29,7 @@ class String1D extends Object
   String1D.sized(int length, {String data})
       : _data = new List<String>.filled(length, data, growable: true);
 
-  factory String1D.shapedLike(ArrayView d, {String data}) =>
+  factory String1D.shapedLike(IterView d, {String data}) =>
       new String1D.sized(d.length, data: data);
 
   String1D.single(String data) : _data = <String>[data];

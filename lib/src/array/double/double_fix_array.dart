@@ -63,12 +63,15 @@ class Double1DFix extends Object
   Double1DFix(Iterable<double> data)
       : _data = new List<double>.from(data, growable: false);
 
+  Double1DFix.copy(IterView<double> other)
+      : _data = new List<double>.from(other.asIterable, growable: false);
+
   Double1DFix.own(this._data);
 
   Double1DFix.sized(int length, {double data: 0.0})
       : _data = new List<double>.filled(length, data);
 
-  factory Double1DFix.shapedLike(Iterable d, {double data: 0.0}) =>
+  factory Double1DFix.shapedLike(IterView d, {double data: 0.0}) =>
       new Double1DFix.sized(d.length, data: data);
 
   Double1DFix.single(double data)

@@ -5,7 +5,7 @@ class Double2DFix extends Object
     implements Numeric2DFix<double>, Double2DView {
   final List<Double1DFix> _data;
 
-  Double2DFix(Iterable<Iterable<double>> data) : _data = <Double1D>[] {
+  Double2DFix(Iterable<Iterable<double>> data) : _data = <Double1DFix>[] {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Iterable<double> item in data) {
@@ -17,69 +17,6 @@ class Double2DFix extends Object
       for (Iterable<double> item in data) {
         _data.add(new Double1D(item));
       }
-    }
-  }
-
-  Double2DFix.make(this._data);
-
-  Double2DFix.sized(int numRows, int numCols, {double data: 0.0})
-      : _data = new List<Double1D>.generate(
-            numRows, (_) => new Double1D.sized(numCols, data: data),
-            growable: false);
-
-  Double2DFix.shaped(Index2D shape, {double data: 0.0})
-      : _data = new List<Double1D>.generate(
-            shape.row, (_) => new Double1D.sized(shape.col, data: data),
-            growable: false);
-
-  factory Double2DFix.shapedLike(Array2DView like, {double data: 0.0}) =>
-      new Double2DFix.sized(like.numRows, like.numCols, data: data);
-
-  factory Double2DFix.diagonal(Iterable<double> diagonal) {
-    final ret = new Double2DFix.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
-    }
-    return ret;
-  }
-
-  Double2DFix.fromNum(Iterable<Iterable<num>> data) : _data = <Double1D>[] {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (Iterable<num> item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
-
-      for (Iterable<num> item in data) {
-        _data.add(new Double1D.fromNum(item));
-      }
-    }
-  }
-
-  Double2DFix.repeatRow(Iterable<double> row, [int numRows = 1])
-      : _data = new List<Double1D>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D(row);
-    }
-  }
-
-  Double2DFix.repeatCol(Iterable<double> column, [int numCols = 1])
-      : _data = new List<Double1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.sized(numCols, data: column.elementAt(i));
-    }
-  }
-
-  Double2DFix.aRow(Iterable<double> row) : _data = new List<Double1D>(1) {
-    _data[0] = new Double1D(row);
-  }
-
-  Double2DFix.aCol(Iterable<double> column)
-      : _data = new List<Double1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.single(column.elementAt(i));
     }
   }
 
@@ -105,6 +42,95 @@ class Double2DFix extends Object
     return ret;
   }
 
+  Double2DFix.from(Iterable<IterView<double>> data)
+      : _data = new List<Double1DFix>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (IterView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        IterView<double> item = data.elementAt(i);
+        _data[i] = new Double1DFix.copy(item);
+      }
+    }
+  }
+
+  Double2DFix.copy(Array2DView<double> data)
+      : _data = new List<Double1DFix>(data.numRows) {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = new Double1DFix.copy(data[i]);
+    }
+  }
+
+  Double2DFix.own(this._data);
+
+  Double2DFix.sized(int numRows, int numCols, {double data: 0.0})
+      : _data = new List<Double1DFix>.generate(
+            numRows, (_) => new Double1DFix.sized(numCols, data: data),
+            growable: false);
+
+  Double2DFix.shaped(Index2D shape, {double data: 0.0})
+      : _data = new List<Double1DFix>.generate(
+            shape.row, (_) => new Double1DFix.sized(shape.col, data: data),
+            growable: false);
+
+  factory Double2DFix.shapedLike(Array2DView like, {double data: 0.0}) =>
+      new Double2DFix.sized(like.numRows, like.numCols, data: data);
+
+  factory Double2DFix.diagonal(IterView<double> diagonal) {
+    final ret = new Double2DFix.sized(diagonal.length, diagonal.length);
+    for (int i = 0; i < diagonal.length; i++) {
+      ret[i][i] = diagonal[i];
+    }
+    return ret;
+  }
+
+  Double2DFix.fromNum(Iterable<Iterable<num>> data)
+      : _data = new List<Double1DFix>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (Iterable<num> item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        Iterable<num> item = data.elementAt(i);
+        _data[i] = new Double1DFix.fromNum(item);
+      }
+    }
+  }
+
+  Double2DFix.repeatRow(IterView<double> row, [int numRows = 1])
+      : _data = new List<Double1DFix>(numRows) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Double1DFix.copy(row);
+    }
+  }
+
+  Double2DFix.repeatCol(IterView<double> column, [int numCols = 1])
+      : _data = new List<Double1DFix>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Double1DFix.sized(numCols, data: column[i]);
+    }
+  }
+
+  Double2DFix.aRow(IterView<double> row) : _data = new List<Double1DFix>(1) {
+    _data[0] = new Double1DFix.copy(row);
+  }
+
+  Double2DFix.aCol(IterView<double> column)
+      : _data = new List<Double1DFix>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Double1DFix.single(column[i]);
+    }
+  }
+
   factory Double2DFix.genRows(
       int numRows, Iterable<double> rowMaker(int index)) {
     final rows = <Double1DFix>[];
@@ -116,7 +142,7 @@ class Double2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Double1DFix(v));
     }
-    return new Double2DFix.make(rows);
+    return new Double2DFix.own(rows);
   }
 
   factory Double2DFix.genCols(
@@ -154,7 +180,7 @@ class Double2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Double1DFix(v));
     }
-    return new Double2DFix.make(rows);
+    return new Double2DFix.own(rows);
   }
 
   static Double2DFix buildCols<T>(
@@ -313,7 +339,7 @@ class Double2DFix extends Object
 
   Double2DView _view;
 
-  Double2DView get view => _view ??= new Double2DView.make(_data);
+  Double2DView get view => _view ??= new Double2DView.own(_data);
 
   Double2DFix get fixed => this;
 

@@ -44,7 +44,7 @@ class String1DFix extends Object
   String1DFix(Iterable<String> data)
       : _data = new List<String>.from(data, growable: false);
 
-  String1DFix.copy(ArrayView<String> other)
+  String1DFix.copy(IterView<String> other)
       : _data = new List<String>.from(other.asIterable);
 
   String1DFix.own(this._data);
@@ -52,7 +52,7 @@ class String1DFix extends Object
   String1DFix.sized(int length, {String data})
       : _data = new List<String>.filled(length, data);
 
-  factory String1DFix.shapedLike(Iterable d, {String data}) =>
+  factory String1DFix.shapedLike(IterView d, {String data}) =>
       new String1DFix.sized(d.length, data: data);
 
   String1DFix.single(String data) : _data = <String>[data];

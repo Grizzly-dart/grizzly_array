@@ -17,7 +17,7 @@ class Bool1D extends Object
   Bool1D([Iterable<bool> data = const <bool>[]])
       : _data = new List<bool>.from(data);
 
-  Bool1D.copy(ArrayView<bool> other)
+  Bool1D.copy(IterView<bool> other)
       : _data = new List<bool>.from(other.asIterable);
 
   Bool1D.own(this._data);
@@ -25,7 +25,7 @@ class Bool1D extends Object
   Bool1D.sized(int length, {bool data: false})
       : _data = new List<bool>.filled(length, data, growable: true);
 
-  factory Bool1D.shapedLike(ArrayView d, {bool data: false}) =>
+  factory Bool1D.shapedLike(IterView d, {bool data: false}) =>
       new Bool1D.sized(d.length, data: data);
 
   Bool1D.single(bool data) : _data = <bool>[data];

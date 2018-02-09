@@ -20,6 +20,28 @@ class Bool2D extends Object
     }
   }
 
+  /// Create [Int2D] from column major
+  factory Bool2D.columns(Iterable<Iterable<bool>> columns) {
+    if (columns.length == 0) {
+      return new Bool2D.sized(0, 0);
+    }
+
+    if (!columns.every((i) => i.length == columns.first.length)) {
+      throw new Exception('Size mismatch!');
+    }
+
+    final ret = new Bool2D.sized(columns.first.length, columns.length);
+    for (int c = 0; c < ret.numCols; c++) {
+      final Iterator<bool> col = columns.elementAt(c).iterator;
+      col.moveNext();
+      for (int r = 0; r < ret.numRows; r++) {
+        ret[r][c] = col.current;
+        col.moveNext();
+      }
+    }
+    return ret;
+  }
+
   Bool2D.from(Iterable<Bool1DView> data)
       : _data = new List<Bool1D>()..length = data.length {
     if (data.length != 0) {
@@ -30,8 +52,9 @@ class Bool2D extends Object
         }
       }
 
-      for (Bool1DView item in data) {
-        _data.add(item.clone());
+      for (int i = 0; i < data.length; i++) {
+        Bool1DView item = data.elementAt(i);
+        _data[i] = item.clone();
       }
     }
   }
@@ -58,59 +81,37 @@ class Bool2D extends Object
   factory Bool2D.shapedLike(Array2DView like, {bool data: false}) =>
       new Bool2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Bool2D.diagonal(Iterable<bool> diagonal) {
+  factory Bool2D.diagonal(IterView<bool> diagonal) {
     final ret = new Bool2D.sized(diagonal.length, diagonal.length);
     for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
+      ret[i][i] = diagonal[i];
     }
     return ret;
   }
 
-  Bool2D.repeatRow(ArrayView<bool> row, [int numRows = 1])
+  Bool2D.repeatRow(IterView<bool> row, [int numRows = 1])
       : _data = new List<Bool1D>()..length = numRows {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.copy(row);
     }
   }
 
-  Bool2D.repeatCol(ArrayView<bool> column, [int numCols = 1])
+  Bool2D.repeatCol(IterView<bool> column, [int numCols = 1])
       : _data = new List<Bool1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.sized(numCols, data: column[i]);
     }
   }
 
-  Bool2D.aRow(ArrayView<bool> row) : _data = new List<Bool1D>()..length = 1 {
+  Bool2D.aRow(IterView<bool> row) : _data = new List<Bool1D>()..length = 1 {
     _data[0] = new Bool1D.copy(row);
   }
 
-  Bool2D.aCol(ArrayView<bool> column)
+  Bool2D.aCol(IterView<bool> column)
       : _data = new List<Bool1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Bool1D.single(column[i]);
     }
-  }
-
-  /// Create [Int2D] from column major
-  factory Bool2D.columns(Iterable<Iterable<bool>> columns) {
-    if (columns.length == 0) {
-      return new Bool2D.sized(0, 0);
-    }
-
-    if (!columns.every((i) => i.length == columns.first.length)) {
-      throw new Exception('Size mismatch!');
-    }
-
-    final ret = new Bool2D.sized(columns.first.length, columns.length);
-    for (int c = 0; c < ret.numCols; c++) {
-      final Iterator<bool> col = columns.elementAt(c).iterator;
-      col.moveNext();
-      for (int r = 0; r < ret.numRows; r++) {
-        ret[r][c] = col.current;
-        col.moveNext();
-      }
-    }
-    return ret;
   }
 
   factory Bool2D.genRows(int numRows, Iterable<bool> rowMaker(int index)) {
@@ -272,11 +273,11 @@ class Bool2D extends Object
 
   Bool2DView _view;
 
-  Bool2DView get view => _view ??= new Bool2DView.make(_data);
+  Bool2DView get view => _view ??= new Bool2DView.own(_data);
 
   Bool2DFix _fixed;
 
-  Bool2DFix get fixed => _fixed ??= new Bool2DFix.make(_data);
+  Bool2DFix get fixed => _fixed ??= new Bool2DFix.own(_data);
 
   @override
   Iterable<ArrayFix<bool>> get rows => _data;

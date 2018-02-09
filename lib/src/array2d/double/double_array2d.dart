@@ -20,6 +20,28 @@ class Double2D extends Object
     }
   }
 
+  /// Create [Int2D] from column major
+  factory Double2D.columns(Iterable<Iterable<double>> columns) {
+    if (columns.length == 0) {
+      return new Double2D.sized(0, 0);
+    }
+
+    if (!columns.every((i) => i.length == columns.first.length)) {
+      throw new Exception('Size mismatch!');
+    }
+
+    final ret = new Double2D.sized(columns.first.length, columns.length);
+    for (int c = 0; c < ret.numCols; c++) {
+      final Iterator<double> col = columns.elementAt(c).iterator;
+      col.moveNext();
+      for (int r = 0; r < ret.numRows; r++) {
+        ret[r][c] = col.current;
+        col.moveNext();
+      }
+    }
+    return ret;
+  }
+
   Double2D.from(Iterable<ArrayView<double>> data)
       : _data = new List<Double1D>()..length = data.length {
     if (data.length != 0) {
@@ -30,8 +52,9 @@ class Double2D extends Object
         }
       }
 
-      for (Double1DView item in data) {
-        _data.add(item.clone());
+      for (int i = 0; i < data.length; i++) {
+        Double1DView item = data.elementAt(i);
+        _data[i] = item.clone();
       }
     }
   }
@@ -58,10 +81,10 @@ class Double2D extends Object
   factory Double2D.shapedLike(Array2DView like, {double data: 0.0}) =>
       new Double2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Double2D.diagonal(Iterable<double> diagonal) {
+  factory Double2D.diagonal(IterView<double> diagonal) {
     final ret = new Double2D.sized(diagonal.length, diagonal.length);
     for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
+      ret[i][i] = diagonal[i];
     }
     return ret;
   }
@@ -111,28 +134,6 @@ class Double2D extends Object
     for (int i = 0; i < numRows; i++) {
       _data[i] = new Double1D.single(column[i]);
     }
-  }
-
-  /// Create [Int2D] from column major
-  factory Double2D.columns(Iterable<Iterable<double>> columns) {
-    if (columns.length == 0) {
-      return new Double2D.sized(0, 0);
-    }
-
-    if (!columns.every((i) => i.length == columns.first.length)) {
-      throw new Exception('Size mismatch!');
-    }
-
-    final ret = new Double2D.sized(columns.first.length, columns.length);
-    for (int c = 0; c < ret.numCols; c++) {
-      final Iterator<double> col = columns.elementAt(c).iterator;
-      col.moveNext();
-      for (int r = 0; r < ret.numRows; r++) {
-        ret[r][c] = col.current;
-        col.moveNext();
-      }
-    }
-    return ret;
   }
 
   factory Double2D.genRows(int numRows, Iterable<double> rowMaker(int index)) {
@@ -356,11 +357,11 @@ class Double2D extends Object
 
   Double2DView _view;
 
-  Double2DView get view => _view ??= new Double2DView.make(_data);
+  Double2DView get view => _view ??= new Double2DView.own(_data);
 
   Double2DFix _fixed;
 
-  Double2DFix get fixed => _fixed ??= new Double2DFix.make(_data);
+  Double2DFix get fixed => _fixed ??= new Double2DFix.own(_data);
 
   Double2D addition(/* int | Iterable<int> | Numeric2DArray */ other,
       {bool self: false}) {

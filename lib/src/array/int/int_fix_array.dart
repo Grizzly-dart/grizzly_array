@@ -43,6 +43,9 @@ class Int1DFix extends Object
   Int1DFix(Iterable<int> data)
       : _data = new List<int>.from(data, growable: false);
 
+  Int1DFix.copy(IterView<int> other)
+      : _data = new List<int>.from(other.asIterable, growable: false);
+
   /// Creates [Int1DFix] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1DFix] because it involves no
   /// copying.
@@ -51,7 +54,7 @@ class Int1DFix extends Object
   Int1DFix.sized(int length, {int data: 0})
       : _data = new List<int>.filled(length, data);
 
-  factory Int1DFix.shapedLike(ArrayView d, {int data: 0}) =>
+  factory Int1DFix.shapedLike(IterView d, {int data: 0}) =>
       new Int1DFix.sized(d.length, data: data);
 
   Int1DFix.single(int data)

@@ -14,6 +14,9 @@ class Int1DView extends Object
   Int1DView(Iterable<int> data)
       : _data = new List<int>.from(data, growable: false);
 
+  Int1DView.copy(IterView<int> other)
+      : _data = new List<int>.from(other.asIterable, growable: false);
+
   /// Creates [Int1DView] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1DView] because it involves no
   /// copying.
@@ -22,7 +25,7 @@ class Int1DView extends Object
   Int1DView.sized(int length, {int data: 0})
       : _data = new List<int>.filled(length, data);
 
-  factory Int1DView.shapedLike(ArrayView d, {int data: 0}) =>
+  factory Int1DView.shapedLike(IterView d, {int data: 0}) =>
       new Int1DView.sized(d.length, data: data);
 
   Int1DView.single(int data)

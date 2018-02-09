@@ -7,15 +7,15 @@ class Bool1DView extends Object
 
   Bool1DView(Iterable<bool> data) : _data = new List<bool>.from(data);
 
-  Bool1DView.copy(ArrayView<bool> other)
-      : _data = new List<bool>.from(other.asIterable);
+  Bool1DView.copy(IterView<bool> other)
+      : _data = new List<bool>.from(other.asIterable, growable: false);
 
   Bool1DView.own(this._data);
 
   Bool1DView.sized(int length, {bool data: false})
       : _data = new List<bool>.filled(length, data);
 
-  factory Bool1DView.shapedLike(ArrayView d, {bool data: false}) =>
+  factory Bool1DView.shapedLike(IterView d, {bool data: false}) =>
       new Bool1DView.sized(d.length, data: data);
 
   Bool1DView.single(bool data) : _data = new List<bool>(1) {

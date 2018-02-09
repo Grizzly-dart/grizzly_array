@@ -8,15 +8,15 @@ class Bool1DFix extends Object
   Bool1DFix(Iterable<bool> data)
       : _data = new List<bool>.from(data, growable: false);
 
-  Bool1DFix.copy(ArrayView<bool> other)
-      : _data = new List<bool>.from(other.asIterable);
+  Bool1DFix.copy(IterView<bool> other)
+      : _data = new List<bool>.from(other.asIterable, growable: false);
 
   Bool1DFix.own(this._data);
 
   Bool1DFix.sized(int length, {bool data: false})
       : _data = new List<bool>.filled(length, data);
 
-  factory Bool1DFix.shapedLike(Iterable d, {bool data: false}) =>
+  factory Bool1DFix.shapedLike(IterView d, {bool data: false}) =>
       new Bool1DFix.sized(d.length, data: data);
 
   Bool1DFix.single([bool data = false]) : _data = <bool>[data];

@@ -22,7 +22,7 @@ class Double1D extends Object
   Double1D([Iterable<double> data = const []])
       : _data = new List<double>.from(data);
 
-  Double1D.copy(ArrayView<double> other)
+  Double1D.copy(IterView<double> other)
       : _data = new List<double>.from(other.asIterable);
 
   Double1D.own(this._data);
@@ -30,7 +30,7 @@ class Double1D extends Object
   Double1D.sized(int length, {double data: 0.0})
       : _data = new List<double>.filled(length, data, growable: true);
 
-  factory Double1D.shapedLike(Iterable d, {double data: 0.0}) =>
+  factory Double1D.shapedLike(IterView d, {double data: 0.0}) =>
       new Double1D.sized(d.length, data: data);
 
   Double1D.single(double data) : _data = new List<double>.from(<double>[data]);

@@ -20,6 +20,28 @@ class String2D extends Object
     }
   }
 
+  /// Create [Int2D] from column major
+  factory String2D.columns(Iterable<Iterable<String>> columns) {
+    if (columns.length == 0) {
+      return new String2D.sized(0, 0);
+    }
+
+    if (!columns.every((i) => i.length == columns.first.length)) {
+      throw new Exception('Size mismatch!');
+    }
+
+    final ret = new String2D.sized(columns.first.length, columns.length);
+    for (int c = 0; c < ret.numCols; c++) {
+      final Iterator<String> col = columns.elementAt(c).iterator;
+      col.moveNext();
+      for (int r = 0; r < ret.numRows; r++) {
+        ret[r][c] = col.current;
+        col.moveNext();
+      }
+    }
+    return ret;
+  }
+
   String2D.from(Iterable<ArrayView<String>> data)
       : _data = new List<String1D>()..length = data.length {
     if (data.length != 0) {
@@ -30,8 +52,9 @@ class String2D extends Object
         }
       }
 
-      for (ArrayView<String> item in data) {
-        _data.add(item.clone());
+      for (int i = 0; i < data.length; i++) {
+        String1DView item = data.elementAt(i);
+        _data[i] = item.clone();
       }
     }
   }
@@ -90,28 +113,6 @@ class String2D extends Object
     for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.single(column[i]);
     }
-  }
-
-  /// Create [Int2D] from column major
-  factory String2D.columns(Iterable<Iterable<String>> columns) {
-    if (columns.length == 0) {
-      return new String2D.sized(0, 0);
-    }
-
-    if (!columns.every((i) => i.length == columns.first.length)) {
-      throw new Exception('Size mismatch!');
-    }
-
-    final ret = new String2D.sized(columns.first.length, columns.length);
-    for (int c = 0; c < ret.numCols; c++) {
-      final Iterator<String> col = columns.elementAt(c).iterator;
-      col.moveNext();
-      for (int r = 0; r < ret.numRows; r++) {
-        ret[r][c] = col.current;
-        col.moveNext();
-      }
-    }
-    return ret;
   }
 
   factory String2D.genRows(int numRows, Iterable<String> rowMaker(int index)) {
@@ -271,11 +272,11 @@ class String2D extends Object
 
   String2DView _view;
 
-  String2DView get view => _view ??= new String2DView.make(_data);
+  String2DView get view => _view ??= new String2DView.own(_data);
 
   String2DFix _fixed;
 
-  String2DFix get fixed => _fixed ??= new String2DFix.make(_data);
+  String2DFix get fixed => _fixed ??= new String2DFix.own(_data);
 
   @override
   Iterable<ArrayFix<String>> get rows => _data;

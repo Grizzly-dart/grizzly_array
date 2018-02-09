@@ -7,7 +7,7 @@ class String1DView extends Object
 
   String1DView(Iterable<String> data) : _data = new List<String>.from(data);
 
-  String1DView.copy(ArrayView<String> other)
+  String1DView.copy(IterView<String> other)
       : _data = new List<String>.from(other.asIterable);
 
   String1DView.own(this._data);
@@ -15,7 +15,7 @@ class String1DView extends Object
   String1DView.sized(int length, {String data})
       : _data = new List<String>.filled(length, data);
 
-  factory String1DView.shapedLike(Iterable d, {String data}) =>
+  factory String1DView.shapedLike(IterView d, {String data}) =>
       new String1DView.sized(d.length, data: data);
 
   String1DView.single(String data) : _data = new List<String>(1) {
