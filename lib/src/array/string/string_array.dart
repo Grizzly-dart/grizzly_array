@@ -11,9 +11,10 @@ part 'string_minix.dart';
 
 class String1D extends Object
     with
-        String1DViewMixin,
         Array1DViewMixin<String>,
         Array1DFixMixin<String>,
+        ArrayMixin<String>,
+        String1DViewMixin,
         String1DFixMixin
     implements StringArray, String1DFix {
   List<String> _data;
@@ -104,12 +105,6 @@ class String1D extends Object
       for (int i = length - 1; i >= 0; i--) {
         if (_data[i] == value) removeAt(i);
       }
-    }
-  }
-
-  void removeMany(ArrayView<String> values) {
-    for (int i = length - 1; i >= 0; i--) {
-      if (values.contains(_data[i])) removeAt(i);
     }
   }
 

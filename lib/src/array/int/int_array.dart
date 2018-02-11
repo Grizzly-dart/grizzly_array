@@ -12,10 +12,11 @@ part 'int_mixin.dart';
 
 class Int1D extends Object
     with
-        Int1DViewMixin,
-        IntFixMixin,
         Array1DViewMixin<int>,
-        Array1DFixMixin<int>
+        Array1DFixMixin<int>,
+        ArrayMixin<int>,
+        Int1DViewMixin,
+        IntFixMixin
     implements Numeric1D<int>, Int1DFix {
   List<int> _data;
 
@@ -353,12 +354,6 @@ class Int1D extends Object
       for (int i = length - 1; i >= 0; i--) {
         if (_data[i] == value) removeAt(i);
       }
-    }
-  }
-
-  void removeMany(ArrayView<int> values) {
-    for (int i = length - 1; i >= 0; i--) {
-      if (values.contains(_data[i])) removeAt(i);
     }
   }
 

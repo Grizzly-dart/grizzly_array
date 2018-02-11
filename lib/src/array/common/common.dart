@@ -1,10 +1,20 @@
 library grizzly.series.array.common;
 
 import 'dart:collection';
+import 'package:grizzly_series/grizzly_series.dart';
 import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import '../array.dart';
 import '../sample.dart';
+
+abstract class ArrayMixin<E> implements Array<E> {
+  void removeMany(IterView<E> values) {
+    final set = new Set<E>.from(values.asIterable);
+    for (int i = length - 1; i >= 0; i--) {
+      if (set.contains(this[i])) removeAt(i);
+    }
+  }
+}
 
 abstract class Array1DViewMixin<E> implements ArrayView<E> {
   Index1D get shape => new Index1D(length);
@@ -77,29 +87,26 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
   StringArray toStringArray() =>
       new String1D(asIterable.map((e) => e.toString()));
 
-/* TODO
   @override
-  IntSeries<double> valueCounts(
+  IntSeries<E> valueCounts(
       {bool sortByValue: false,
-      bool ascending: false,
-      bool dropNull: false,
-      dynamic name: ''}) {
-    final groups = new Map<double, List<int>>();
+      bool descending: false,
+      name: ''}) {
+    final groups = new Map<E, int>();
     for (int i = 0; i < length; i++) {
-      final double v = _data[i];
-      if (!groups.containsKey(v)) groups[v] = <int>[0];
-      groups[v][0]++;
+      final E v = this[i];
+      if (!groups.containsKey(v)) groups[v] = 0;
+      groups[v]++;
     }
-    final ret = new IntSeries<double>.fromMap(groups, name: name);
+    final ret = new IntSeries<E>.fromMap(groups, name: name);
     // Sort
     if (sortByValue) {
-      ret.sortByIndex(ascending: ascending, inplace: true);
+      ret.sortByLabel(descending: descending);
     } else {
-      ret.sortByValue(ascending: ascending, inplace: true);
+      ret.sortByValue(descending: descending);
     }
     return ret;
   }
-  */
 }
 
 abstract class Array1DFixMixin<E> implements ArrayFix<E> {

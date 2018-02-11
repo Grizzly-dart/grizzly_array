@@ -13,9 +13,10 @@ part 'double_mixin.dart';
 class Double1D extends Object
     with
         Array1DViewMixin<double>,
+        Array1DFixMixin<double>,
+        ArrayMixin<double>,
         Double1DViewMixin,
-        DoubleFixMixin,
-        Array1DFixMixin<double>
+        DoubleFixMixin
     implements Numeric1D<double>, Double1DFix {
   List<double> _data;
 
@@ -313,15 +314,6 @@ class Double1D extends Object
       for (int i = length - 1; i >= 0; i--) {
         if (_data[i] > vLow && _data[i] < vHigh) removeAt(i);
       }
-    }
-  }
-
-  void removeMany(covariant Numeric1DView<double> values,
-      {double absTol: 1e-8}) {
-    final Numeric1DView<double> vLow = values - absTol;
-    final Numeric1DView<double> vHigh = values - absTol;
-    for (int i = length - 1; i >= 0; i--) {
-      if ((vLow < _data[i]).isTrue && (vHigh > _data[i]).isTrue) removeAt(i);
     }
   }
 

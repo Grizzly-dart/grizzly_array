@@ -10,7 +10,11 @@ part 'bool_view_array.dart';
 part 'bool_mixin.dart';
 
 class Bool1D extends Object
-    with Array1DViewMixin<bool>, Array1DFixMixin<bool>, Bool1DViewMixin
+    with
+        Array1DViewMixin<bool>,
+        Array1DFixMixin<bool>,
+        ArrayMixin<bool>,
+        Bool1DViewMixin
     implements Array<bool>, Bool1DFix, BoolArray {
   List<bool> _data;
 
@@ -99,12 +103,6 @@ class Bool1D extends Object
       for (int i = length - 1; i >= 0; i--) {
         if (_data[i] == value) removeAt(i);
       }
-    }
-  }
-
-  void removeMany(ArrayView<bool> values) {
-    for (int i = length - 1; i >= 0; i--) {
-      if (values.contains(_data[i])) removeAt(i);
     }
   }
 
