@@ -69,13 +69,13 @@ class String2DFix extends Object
   String2DFix.own(this._data);
 
   String2DFix.sized(int numRows, int numCols, {String data: ''})
-      : _data = new List<String1DFix>.generate(
-            numRows, (_) => new String1DFix.sized(numCols, data: data),
+      : _data = new List<String1D>.generate(
+            numRows, (_) => new String1D.sized(numCols, data: data),
             growable: false);
 
   String2DFix.shaped(Index2D shape, {String data: ''})
-      : _data = new List<String1DFix>.generate(
-            shape.row, (_) => new String1DFix.sized(shape.col, data: data),
+      : _data = new List<String1D>.generate(
+            shape.row, (_) => new String1D.sized(shape.col, data: data),
             growable: false);
 
   factory String2DFix.shapedLike(Array2DView like, {String data: ''}) =>

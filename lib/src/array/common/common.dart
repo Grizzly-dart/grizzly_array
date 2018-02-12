@@ -89,9 +89,7 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
 
   @override
   IntSeries<E> valueCounts(
-      {bool sortByValue: false,
-      bool descending: false,
-      name: ''}) {
+      {bool sortByValue: false, bool descending: false, name: ''}) {
     final groups = new Map<E, int>();
     for (int i = 0; i < length; i++) {
       final E v = this[i];

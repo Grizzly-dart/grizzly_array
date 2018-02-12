@@ -6,11 +6,13 @@ import 'int/int_array.dart';
 import 'double/double_array.dart';
 import 'bool/bool_array.dart';
 import 'string/string_array.dart';
+import 'dynamic/dynamic_array.dart';
 
 export 'int/int_array.dart';
 export 'double/double_array.dart';
 export 'bool/bool_array.dart';
 export 'string/string_array.dart';
+export 'dynamic/dynamic_array.dart';
 
 // TODO DateTime
 

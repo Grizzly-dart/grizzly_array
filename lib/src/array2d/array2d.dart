@@ -44,6 +44,14 @@ part 'string/string_view_array2d.dart';
 part 'string/string_row.dart';
 part 'string/string_col.dart';
 
+part 'dynamic/dynamic_array2d.dart';
+part 'dynamic/dynamic_axis.dart';
+part 'dynamic/dynamic_col.dart';
+part 'dynamic/dynamic_fix_array2d.dart';
+part 'dynamic/dynamic_mixin.dart';
+part 'dynamic/dynamic_row.dart';
+part 'dynamic/dynamic_view_array2d.dart';
+
 part 'double_array2d.dart';
 
 Double2D array2D(
