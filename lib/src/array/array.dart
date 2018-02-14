@@ -1,22 +1,18 @@
 library grizzly.series.array;
 
-import 'dart:math' as math;
-import 'dart:collection';
-import 'dart:typed_data';
-import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
-
-import 'package:grizzly_array/src/array2d/array2d.dart';
 
 import 'int/int_array.dart';
 import 'double/double_array.dart';
 import 'bool/bool_array.dart';
 import 'string/string_array.dart';
+import 'dynamic/dynamic_array.dart';
 
 export 'int/int_array.dart';
 export 'double/double_array.dart';
 export 'bool/bool_array.dart';
 export 'string/string_array.dart';
+export 'dynamic/dynamic_array.dart';
 
 // TODO DateTime
 

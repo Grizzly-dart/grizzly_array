@@ -44,27 +44,23 @@ class String1DFix extends Object
   String1DFix(Iterable<String> data)
       : _data = new List<String>.from(data, growable: false);
 
-  String1DFix.copy(ArrayView<String> other)
-      : _data = new List<String>.from(other.iterable);
+  String1DFix.copy(IterView<String> other)
+      : _data = new List<String>.from(other.asIterable);
 
   String1DFix.own(this._data);
 
-  String1DFix.sized(int length, {String data: ''})
-      : _data = new List<String>.filled(length, data, growable: false);
+  String1DFix.sized(int length, {String data})
+      : _data = new List<String>.filled(length, data);
 
-  factory String1DFix.shapedLike(Iterable d, {String data: ''}) =>
+  factory String1DFix.shapedLike(IterView d, {String data}) =>
       new String1DFix.sized(d.length, data: data);
 
   String1DFix.single(String data) : _data = <String>[data];
 
   String1DFix.gen(int length, String maker(int index))
-      : _data = new List<String>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<String>.generate(length, maker, growable: false);
 
-  Iterable<String> get iterable => _data;
+  Iterable<String> get asIterable => _data;
 
   Iterator<String> get iterator => _data.iterator;
 
@@ -91,7 +87,7 @@ class String1DFix extends Object
   }
 
   String1DView _view;
-  String1DView get view => _view ??= new String1DView.make(_data);
+  String1DView get view => _view ??= new String1DView.own(_data);
 
   String1DFix get fixed => this;
 }

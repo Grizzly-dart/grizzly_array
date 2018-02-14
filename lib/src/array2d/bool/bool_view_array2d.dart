@@ -1,9 +1,11 @@
 part of grizzly.series.array2d;
 
-class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
+class Bool2DView extends Object
+    with Bool2DViewMixin, Array2DViewMixin<bool>
+    implements BoolArray2DView {
   final List<Bool1DView> _data;
 
-  Bool2DView(Iterable<Iterable<bool>> data) : _data = <Bool1D>[] {
+  Bool2DView(Iterable<Iterable<bool>> data) : _data = <Bool1DView>[] {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Iterable<bool> item in data) {
@@ -13,54 +15,8 @@ class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
       }
 
       for (Iterable<bool> item in data) {
-        _data.add(new Bool1D(item));
+        _data.add(new Bool1DView(item));
       }
-    }
-  }
-
-  Bool2DView.make(this._data);
-
-  Bool2DView.sized(int numRows, int numCols, {bool data: false})
-      : _data = new List<Bool1D>.generate(
-            numRows, (_) => new Bool1D.sized(numCols, data: data));
-
-  Bool2DView.shaped(Index2D shape, {bool data: false})
-      : _data = new List<Bool1D>.generate(
-            shape.row, (_) => new Bool1D.sized(shape.col, data: data));
-
-  factory Bool2DView.shapedLike(Array2DView like, {bool data: false}) =>
-      new Bool2DView.sized(like.numRows, like.numCols, data: data);
-
-  factory Bool2DView.diagonal(Iterable<bool> diagonal) {
-    final ret = new Bool2DFix.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
-    }
-    return ret.view;
-  }
-
-  Bool2DView.repeatRow(Iterable<bool> row, [int numRows = 1])
-      : _data = new List<Bool1D>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1D(row);
-    }
-  }
-
-  Bool2DView.repeatCol(Iterable<bool> column, [int numCols = 1])
-      : _data = new List<Bool1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1D.sized(numCols, data: column.elementAt(i));
-    }
-  }
-
-  Bool2DView.aRow(Iterable<bool> row) : _data = new List<Bool1D>(1) {
-    _data[0] = new Bool1D(row);
-  }
-
-  Bool2DView.aCol(Iterable<bool> column)
-      : _data = new List<Bool1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1D.single(column.elementAt(i));
     }
   }
 
@@ -86,6 +42,82 @@ class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
     return ret.view;
   }
 
+  Bool2DView.from(Iterable<IterView<bool>> data)
+      : _data = new List<Bool1DView>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (IterView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        IterView<bool> item = data.elementAt(i);
+        _data[i] = new Bool1DView.copy(item);
+      }
+    }
+  }
+
+  Bool2DView.copy(Array2DView<bool> data)
+      : _data = new List<Bool1DView>(data.numRows) {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = new Bool1DView.copy(data[i]);
+    }
+  }
+
+  Bool2DView.own(this._data) {
+    // TODO check that all rows are of same length
+  }
+
+  Bool2DView.sized(int numRows, int numCols, {bool data: false})
+      : _data = new List<Bool1DView>.generate(
+            numRows, (_) => new Bool1DView.sized(numCols, data: data),
+            growable: false);
+
+  Bool2DView.shaped(Index2D shape, {bool data: false})
+      : _data = new List<Bool1DView>.generate(
+            shape.row, (_) => new Bool1DView.sized(shape.col, data: data),
+            growable: false);
+
+  factory Bool2DView.shapedLike(Array2DView like, {bool data: false}) =>
+      new Bool2DView.sized(like.numRows, like.numCols, data: data);
+
+  factory Bool2DView.diagonal(IterView<bool> diagonal) {
+    final ret = new List<Bool1DView>(diagonal.length);
+    for (int i = 0; i < diagonal.length; i++) {
+      final row = new List<bool>.filled(diagonal.length, false);
+      row[i] = diagonal[i];
+      ret[i] = new Bool1DView.own(row);
+    }
+    return new Bool2DView.own(ret);
+  }
+
+  Bool2DView.repeatRow(IterView<bool> row, [int numRows = 1])
+      : _data = new List<Bool1DView>(numRows) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Bool1DView.copy(row);
+    }
+  }
+
+  Bool2DView.repeatCol(IterView<bool> column, [int numCols = 1])
+      : _data = new List<Bool1DView>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Bool1DView.sized(numCols, data: column[i]);
+    }
+  }
+
+  Bool2DView.aRow(IterView<bool> row) : _data = new List<Bool1DView>(1) {
+    _data[0] = new Bool1DView.copy(row);
+  }
+
+  Bool2DView.aCol(IterView<bool> column)
+      : _data = new List<Bool1DView>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Bool1DView.single(column[i]);
+    }
+  }
+
   factory Bool2DView.genRows(int numRows, Iterable<bool> rowMaker(int index)) {
     final rows = <Bool1DView>[];
     int colLen;
@@ -96,7 +128,7 @@ class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Bool1DView(v));
     }
-    return new Bool2DView.make(rows);
+    return new Bool2DView.own(rows);
   }
 
   factory Bool2DView.genCols(int numCols, Iterable<bool> colMaker(int index)) {
@@ -133,7 +165,7 @@ class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Bool1DView(v));
     }
-    return new Bool2DView.make(rows);
+    return new Bool2DView.own(rows);
   }
 
   static Bool2DView buildCols<T>(
@@ -180,4 +212,10 @@ class Bool2DView extends Object with Bool2DMixin implements Array2DView<bool> {
   Bool2DRowView get row => _row ??= new Bool2DRowView(this);
 
   Bool2DView get view => this;
+
+  @override
+  Iterable<ArrayView<bool>> get rows => _data;
+
+  @override
+  Iterable<ArrayView<bool>> get cols => new ColsListView<bool>(this);
 }

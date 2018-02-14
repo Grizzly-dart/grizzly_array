@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2D extends Object
-    with String2DMixin
+    with String2DMixin, Array2DViewMixin<String>
     implements Array2D<String>, String2DFix {
   final List<String1D> _data;
 
@@ -20,8 +20,30 @@ class String2D extends Object
     }
   }
 
+  /// Create [Int2D] from column major
+  factory String2D.columns(Iterable<Iterable<String>> columns) {
+    if (columns.length == 0) {
+      return new String2D.sized(0, 0);
+    }
+
+    if (!columns.every((i) => i.length == columns.first.length)) {
+      throw new Exception('Size mismatch!');
+    }
+
+    final ret = new String2D.sized(columns.first.length, columns.length);
+    for (int c = 0; c < ret.numCols; c++) {
+      final Iterator<String> col = columns.elementAt(c).iterator;
+      col.moveNext();
+      for (int r = 0; r < ret.numRows; r++) {
+        ret[r][c] = col.current;
+        col.moveNext();
+      }
+    }
+    return ret;
+  }
+
   String2D.from(Iterable<ArrayView<String>> data)
-      : _data = new List<String1D>(data.length) {
+      : _data = new List<String1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
       for (ArrayView<String> item in data) {
@@ -30,14 +52,19 @@ class String2D extends Object
         }
       }
 
-      for (ArrayView<String> item in data) {
-        _data.add(item.clone());
+      for (int i = 0; i < data.length; i++) {
+        String1DView item = data.elementAt(i);
+        _data[i] = item.clone();
       }
     }
   }
 
-  factory String2D.copy(Array2DView<String> data) =>
-      new String2D(data.iterable);
+  String2D.copy(Array2DView<String> data)
+      : _data = new List<String1D>()..length = data.numRows {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = data[i].clone();
+    }
+  }
 
   String2D.own(this._data) {
     // TODO check that all rows are of same length
@@ -63,50 +90,29 @@ class String2D extends Object
   }
 
   String2D.repeatRow(ArrayView<String> row, [int numRows = 1])
-      : _data = new List<String1D>(numRows) {
+      : _data = new List<String1D>()..length = numRows {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.copy(row);
     }
   }
 
   String2D.repeatCol(ArrayView<String> column, [int numCols = 1])
-      : _data = new List<String1D>(column.length) {
+      : _data = new List<String1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.sized(numCols, data: column[i]);
     }
   }
 
-  String2D.aRow(ArrayView<String> row) : _data = new List<String1D>(1) {
+  String2D.aRow(ArrayView<String> row)
+      : _data = new List<String1D>()..length = 1 {
     _data[0] = new String1D.copy(row);
   }
 
   String2D.aCol(ArrayView<String> column)
-      : _data = new List<String1D>(column.length) {
+      : _data = new List<String1D>()..length = column.length {
     for (int i = 0; i < numRows; i++) {
       _data[i] = new String1D.single(column[i]);
     }
-  }
-
-  /// Create [Int2D] from column major
-  factory String2D.columns(Iterable<Iterable<String>> columns) {
-    if (columns.length == 0) {
-      return new String2D.sized(0, 0);
-    }
-
-    if (!columns.every((i) => i.length == columns.first.length)) {
-      throw new Exception('Size mismatch!');
-    }
-
-    final ret = new String2D.sized(columns.first.length, columns.length);
-    for (int c = 0; c < ret.numCols; c++) {
-      final Iterator<String> col = columns.elementAt(c).iterator;
-      col.moveNext();
-      for (int r = 0; r < ret.numRows; r++) {
-        ret[r][c] = col.current;
-        col.moveNext();
-      }
-    }
-    return ret;
   }
 
   factory String2D.genRows(int numRows, Iterable<String> rowMaker(int index)) {
@@ -206,32 +212,20 @@ class String2D extends Object
 
   String1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(
-      final int i, final /* Iterable<String> | ArrayView<String> */ val) {
+  operator []=(final int i, final ArrayView<String> val) {
     if (i > numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
-    }
-
-    Iterable<String> v;
-    if (val is ArrayView<String>) {
-      v = val.iterable;
-    } else if (val is Iterable<String>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+      throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
-      final arr = new String1D(v);
+      final arr = new String1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
-      throw new Exception('Invalid size!');
-    }
+    if (val.length != numCols) throw new Exception('Invalid size!');
 
-    final arr = new String1D(v);
+    final arr = new String1D.copy(val);
 
     if (i == numRows) {
       _data.add(arr);
@@ -263,21 +257,30 @@ class String2D extends Object
   }
 
   @override
-  void add(Iterable<String> row) => this[numRows] = row;
+  void add(ArrayView<String> row) => this[numRows] = row;
 
   @override
-  void insert(int index, Iterable<String> row) {
+  void addScalar(String v) => _data.add(new String1D.sized(numCols, data: v));
+
+  @override
+  void insert(int index, ArrayView<String> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
-    _data.insert(index, new String1D(row));
+    _data.insert(index, new String1D.copy(row));
   }
 
   String2DView _view;
 
-  String2DView get view => _view ??= new String2DView.make(_data);
+  String2DView get view => _view ??= new String2DView.own(_data);
 
   String2DFix _fixed;
 
-  String2DFix get fixed => _fixed ??= new String2DFix.make(_data);
+  String2DFix get fixed => _fixed ??= new String2DFix.own(_data);
+
+  @override
+  Iterable<ArrayFix<String>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<String>> get cols => new ColsListFix<String>(this);
 }

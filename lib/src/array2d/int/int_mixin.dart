@@ -12,10 +12,6 @@ abstract class Int2DMixin implements Numeric2DView<int> {
   @override
   Array<int> makeArray(Iterable<int> newData) => new Int1D(newData);
 
-  Iterable<Iterable<int>> get iterable => _data.map((a) => a.iterable);
-
-  Iterator<ArrayView<int>> get iterator => _data.iterator;
-
   int get numCols {
     if (numRows == 0) return 0;
     return _data.first.length;
@@ -162,7 +158,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
     return sum / denom;
   }
 
-  Int2D operator +(/* int | Iterable<int> | Int2DArray */ other) {
+  Int2D operator +(/* int | Numeric1DView<int> | Int2DArray */ other) {
     if (other is int) {
       Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
@@ -171,7 +167,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
         }
       }
       return ret;
-    } else if (other is Iterable<int>) {
+    } else if (other is Numeric1DView<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
       Int2D ret = new Int2D.from(_data);
@@ -192,7 +188,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
     throw new ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
-  Int2D operator -(/* int | Iterable<int> | Int2DArray */ other) {
+  Int2D operator -(/* int | Numeric1DView<int> | Int2DArray */ other) {
     if (other is int) {
       Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
@@ -201,7 +197,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
         }
       }
       return ret;
-    } else if (other is Iterable<int>) {
+    } else if (other is Numeric1DView<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
       Int2D ret = new Int2D.from(_data);
@@ -222,7 +218,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
     throw new ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
-  Int2D operator *(/* int | Iterable<int> | Int2DArray */ other) {
+  Int2D operator *(/* int | Numeric1DView<int> | Int2DArray */ other) {
     if (other is int) {
       Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
@@ -231,7 +227,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
         }
       }
       return ret;
-    } else if (other is Iterable<int>) {
+    } else if (other is Numeric1DView<int>) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
       Int2D ret = new Int2D.from(_data);
@@ -252,7 +248,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
     throw new ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
-  Double2D operator /(/* int | Iterable<int> | Int2DArray */ other) {
+  Double2D operator /(/* int | Numeric1DView | Int2DArray */ other) {
     if (other is num) {
       Double2D ret = new Double2D.fromNum(_data);
       for (int r = 0; r < numRows; r++) {
@@ -261,7 +257,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
         }
       }
       return ret;
-    } else if (other is Iterable<num>) {
+    } else if (other is Numeric1DView) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
       Double2D ret = new Double2D.fromNum(_data);
@@ -282,7 +278,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
     throw new ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
-  Int2D operator ~/(/* int | Iterable<int> | Int2DArray */ other) {
+  Int2D operator ~/(/* int | Numeric1DView | Int2DArray */ other) {
     if (other is int) {
       Int2D ret = new Int2D.from(_data);
       for (int r = 0; r < numRows; r++) {
@@ -291,7 +287,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
         }
       }
       return ret;
-    } else if (other is Iterable<int>) {
+    } else if (other is Numeric1DView) {
       if (other.length != numCols)
         throw new ArgumentError.value(other, 'other', 'Size mismatch!');
       Int2D ret = new Int2D.from(_data);

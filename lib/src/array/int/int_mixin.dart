@@ -135,7 +135,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   Int1D get cumsum {
-    final ret = new Int1D(new Int32List(length));
+    final ret = new Int1D.sized(length);
     int sum = 0;
     for (int i = 0; i < length; i++) {
       final int d = this[i];
@@ -150,7 +150,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   Int1D get cumprod {
-    final ret = new Int1D(new Int32List(length));
+    final ret = new Int1D.sized(length);
     int prod = 1;
     for (int i = 0; i < length; i++) {
       final int d = this[i];
@@ -228,13 +228,9 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret.toInt();
   }
 
-  Double1D get toDouble {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) {
-      ret[i] = this[i].toDouble();
-    }
-    return ret;
-  }
+  Double1D get toDouble => new Double1D.fromNum(this);
+
+  Int1D get toInt => new Int1D.copy(this);
 
   double cov(Numeric1DView y) {
     if (y.length != length) throw new Exception('Size mismatch!');
@@ -310,31 +306,76 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret;
   }
 
-/* TODO
-  @override
-  IntSeries<int> valueCounts(
-      {bool sortByValue: false,
-      bool ascending: false,
-      bool dropNull: false,
-      dynamic name: ''}) {
-    final groups = new Map<int, List<int>>();
-
-    for (int i = 0; i < length; i++) {
-      final int v = _data[i];
-      if (!groups.containsKey(v)) groups[v] = <int>[0];
-      groups[v][0]++;
-    }
-
-    final ret = new IntSeries<int>.fromMap(groups, name: name);
-
-    // Sort
-    if (sortByValue) {
-      ret.sortByIndex(ascending: ascending, inplace: true);
+  Bool1D operator <(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] < other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] < other[i];
+      }
     } else {
-      ret.sortByValue(ascending: ascending, inplace: true);
+      throw new UnsupportedError('Type not supported!');
     }
-
     return ret;
   }
-  */
+
+  Bool1D operator <=(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] <= other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] <= other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator >(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] > other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] > other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator >=(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] >= other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] >= other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  bool contains(int value) => asIterable.contains(value);
+
+  Int1D abs() {
+    final ret = new Int1D.sized(length);
+    for (int i = 0; i < length; i++) ret[i] = this[i].abs();
+    return ret;
+  }
 }

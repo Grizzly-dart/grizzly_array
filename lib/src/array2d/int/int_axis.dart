@@ -1,15 +1,5 @@
 part of grizzly.series.array2d;
 
-class Int1DFixLazy extends Int1DFix {
-  Int1DFixLazy(Int2DFix inner, int colIndex)
-      : super(new ColList<int>(inner, colIndex));
-}
-
-class Int1DViewLazy extends Int1DView {
-  Int1DViewLazy(Int2DView inner, int colIndex)
-      : super(new ColList<int>(inner, colIndex));
-}
-
 abstract class IntAxis2DViewMixin implements Numeric2DAxisView<int> {
   /// Minimum along y-axis
   Int1D get min {
@@ -76,5 +66,103 @@ abstract class IntAxis2DViewMixin implements Numeric2DAxisView<int> {
   }
 
   @override
+  ArrayView<int> get argMax {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMax;
+    return ret;
+  }
+
+  @override
+  ArrayView<int> get argMin {
+    Int1D ret = new Int1D.sized(length);
+    for (int r = 0; r < length; r++) ret[r] = this[r].argMin;
+    return ret;
+  }
+
+  @override
   Array<int> makeArray(Iterable<int> newData) => new Int1D(newData);
+}
+
+abstract class Int2DRowViewMixin implements Numeric2DAxisView<int> {
+  Numeric2D<int> operator +(Numeric1DView<int> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] + other;
+    return ret;
+  }
+
+  Numeric2D<int> operator -(Numeric1DView<int> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] - other;
+    return ret;
+  }
+
+  Numeric2D<int> operator *(Numeric1DView<int> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] * other;
+    return ret;
+  }
+
+  Numeric2D<double> operator /(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] / other;
+    return ret;
+  }
+
+  Numeric2D<int> operator ~/(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(length, otherDLength);
+    for (int r = 0; r < length; r++) ret[r] = this[r] ~/ other;
+    return ret;
+  }
+}
+
+abstract class Int2DColViewMixin implements Numeric2DAxisView<int> {
+  Numeric2D<int> operator +(Numeric1DView<int> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] + other;
+    return ret;
+  }
+
+  Numeric2D<int> operator -(Numeric1DView<int> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] - other;
+    return ret;
+  }
+
+  Numeric2D<int> operator *(Numeric1DView<int> other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] * other;
+    return ret;
+  }
+
+  Numeric2D<double> operator /(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Double2D ret = new Double2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] / other;
+    return ret;
+  }
+
+  Numeric2D<int> operator ~/(Numeric1DView other) {
+    if (other.length != otherDLength)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+    Int2D ret = new Int2D.sized(otherDLength, length);
+    for (int c = 0; c < length; c++) ret.col[c] = this[c] ~/ other;
+    return ret;
+  }
 }

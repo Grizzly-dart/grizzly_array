@@ -10,34 +10,34 @@ part 'bool_view_array.dart';
 part 'bool_mixin.dart';
 
 class Bool1D extends Object
-    with Bool1DViewMixin, Array1DViewMixin<bool>, Array1DFixMixin<bool>
-    implements Array<bool>, Bool1DFix {
+    with
+        Array1DViewMixin<bool>,
+        Array1DFixMixin<bool>,
+        ArrayMixin<bool>,
+        Bool1DViewMixin
+    implements Array<bool>, Bool1DFix, BoolArray {
   List<bool> _data;
 
   Bool1D([Iterable<bool> data = const <bool>[]])
       : _data = new List<bool>.from(data);
 
-  Bool1D.copy(ArrayView<bool> other)
-      : _data = new List<bool>.from(other.iterable);
+  Bool1D.copy(IterView<bool> other)
+      : _data = new List<bool>.from(other.asIterable);
 
   Bool1D.own(this._data);
 
   Bool1D.sized(int length, {bool data: false})
-      : _data = new List<bool>.filled(length, data);
+      : _data = new List<bool>.filled(length, data, growable: true);
 
-  factory Bool1D.shapedLike(ArrayView d, {bool data: false}) =>
+  factory Bool1D.shapedLike(IterView d, {bool data: false}) =>
       new Bool1D.sized(d.length, data: data);
 
   Bool1D.single(bool data) : _data = <bool>[data];
 
   Bool1D.gen(int length, bool maker(int index))
-      : _data = new List<bool>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<bool>.generate(length, maker);
 
-  Iterable<bool> get iterable => _data;
+  Iterable<bool> get asIterable => _data;
 
   Iterator<bool> get iterator => _data.iterator;
 
@@ -73,11 +73,36 @@ class Bool1D extends Object
       _data.sort((bool a, bool b) => b ? 1 : 0);
   }
 
-  void mask(Array<bool> mask) {
+  void mask(ArrayView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
       if (!mask[i]) _data.removeAt(i);
+    }
+  }
+
+  void removeAt(int pos) => _data.removeAt(pos);
+
+  void removeAtMany(ArrayView<int> pos) {
+    final poss = pos.unique()..sort(descending: true);
+    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+
+    for (int pos in poss.asIterable) {
+      _data.removeAt(pos);
+    }
+  }
+
+  void removeRange(int start, [int end]) {
+    _data.removeRange(start, end ?? length);
+  }
+
+  void remove(bool value, {bool onlyFirst: false}) {
+    if (onlyFirst) {
+      _data.remove(value);
+    } else {
+      for (int i = length - 1; i >= 0; i--) {
+        if (_data[i] == value) removeAt(i);
+      }
     }
   }
 

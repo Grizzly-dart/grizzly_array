@@ -2,11 +2,12 @@ part of grizzly.series.array2d;
 
 class Int2DRow extends Object
     with
-        IntAxis2DViewMixin,
         AxisFixMixin<int>,
         AxisMixin<int>,
         AxisViewMixin<int>,
-        RowMixin<int>
+        RowMixin<int>,
+        IntAxis2DViewMixin,
+        Int2DRowViewMixin
     implements Numeric2DAxis<int>, Int2DRowFix {
   final Int2D inner;
 
@@ -17,10 +18,11 @@ class Int2DRow extends Object
 
 class Int2DRowFix extends Object
     with
-        IntAxis2DViewMixin,
         AxisFixMixin<int>,
+        RowFixMixin<int>,
         AxisViewMixin<int>,
-        RowFixMixin<int>
+        IntAxis2DViewMixin,
+        Int2DRowViewMixin
     implements Numeric2DAxisFix<int>, Int2DRowView {
   final Int2DFix inner;
 
@@ -30,7 +32,11 @@ class Int2DRowFix extends Object
 }
 
 class Int2DRowView extends Object
-    with IntAxis2DViewMixin, AxisViewMixin<int>, RowViewMixin<int>
+    with
+        AxisViewMixin<int>,
+        RowViewMixin<int>,
+        IntAxis2DViewMixin,
+        Int2DRowViewMixin
     implements Numeric2DAxisView<int> {
   final Int2DView inner;
 

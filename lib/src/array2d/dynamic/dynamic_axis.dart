@@ -1,9 +1,9 @@
 part of grizzly.series.array2d;
 
-abstract class String2DAxisMixin implements StringAxis2DView {
+abstract class Dynamic2DAxisMixin implements DynamicAxis2DView {
   /// Minimum along y-axis
-  String1D get min {
-    final ret = new String1D.sized(length);
+  Dynamic1D get min {
+    final ret = new Dynamic1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].min;
     }
@@ -11,8 +11,8 @@ abstract class String2DAxisMixin implements StringAxis2DView {
   }
 
   /// Maximum along y-axis
-  String1D get max {
-    final ret = new String1D.sized(length);
+  Dynamic1D get max {
+    final ret = new Dynamic1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].max;
     }
@@ -34,5 +34,5 @@ abstract class String2DAxisMixin implements StringAxis2DView {
   }
 
   @override
-  StringArray makeArray(Iterable<String> newData) => new String1D(newData);
+  DynamicArray makeArray(Iterable<dynamic> newData) => new Dynamic1D(newData);
 }

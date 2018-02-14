@@ -40,32 +40,30 @@ class Int1DFix extends Object
     implements Numeric1DFix<int>, Int1DView {
   final List<int> _data;
 
-  Int1DFix(Iterable<int> data) : _data = new Int32List.fromList(data.toList());
+  Int1DFix(Iterable<int> data)
+      : _data = new List<int>.from(data, growable: false);
+
+  Int1DFix.copy(IterView<int> other)
+      : _data = new List<int>.from(other.asIterable, growable: false);
 
   /// Creates [Int1DFix] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1DFix] because it involves no
   /// copying.
   Int1DFix.own(this._data);
 
-  Int1DFix.sized(int length, {int data: 0}) : _data = new Int32List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = data;
-    }
-  }
+  Int1DFix.sized(int length, {int data: 0})
+      : _data = new List<int>.filled(length, data);
 
-  factory Int1DFix.shapedLike(ArrayView d, {int data: 0}) =>
+  factory Int1DFix.shapedLike(IterView d, {int data: 0}) =>
       new Int1DFix.sized(d.length, data: data);
 
-  Int1DFix.single(int data) : _data = new Int32List.fromList(<int>[data]);
+  Int1DFix.single(int data)
+      : _data = new List<int>.from(<int>[data], growable: false);
 
   Int1DFix.gen(int length, int maker(int index))
-      : _data = new Int32List(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<int>.generate(length, maker, growable: false);
 
-  Iterable<int> get iterable => _data;
+  Iterable<int> get asIterable => _data;
 
   Iterator<int> get iterator => _data.iterator;
 

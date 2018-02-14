@@ -1,25 +1,21 @@
 part of grizzly.series.array.bool;
 
 class Bool1DView extends Object
-    with Bool1DViewMixin, Array1DViewMixin<bool>
+    with Array1DViewMixin<bool>, Bool1DViewMixin
     implements ArrayView<bool>, BoolArrayView {
   final List<bool> _data;
 
   Bool1DView(Iterable<bool> data) : _data = new List<bool>.from(data);
 
-  Bool1DView.copy(ArrayView<bool> other)
-      : _data = new List<bool>.from(other.iterable);
+  Bool1DView.copy(IterView<bool> other)
+      : _data = new List<bool>.from(other.asIterable, growable: false);
 
   Bool1DView.own(this._data);
 
   Bool1DView.sized(int length, {bool data: false})
-      : _data = new List<bool>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = data;
-    }
-  }
+      : _data = new List<bool>.filled(length, data);
 
-  factory Bool1DView.shapedLike(ArrayView d, {bool data: false}) =>
+  factory Bool1DView.shapedLike(IterView d, {bool data: false}) =>
       new Bool1DView.sized(d.length, data: data);
 
   Bool1DView.single(bool data) : _data = new List<bool>(1) {
@@ -27,13 +23,9 @@ class Bool1DView extends Object
   }
 
   Bool1DView.gen(int length, bool maker(int index))
-      : _data = new List<bool>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<bool>.generate(length, maker, growable: false);
 
-  Iterable<bool> get iterable => _data;
+  Iterable<bool> get asIterable => _data;
 
   Iterator<bool> get iterator => _data.iterator;
 

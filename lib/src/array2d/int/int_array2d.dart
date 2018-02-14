@@ -20,62 +20,6 @@ class Int2D extends Object
     }
   }
 
-  Int2D.from(Iterable<Int1DView> data) : _data = new List<Int1D>(data.length) {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (Int1DView item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
-
-      for (Int1DView item in data) {
-        _data.add(item.clone());
-      }
-    }
-  }
-
-  factory Int2D.copy(Int2D data) => new Int2D(data.iterable);
-
-  Int2D.own(this._data) {
-    // TODO check that all rows are of same length
-  }
-
-  Int2D.sized(int rows, int columns, {int data: 0})
-      : _data = new List<Int1D>.generate(
-            rows, (_) => new Int1D.sized(columns, data: data));
-
-  Int2D.shaped(Index2D shape, {int data: 0})
-      : _data = new List<Int1D>.generate(
-            shape.row, (_) => new Int1D.sized(shape.col, data: data));
-
-  factory Int2D.shapedLike(Array2DView like, {int data: 0}) =>
-      new Int2D.sized(like.numRows, like.numCols, data: data);
-
-  Int2D.repeatRow(ArrayView<int> row, [int numRows = 1])
-      : _data = new List<Int1D>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.copy(row);
-    }
-  }
-
-  Int2D.repeatCol(ArrayView<int> column, [int numCols = 1])
-      : _data = new List<Int1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.sized(numCols, data: column[i]);
-    }
-  }
-
-  Int2D.aRow(ArrayView<int> row) : _data = new List<Int1D>(1) {
-    _data[0] = new Int1D.copy(row);
-  }
-
-  Int2D.aCol(ArrayView<int> column) : _data = new List<Int1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.single(column[i]);
-    }
-  }
-
   /// Create [Int2D] from column major
   factory Int2D.columns(Iterable<Iterable<int>> columns) {
     if (columns.length == 0) {
@@ -96,6 +40,78 @@ class Int2D extends Object
       }
     }
     return ret;
+  }
+
+  Int2D.from(Iterable<Int1DView> data)
+      : _data = new List<Int1D>()..length = data.length {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (Int1DView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        Int1DView item = data.elementAt(i);
+        _data[i] = item.clone();
+      }
+    }
+  }
+
+  Int2D.copy(Array2DView<int> data)
+      : _data = new List<Int1D>()..length = data.numRows {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = data[i].clone();
+    }
+  }
+
+  Int2D.own(this._data) {
+    // TODO check that all rows are of same length
+  }
+
+  Int2D.sized(int rows, int columns, {int data: 0})
+      : _data = new List<Int1D>.generate(
+            rows, (_) => new Int1D.sized(columns, data: data));
+
+  Int2D.shaped(Index2D shape, {int data: 0})
+      : _data = new List<Int1D>.generate(
+            shape.row, (_) => new Int1D.sized(shape.col, data: data));
+
+  factory Int2D.shapedLike(Array2DView like, {int data: 0}) =>
+      new Int2D.sized(like.numRows, like.numCols, data: data);
+
+  factory Int2D.diagonal(Iterable<int> diagonal) {
+    final ret = new Int2D.sized(diagonal.length, diagonal.length);
+    for (int i = 0; i < diagonal.length; i++) {
+      ret[i][i] = diagonal.elementAt(i);
+    }
+    return ret;
+  }
+
+  Int2D.repeatRow(IterView<int> row, [int numRows = 1])
+      : _data = new List<Int1D>()..length = numRows {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Int1D.copy(row);
+    }
+  }
+
+  Int2D.repeatCol(IterView<int> column, [int numCols = 1])
+      : _data = new List<Int1D>()..length = column.length {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Int1D.sized(numCols, data: column[i]);
+    }
+  }
+
+  Int2D.aRow(IterView<int> row) : _data = new List<Int1D>()..length = 1 {
+    _data[0] = new Int1D.copy(row);
+  }
+
+  Int2D.aCol(IterView<int> column)
+      : _data = new List<Int1D>()..length = column.length {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Int1D.single(column[i]);
+    }
   }
 
   factory Int2D.genRows(int numRows, Iterable<int> rowMaker(int index)) {
@@ -181,9 +197,6 @@ class Int2D extends Object
     return ret;
   }
 
-  @override
-  Iterator<Int1D> get iterator => _data.iterator;
-
   covariant Int2DCol _col;
 
   Int2DCol get col => _col ??= new Int2DCol(this);
@@ -202,7 +215,7 @@ class Int2D extends Object
 
   operator []=(final int i, ArrayView<int> val) {
     if (i > numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
+      throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
@@ -211,9 +224,7 @@ class Int2D extends Object
       return;
     }
 
-    if (val.length != numCols) {
-      throw new Exception('Invalid size!');
-    }
+    if (val.length != numCols) throw new Exception('Invalid size!');
 
     final arr = new Int1D.copy(val);
 
@@ -388,7 +399,7 @@ class Int2D extends Object
       final ret = new Int2D.sized(numRows, other.numCols);
       for (int r = 0; r < ret.numRows; r++) {
         for (int c = 0; c < ret.numCols; c++) {
-          ret[r][c] = _data[r].dot(other.col[c].iterable);
+          ret[r][c] = _data[r].dot(other.col[c].asIterable);
         }
       }
       return ret;
@@ -399,11 +410,11 @@ class Int2D extends Object
 
   Int2DView _view;
 
-  Int2DView get view => _view ??= new Int2DView.make(_data);
+  Int2DView get view => _view ??= new Int2DView.own(_data);
 
   Int2DFix _fixed;
 
-  Int2DFix get fixed => _fixed ??= new Int2DFix._takeOwnership(_data);
+  Int2DFix get fixed => _fixed ??= new Int2DFix.own(_data);
 
   Int2D addition(/* int | Iterable<int> | Int2DArray */ other,
       {bool self: false}) {

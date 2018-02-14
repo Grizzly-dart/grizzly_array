@@ -5,7 +5,7 @@ class Int2DFix extends Object
     implements Numeric2DFix<int>, Int2DView {
   final List<Int1DFix> _data;
 
-  Int2DFix(Iterable<Iterable<int>> data) : _data = <Int1D>[] {
+  Int2DFix(Iterable<Iterable<int>> data) : _data = <Int1DFix>[] {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Iterable<int> item in data) {
@@ -15,60 +15,8 @@ class Int2DFix extends Object
       }
 
       for (Iterable<int> item in data) {
-        _data.add(new Int1D(item));
+        _data.add(new Int1DFix(item));
       }
-    }
-  }
-
-  Int2DFix.copy(Iterable<Int1DView> data)
-      : _data = new List<Int1DFix>(data.length) {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (Int1DView item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
-
-      for (Int1DView item in data) {
-        _data.add(item.clone());
-      }
-    }
-  }
-
-  Int2DFix._takeOwnership(this._data);
-
-  Int2DFix.sized(int rows, int columns, {int data: 0})
-      : _data = new List<Int1D>.generate(rows, (_) => new Int1D.sized(columns));
-
-  Int2DFix.shaped(Index2D shape, {int data: 0})
-      : _data = new List<Int1D>.generate(
-            shape.row, (_) => new Int1D.sized(shape.col, data: data));
-
-  factory Int2DFix.shapedLike(Array2DView like, {int data: 0}) =>
-      new Int2DFix.sized(like.numRows, like.numCols, data: data);
-
-  Int2DFix.repeatRow(Iterable<int> row, [int numRows = 1])
-      : _data = new List<Int1D>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D(row);
-    }
-  }
-
-  Int2DFix.repeatCol(Iterable<int> column, [int numCols = 1])
-      : _data = new List<Int1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.sized(numCols, data: column.elementAt(i));
-    }
-  }
-
-  Int2DFix.aRow(Iterable<int> row) : _data = new List<Int1D>(1) {
-    _data[0] = new Int1D(row);
-  }
-
-  Int2DFix.aCol(Iterable<int> column) : _data = new List<Int1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.single(column.elementAt(i));
     }
   }
 
@@ -94,6 +42,80 @@ class Int2DFix extends Object
     return ret;
   }
 
+  Int2DFix.from(Iterable<IterView<int>> data)
+      : _data = new List<Int1DFix>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (IterView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        IterView<int> item = data.elementAt(i);
+        _data[i] = new Int1DFix.copy(item);
+      }
+    }
+  }
+
+  Int2DFix.copy(Array2DView<int> data)
+      : _data = new List<Int1DView>(data.numRows) {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = new Int1DFix.copy(data[i]);
+    }
+  }
+
+  Int2DFix.own(this._data) {
+    // TODO check that all rows are of same length
+  }
+
+  Int2DFix.sized(int rows, int columns, {int data: 0})
+      : _data = new List<Int1DFix>.generate(
+            rows, (_) => new Int1DFix.sized(columns),
+            growable: false);
+
+  Int2DFix.shaped(Index2D shape, {int data: 0})
+      : _data = new List<Int1DFix>.generate(
+            shape.row, (_) => new Int1DFix.sized(shape.col, data: data),
+            growable: false);
+
+  factory Int2DFix.shapedLike(Array2DView like, {int data: 0}) =>
+      new Int2DFix.sized(like.numRows, like.numCols, data: data);
+
+  factory Int2DFix.diagonal(Iterable<int> diagonal) {
+    final ret = new Int2DFix.sized(diagonal.length, diagonal.length);
+    for (int i = 0; i < diagonal.length; i++) {
+      ret[i][i] = diagonal.elementAt(i);
+    }
+    return ret;
+  }
+
+  Int2DFix.repeatRow(IterView<int> row, [int numRows = 1])
+      : _data = new List<Int1DFix>(numRows) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Int1DFix.copy(row);
+    }
+  }
+
+  Int2DFix.repeatCol(IterView<int> column, [int numCols = 1])
+      : _data = new List<Int1DFix>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Int1DFix.sized(numCols, data: column[i]);
+    }
+  }
+
+  Int2DFix.aRow(IterView<int> row) : _data = new List<Int1DFix>(1) {
+    _data[0] = new Int1DFix.copy(row);
+  }
+
+  Int2DFix.aCol(IterView<int> column)
+      : _data = new List<Int1DFix>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new Int1DFix.single(column[i]);
+    }
+  }
+
   factory Int2DFix.genRows(int numRows, Iterable<int> rowMaker(int index)) {
     final rows = <Int1DFix>[];
     int colLen;
@@ -104,7 +126,7 @@ class Int2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Int1DFix(v));
     }
-    return new Int2DFix._takeOwnership(rows);
+    return new Int2DFix.own(rows);
   }
 
   factory Int2DFix.genCols(int numCols, Iterable<int> colMaker(int index)) {
@@ -141,7 +163,7 @@ class Int2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new Int1DFix(v));
     }
-    return new Int2DFix._takeOwnership(rows);
+    return new Int2DFix.own(rows);
   }
 
   static Int2DFix buildCols<T>(
@@ -178,9 +200,6 @@ class Int2DFix extends Object
     }
     return ret;
   }
-
-  @override
-  Iterator<Int1DFix> get iterator => _data.iterator;
 
   covariant Int2DColFix _col;
 
@@ -277,7 +296,7 @@ class Int2DFix extends Object
 
   Int2DView _view;
 
-  Int2DView get view => _view ??= new Int2DView.make(_data);
+  Int2DView get view => _view ??= new Int2DView.own(_data);
 
   Int2DFix get fixed => this;
 

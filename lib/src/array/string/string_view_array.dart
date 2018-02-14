@@ -7,16 +7,15 @@ class String1DView extends Object
 
   String1DView(Iterable<String> data) : _data = new List<String>.from(data);
 
-  String1DView.make(this._data);
+  String1DView.copy(IterView<String> other)
+      : _data = new List<String>.from(other.asIterable);
 
-  String1DView.sized(int length, {String data: ''})
-      : _data = new List<String>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = data;
-    }
-  }
+  String1DView.own(this._data);
 
-  factory String1DView.shapedLike(Iterable d, {String data: ''}) =>
+  String1DView.sized(int length, {String data})
+      : _data = new List<String>.filled(length, data);
+
+  factory String1DView.shapedLike(IterView d, {String data}) =>
       new String1DView.sized(d.length, data: data);
 
   String1DView.single(String data) : _data = new List<String>(1) {
@@ -24,13 +23,9 @@ class String1DView extends Object
   }
 
   String1DView.gen(int length, String maker(int index))
-      : _data = new List<String>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<String>.generate(length, maker, growable: false);
 
-  Iterable<String> get iterable => _data;
+  Iterable<String> get asIterable => _data;
 
   Iterator<String> get iterator => _data.iterator;
 

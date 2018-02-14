@@ -1,28 +1,28 @@
 part of grizzly.series.array2d;
 
-abstract class String2DMixin implements Array2DView<String> {
-  List<String1DView> get _data;
+abstract class Dynamic2DMixin implements DynamicArray2DView {
+  List<Dynamic1DView> get _data;
 
-  String2DColView get col;
+  Dynamic2DColView get col;
 
-  String2DRowView get row;
+  Dynamic2DRowView get row;
 
-  String2DView get view;
+  Dynamic2DView get view;
 
-  String2DView makeView(Iterable<Iterable<String>> newData) =>
-      new String2DView(newData);
+  Dynamic2DView makeView(Iterable<Iterable<dynamic>> newData) =>
+      new Dynamic2DView(newData);
 
-  String2DFix makeFix(Iterable<Iterable<String>> newData) =>
-      new String2DFix(newData);
+  Dynamic2DFix makeFix(Iterable<Iterable<dynamic>> newData) =>
+      new Dynamic2DFix(newData);
 
-  String2D make(Iterable<Iterable<String>> newData) => new String2D(newData);
+  Dynamic2D make(Iterable<Iterable<dynamic>> newData) => new Dynamic2D(newData);
 
   @override
-  Array<String> makeArray(Iterable<String> newData) => new String1D(newData);
+  Array<dynamic> makeArray(Iterable<dynamic> newData) => new Dynamic1D(newData);
 
-  Iterable<Iterable<String>> get iterable => _data.map((a) => a.asIterable);
+  Iterable<Iterable<dynamic>> get iterable => _data.map((a) => a.asIterable);
 
-  Iterator<ArrayView<String>> get iterator => _data.iterator;
+  Iterator<ArrayView<dynamic>> get iterator => _data.iterator;
 
   int get numCols {
     if (numRows == 0) return 0;
@@ -35,9 +35,9 @@ abstract class String2DMixin implements Array2DView<String> {
 
   bool get isSquare => numRows == numCols;
 
-  String1DView operator [](int i) => _data[i].view;
+  Dynamic1DView operator [](int i) => _data[i].view;
 
-  String2D slice(Index2D start, [Index2D end]) {
+  Dynamic2D slice(Index2D start, [Index2D end]) {
     final Index2D myShape = shape;
     if (end == null) {
       end = myShape;
@@ -55,34 +55,34 @@ abstract class String2DMixin implements Array2DView<String> {
     if (start >= myShape)
       throw new ArgumentError.value(start, 'start', 'Index out of range!');
 
-    final list = <String1D>[];
+    final list = <Dynamic1D>[];
 
     for (int c = start.row; c < end.row; c++) {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new String2D.own(list);
+    return new Dynamic2D.own(list);
   }
 
-  String get min {
-    String min;
+  dynamic get min {
+    dynamic min;
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < _data.first.length; j++) {
-        final String d = _data[i][j];
+        final dynamic d = _data[i][j];
         if (d == null) continue;
-        if (min == null || d.compareTo(min) < 0) min = d;
+        if (min == null || d.compareTo(min) < 0) min = d; // TODO
       }
     }
     return min;
   }
 
-  String get max {
-    String max;
+  dynamic get max {
+    dynamic max;
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < _data.first.length; j++) {
-        final String d = _data[i][j];
+        final dynamic d = _data[i][j];
         if (d == null) continue;
-        if (max == null || d.compareTo(max) > 0) max = d;
+        if (max == null || d.compareTo(max) > 0) max = d; // TODO
       }
     }
     return max;
@@ -90,12 +90,13 @@ abstract class String2DMixin implements Array2DView<String> {
 
   Index2D get argMin {
     Index2D ret;
-    String min;
+    dynamic min;
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < _data.first.length; j++) {
-        final String d = _data[i][j];
+        final dynamic d = _data[i][j];
         if (d == null) continue;
         if (min == null || d.compareTo(min) < 0) {
+          // TODO
           min = d;
           ret = idx2D(i, j);
         }
@@ -106,12 +107,13 @@ abstract class String2DMixin implements Array2DView<String> {
 
   Index2D get argMax {
     Index2D ret;
-    String max;
+    dynamic max;
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < _data.first.length; j++) {
-        final String d = _data[i][j];
+        final dynamic d = _data[i][j];
         if (d == null) continue;
         if (max == null || d.compareTo(max) > 0) {
+          // TODO
           max = d;
           ret = idx2D(i, j);
         }
@@ -120,23 +122,8 @@ abstract class String2DMixin implements Array2DView<String> {
     return ret;
   }
 
-  Array2D<String> head([int count = 10]) {
-    // TODO
-    throw new UnimplementedError();
-  }
-
-  Array2D<String> tail([int count = 10]) {
-    //TODO
-    throw new UnimplementedError();
-  }
-
-  Array2D<String> sample([int count = 10]) {
-    //TODO
-    throw new UnimplementedError();
-  }
-
-  String2D get transpose {
-    final ret = new String2D.sized(numCols, numRows);
+  Dynamic2D get transpose {
+    final ret = new Dynamic2D.sized(numCols, numRows);
     for (int j = 0; j < _data.first.length; j++) {
       for (int i = 0; i < numRows; i++) {
         ret[j][i] = _data[i][j];
@@ -145,11 +132,11 @@ abstract class String2DMixin implements Array2DView<String> {
     return ret;
   }
 
-  String1D get diagonal {
+  Dynamic1D get diagonal {
     int dim = numCols;
     if (dim > numRows) dim = numRows;
 
-    final ret = new String1D.sized(dim);
+    final ret = new Dynamic1D.sized(dim);
     for (int i = 0; i < dim; i++) {
       ret[i] = _data[i][i];
     }

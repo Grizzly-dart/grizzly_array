@@ -1,11 +1,11 @@
 part of grizzly.series.array2d;
 
 class String2DFix extends Object
-    with String2DMixin
+    with String2DMixin, Array2DViewMixin<String>
     implements Array2DFix<String>, String2DView {
   final List<String1DFix> _data;
 
-  String2DFix(Iterable<Iterable<String>> data) : _data = <String1D>[] {
+  String2DFix(Iterable<Iterable<String>> data) : _data = <String1DFix>[] {
     if (data.length != 0) {
       final int len = data.first.length;
       for (Iterable<String> item in data) {
@@ -15,54 +15,8 @@ class String2DFix extends Object
       }
 
       for (Iterable<String> item in data) {
-        _data.add(new String1D(item));
+        _data.add(new String1DFix(item));
       }
-    }
-  }
-
-  String2DFix.make(this._data);
-
-  String2DFix.sized(int numRows, int numCols, {String data: ''})
-      : _data = new List<String1D>.generate(
-            numRows, (_) => new String1D.sized(numCols, data: data));
-
-  String2DFix.shaped(Index2D shape, {String data: ''})
-      : _data = new List<String1D>.generate(
-            shape.row, (_) => new String1D.sized(shape.col, data: data));
-
-  factory String2DFix.shapedLike(Array2DView like, {String data: ''}) =>
-      new String2DFix.sized(like.numRows, like.numCols, data: data);
-
-  factory String2DFix.diagonal(Iterable<String> diagonal) {
-    final ret = new String2DFix.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
-    }
-    return ret;
-  }
-
-  String2DFix.repeatRow(Iterable<String> row, [int numRows = 1])
-      : _data = new List<String1D>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new String1D(row);
-    }
-  }
-
-  String2DFix.repeatCol(Iterable<String> column, [int numCols = 1])
-      : _data = new List<String1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new String1D.sized(numCols, data: column.elementAt(i));
-    }
-  }
-
-  String2DFix.aRow(Iterable<String> row) : _data = new List<String1D>(1) {
-    _data[0] = new String1D(row);
-  }
-
-  String2DFix.aCol(Iterable<String> column)
-      : _data = new List<String1D>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new String1D.single(column.elementAt(i));
     }
   }
 
@@ -88,6 +42,78 @@ class String2DFix extends Object
     return ret;
   }
 
+  String2DFix.from(Iterable<IterView<String>> data)
+      : _data = new List<String1DFix>(data.length) {
+    if (data.length != 0) {
+      final int len = data.first.length;
+      for (IterView item in data) {
+        if (item.length != len) {
+          throw new Exception('All rows must have same number of columns!');
+        }
+      }
+
+      for (int i = 0; i < data.length; i++) {
+        IterView<String> item = data.elementAt(i);
+        _data[i] = new String1DFix.copy(item);
+      }
+    }
+  }
+
+  String2DFix.copy(Array2DView<String> data)
+      : _data = new List<String1DFix>(data.numRows) {
+    for (int i = 0; i < data.numRows; i++) {
+      _data[i] = new String1DFix.copy(data[i]);
+    }
+  }
+
+  String2DFix.own(this._data);
+
+  String2DFix.sized(int numRows, int numCols, {String data: ''})
+      : _data = new List<String1D>.generate(
+            numRows, (_) => new String1D.sized(numCols, data: data),
+            growable: false);
+
+  String2DFix.shaped(Index2D shape, {String data: ''})
+      : _data = new List<String1D>.generate(
+            shape.row, (_) => new String1D.sized(shape.col, data: data),
+            growable: false);
+
+  factory String2DFix.shapedLike(Array2DView like, {String data: ''}) =>
+      new String2DFix.sized(like.numRows, like.numCols, data: data);
+
+  factory String2DFix.diagonal(Iterable<String> diagonal) {
+    final ret = new String2DFix.sized(diagonal.length, diagonal.length);
+    for (int i = 0; i < diagonal.length; i++) {
+      ret[i][i] = diagonal.elementAt(i);
+    }
+    return ret;
+  }
+
+  String2DFix.repeatRow(IterView<String> row, [int numRows = 1])
+      : _data = new List<String1DFix>(numRows) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new String1DFix.copy(row);
+    }
+  }
+
+  String2DFix.repeatCol(IterView<String> column, [int numCols = 1])
+      : _data = new List<String1DFix>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new String1DFix.sized(numCols, data: column[i]);
+    }
+  }
+
+  String2DFix.aRow(IterView<String> row) : _data = new List<String1DFix>(1) {
+    _data[0] = new String1DFix.copy(row);
+  }
+
+  String2DFix.aCol(IterView<String> column)
+      : _data = new List<String1DFix>(column.length) {
+    for (int i = 0; i < numRows; i++) {
+      _data[i] = new String1DFix.single(column[i]);
+    }
+  }
+
   factory String2DFix.genRows(
       int numRows, Iterable<String> rowMaker(int index)) {
     final rows = <String1DFix>[];
@@ -99,7 +125,7 @@ class String2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new String1DFix(v));
     }
-    return new String2DFix.make(rows);
+    return new String2DFix.own(rows);
   }
 
   factory String2DFix.genCols(
@@ -137,7 +163,7 @@ class String2DFix extends Object
       if (colLen != v.length) throw new Exception('Size mismatch!');
       rows.add(new String1DFix(v));
     }
-    return new String2DFix.make(rows);
+    return new String2DFix.own(rows);
   }
 
   static String2DFix buildCols<T>(
@@ -185,31 +211,20 @@ class String2DFix extends Object
 
   String1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, /* Iterable<String> | ArrayView<String> */ val) {
+  operator []=(final int i, ArrayView<String> val) {
     if (i >= numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
-    }
-
-    Iterable<String> v;
-    if (val is ArrayView<String>) {
-      v = val.iterable;
-    } else if (val is Iterable<String>) {
-      v = val;
-    } else {
-      throw new ArgumentError.value(val, 'val', 'Unknown type!');
+      throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
-      final arr = new String1D(v);
+      final arr = new String1D.copy(val);
       _data.add(arr);
       return;
     }
 
-    if (v.length != numCols) {
-      throw new Exception('Invalid size!');
-    }
+    if (val.length != numCols) throw new Exception('Invalid size!');
 
-    final arr = new String1D(v);
+    final arr = new String1D.copy(val);
 
     _data[i] = arr;
   }
@@ -237,7 +252,13 @@ class String2DFix extends Object
 
   String2DView _view;
 
-  String2DView get view => _view ??= new String2DView.make(_data);
+  String2DView get view => _view ??= new String2DView.own(_data);
+
+  @override
+  Iterable<ArrayFix<String>> get rows => _data;
+
+  @override
+  Iterable<ArrayFix<String>> get cols => new ColsListFix<String>(this);
 
   String2DFix get fixed => this;
 }

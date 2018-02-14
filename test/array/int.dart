@@ -18,7 +18,8 @@ void main() {
 
     test('to2D', () {
       Int1D s1 = new Int1D([1, 5]);
-      expect(s1.to2D(), [
+      Int2D s2 = s1.to2D();
+      expect(s2, [
         [1, 5]
       ]);
       expect(s1.transpose, [
@@ -58,19 +59,21 @@ void main() {
     });
 
     test('sort', () {
-      expect((int1D([1, 5, 2, 4, 3])..sort()).iterable, [1, 2, 3, 4, 5]);
-      expect((int1D([1, 5, 2, 4, 3])..sort(descending: true)).iterable,
+      expect((int1D([1, 5, 2, 4, 3])..sort()).asIterable, [1, 2, 3, 4, 5]);
+      expect((int1D([1, 5, 2, 4, 3])..sort(descending: true)).asIterable,
           [5, 4, 3, 2, 1]);
     });
 
     test('unique', () {
-      expect(int1D([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).unique().iterable,
+      expect(int1D([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).unique().asIterable,
           [1, 5, 6, 2, 3]);
     });
 
     test('uniqueIndices', () {
       expect(
-          int1D([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).uniqueIndices().iterable,
+          int1D([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1])
+              .uniqueIndices()
+              .asIterable,
           [0, 2, 3, 5, 6]);
     });
 

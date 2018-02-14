@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class Bool2DMixin implements Array2DView<bool> {
+abstract class Bool2DViewMixin implements Array2DView<bool> {
   List<Bool1DView> get _data;
 
   Bool2DColView get col;
@@ -16,9 +16,8 @@ abstract class Bool2DMixin implements Array2DView<bool> {
 
   Bool2D make(Iterable<Iterable<bool>> newData) => new Bool2D(newData);
 
-  Iterable<Iterable<bool>> get iterable => _data.map((a) => a.iterable);
-
-  Iterator<ArrayView<bool>> get iterator => _data.iterator;
+  @override
+  Array<bool> makeArray(Iterable<bool> newData) => new Bool1D(newData);
 
   int get numCols {
     if (numRows == 0) return 0;
@@ -174,11 +173,6 @@ abstract class Bool2DMixin implements Array2DView<bool> {
     return ret;
   }
 
-  @override
-  Array<bool> unique() {
-    throw new UnimplementedError();
-  }
-
   String toString() {
     final sb = new StringBuffer();
     //TODO print as table
@@ -195,56 +189,17 @@ abstract class Bool2DMixin implements Array2DView<bool> {
     return sb.toString();
   }
 
-  /* TODO
-  IntSeries<bool> valueCounts(
-      {bool sortByValue: false,
-      bool ascending: false,
-      bool dropNull: false,
-      dynamic name: ''}) {
-    final groups = new Map<bool, List<int>>();
-    for (int r = 0; r < numRows; r++) {
-      for (int c = 0; c < numCols; c++) {
-        final bool v = _data[r][c];
-        if (!groups.containsKey(v)) groups[v] = <int>[0];
-        groups[v][0]++;
-      }
-    }
-    final ret = new IntSeries<bool>.fromMap(groups, name: name);
-    // Sort
-    if (sortByValue) {
-      ret.sortByIndex(ascending: ascending, inplace: true);
-    } else {
-      ret.sortByValue(ascending: ascending, inplace: true);
-    }
-    return ret;
-  }
-  */
-
-  bool get allTrue {
+  bool get isTrue {
     for (int i = 0; i < numRows; i++) {
-      if (!_data[i].allTrue) return false;
+      if (!_data[i].isTrue) return false;
     }
     return true;
   }
 
-  bool get allFalse {
+  bool get isFalse {
     for (int i = 0; i < numRows; i++) {
-      if (!_data[i].allFalse) return false;
+      if (!_data[i].isFalse) return false;
     }
     return true;
-  }
-
-  bool get anyTrue {
-    for (int i = 0; i < numRows; i++) {
-      if (_data[i].anyTrue) return true;
-    }
-    return false;
-  }
-
-  bool get anyFalse {
-    for (int i = 0; i < numRows; i++) {
-      if (_data[i].anyFalse) return true;
-    }
-    return false;
   }
 }

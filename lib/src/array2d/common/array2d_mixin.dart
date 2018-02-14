@@ -9,7 +9,7 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
   Array<E> unique() {
     final ret = new LinkedHashSet<E>();
     for (ArrayView<E> r in rows) {
-      for (E element in r.iterable) {
+      for (E element in r.asIterable) {
         if (!ret.contains(element)) ret.add(element);
       }
     }

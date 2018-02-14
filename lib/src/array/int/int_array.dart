@@ -1,7 +1,6 @@
 library grizzly.series.array.int;
 
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
@@ -13,17 +12,19 @@ part 'int_mixin.dart';
 
 class Int1D extends Object
     with
-        Int1DViewMixin,
-        IntFixMixin,
         Array1DViewMixin<int>,
-        Array1DFixMixin<int>
+        Array1DFixMixin<int>,
+        ArrayMixin<int>,
+        Int1DViewMixin,
+        IntFixMixin
     implements Numeric1D<int>, Int1DFix {
   List<int> _data;
 
   Int1D([Iterable<int> data = const <int>[]])
       : _data = new List<int>.from(data);
 
-  Int1D.copy(ArrayView<int> other) : _data = new List<int>.from(other.iterable);
+  Int1D.copy(IterView<int> other)
+      : _data = new List<int>.from(other.asIterable);
 
   /// Creates [Int1D] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1D] because it involves no
@@ -31,20 +32,17 @@ class Int1D extends Object
   Int1D.own(this._data);
 
   Int1D.sized(int length, {int data: 0})
-      : _data = new List<int>.filled(length, data);
+      : _data = new List<int>.filled(length, data, growable: true);
 
-  Int1D.shapedLike(ArrayView d, {int data: 0})
+  Int1D.shapedLike(IterView d, {int data: 0})
       : _data = new List<int>.filled(d.length, data);
 
   Int1D.single(int data) : _data = <int>[data];
 
-  Int1D.gen(int length, int maker(int index)) : _data = new List<int>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+  Int1D.gen(int length, int maker(int index))
+      : _data = new List<int>.generate(length, maker);
 
-  Iterable<int> get iterable => _data;
+  Iterable<int> get asIterable => _data;
 
   Iterator<int> get iterator => _data.iterator;
 
@@ -322,16 +320,41 @@ class Int1D extends Object
       _data.sort((int a, int b) => b.compareTo(a));
   }
 
-  void mask(Array<bool> mask) {
+  void mask(ArrayView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     int retLength = mask.count(true);
-    final ret = new Int32List(retLength);
+    final ret = new List<int>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
       if (mask[i]) ret[idx++] = _data[i];
     }
     _data = ret;
+  }
+
+  void removeAt(int pos) => _data.removeAt(pos);
+
+  void removeAtMany(ArrayView<int> pos) {
+    final poss = pos.unique()..sort(descending: true);
+    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+
+    for (int pos in poss.asIterable) {
+      _data.removeAt(pos);
+    }
+  }
+
+  void removeRange(int start, [int end]) {
+    _data.removeRange(start, end ?? length);
+  }
+
+  void remove(int value, {bool onlyFirst: false}) {
+    if (onlyFirst) {
+      _data.remove(value);
+    } else {
+      for (int i = length - 1; i >= 0; i--) {
+        if (_data[i] == value) removeAt(i);
+      }
+    }
   }
 
   Int1DView _view;

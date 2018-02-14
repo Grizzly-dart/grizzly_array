@@ -11,36 +11,34 @@ part 'string_minix.dart';
 
 class String1D extends Object
     with
-        String1DViewMixin,
         Array1DViewMixin<String>,
         Array1DFixMixin<String>,
+        ArrayMixin<String>,
+        String1DViewMixin,
         String1DFixMixin
-    implements Array<String>, String1DFix {
+    implements StringArray, String1DFix {
   List<String> _data;
 
-  String1D(Iterable<String> data) : _data = new List<String>.from(data);
+  String1D([Iterable<String> data = const []])
+      : _data = new List<String>.from(data);
 
-  String1D.copy(ArrayView<String> other)
-      : _data = new List<String>.from(other.iterable);
+  String1D.copy(IterView<String> other)
+      : _data = new List<String>.from(other.asIterable);
 
   String1D.own(this._data);
 
-  String1D.sized(int length, {String data: ''})
-      : _data = new List<String>.filled(length, data);
+  String1D.sized(int length, {String data})
+      : _data = new List<String>.filled(length, data, growable: true);
 
-  factory String1D.shapedLike(ArrayView d, {String data: ''}) =>
+  factory String1D.shapedLike(IterView d, {String data}) =>
       new String1D.sized(d.length, data: data);
 
   String1D.single(String data) : _data = <String>[data];
 
   String1D.gen(int length, String maker(int index))
-      : _data = new List<String>(length) {
-    for (int i = 0; i < length; i++) {
-      _data[i] = maker(i);
-    }
-  }
+      : _data = new List<String>.generate(length, maker);
 
-  Iterable<String> get iterable => _data;
+  Iterable<String> get asIterable => _data;
 
   Iterator<String> get iterator => _data.iterator;
 
@@ -77,7 +75,7 @@ class String1D extends Object
       _data.sort((String a, String b) => b.compareTo(a));
   }
 
-  void mask(Array<bool> mask) {
+  void mask(ArrayView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
@@ -85,8 +83,33 @@ class String1D extends Object
     }
   }
 
+  void removeAt(int pos) => _data.removeAt(pos);
+
+  void removeAtMany(ArrayView<int> pos) {
+    final poss = pos.unique()..sort(descending: true);
+    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+
+    for (int pos in poss.asIterable) {
+      _data.removeAt(pos);
+    }
+  }
+
+  void removeRange(int start, [int end]) {
+    _data.removeRange(start, end ?? length);
+  }
+
+  void remove(String value, {bool onlyFirst: false}) {
+    if (onlyFirst) {
+      _data.remove(value);
+    } else {
+      for (int i = length - 1; i >= 0; i--) {
+        if (_data[i] == value) removeAt(i);
+      }
+    }
+  }
+
   String1DView _view;
-  String1DView get view => _view ??= new String1DView.make(_data);
+  String1DView get view => _view ??= new String1DView.own(_data);
 
   String1DFix _fixed;
   String1DFix get fixed => _fixed ??= new String1DFix.own(_data);
