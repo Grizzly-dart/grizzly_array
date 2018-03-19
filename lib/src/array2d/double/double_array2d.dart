@@ -335,7 +335,7 @@ class Double2D extends Object
   Double2D get log10Self {
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++)
-        _data[r][c] = math.log(_data[r][c]) / math.LN10;
+        _data[r][c] = math.log(_data[r][c]) / math.ln10;
     }
     return this;
   }

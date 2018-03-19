@@ -49,6 +49,8 @@ class Double1DView extends Object
   Double1D slice(int start, [int end]) =>
       new Double1D(_data.sublist(start, end));
 
+  int count(double v, {double absTol: 1e-8}) => super.count(v, absTol: absTol);
+
   Double1DFix operator +(/* num | Iterable<num> */ other) => addition(other);
 
   Double1DFix addition(/* num | Iterable<num> */ other) {

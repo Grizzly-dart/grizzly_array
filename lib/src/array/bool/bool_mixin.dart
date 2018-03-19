@@ -167,7 +167,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   BoolArrayView operator ~() {
     final ret = new Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = ~this[i];
+      ret[i] = !this[i];
     }
     return ret;
   }

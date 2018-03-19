@@ -361,7 +361,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
     final ret = new Double2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++)
-        ret[r][c] = math.log(_data[r][c]) / math.LN10;
+        ret[r][c] = math.log(_data[r][c]) / math.ln10;
     }
     return ret;
   }

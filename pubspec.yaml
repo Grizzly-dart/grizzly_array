@@ -14,6 +14,10 @@ dependencies:
   grizzly_scales: ^0.0.3-dev
   grizzly_series: # ^0.0.9
     path: ../grizzly_series
+  collection: ^1.14.7
 
 dev_dependencies:
   test: ^0.12.0
+
+language:
+  enablePreviewDart2: true
