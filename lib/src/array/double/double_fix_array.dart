@@ -30,24 +30,35 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     }
   }
 
+  @override
   Double1DFix get logSelf {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]);
     return this;
   }
 
+  @override
   Double1DFix get log10Self {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.LN10;
     return this;
   }
 
+  @override
   Double1D expSelf(num x) {
     for (int i = 0; i < length; i++) this[i] = math.exp(this[i]);
     return this;
   }
 
+  @override
   Double1DFix logNSelf(double n) {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.log(n);
     return this;
+  }
+
+  @override
+  void negate() {
+    for(int i = 0; i < length; i++) {
+      this[i] = -this[i];
+    }
   }
 }
 

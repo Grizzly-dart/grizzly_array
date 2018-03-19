@@ -29,6 +29,13 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       return;
     }
   }
+
+  @override
+  void negate() {
+    for(int i = 0; i < length; i++) {
+      this[i] = -this[i];
+    }
+  }
 }
 
 class Int1DFix extends Object

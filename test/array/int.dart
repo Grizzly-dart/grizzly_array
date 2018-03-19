@@ -19,7 +19,7 @@ void main() {
     test('to2D', () {
       Int1D s1 = new Int1D([1, 5]);
       Int2D s2 = s1.to2D();
-      expect(s2, [
+      expect(s2.asIterable, [
         [1, 5]
       ]);
       expect(s1.transpose, [
