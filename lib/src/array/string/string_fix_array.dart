@@ -35,8 +35,8 @@ abstract class String1DFixMixin implements ArrayFix<String>, StringFixArray {
 class String1DFix extends Object
     with
         String1DViewMixin,
-        Array1DViewMixin<String>,
-        Array1DFixMixin<String>,
+        ArrayViewMixin<String>,
+        ArrayFixMixin<String>,
         String1DFixMixin
     implements ArrayFix<String>, String1DView, StringFixArray {
   List<String> _data;

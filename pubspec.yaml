@@ -15,6 +15,7 @@ dependencies:
   grizzly_series: # ^0.0.9
     path: ../grizzly_series
   collection: ^1.14.7
+  text_table: ^2.5.2
 
 dev_dependencies:
   test: ^0.12.0

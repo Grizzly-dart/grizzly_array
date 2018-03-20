@@ -2,8 +2,8 @@ part of grizzly.series.array.dynamic;
 
 class Dynamic1DFix extends Object
     with
-        Array1DViewMixin<dynamic>,
-        Array1DFixMixin<dynamic>,
+        ArrayViewMixin<dynamic>,
+        ArrayFixMixin<dynamic>,
         Dynamic1DViewMixin,
         Dynamic1DFixMixin
     implements Dynamic1DView, DynamicArrayFix {
@@ -11,25 +11,28 @@ class Dynamic1DFix extends Object
 
   Comparator comparator;
 
-  Dynamic1DFix(Iterable<dynamic> data, {this.comparator})
+  Dynamic1DFix(Iterable<dynamic> data, {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.from(data, growable: false);
 
-  Dynamic1DFix.copy(IterView<dynamic> other, {this.comparator})
+  Dynamic1DFix.copy(IterView<dynamic> other,
+      {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.from(other.asIterable);
 
   Dynamic1DFix.own(this._data, {this.comparator});
 
-  Dynamic1DFix.sized(int length, {dynamic data, this.comparator})
+  Dynamic1DFix.sized(int length,
+      {dynamic data, this.comparator: _dummyComparator})
       : _data = new List<dynamic>.filled(length, data);
 
   factory Dynamic1DFix.shapedLike(IterView d,
-          {dynamic data, Comparator comparator}) =>
+          {dynamic data, Comparator comparator: _dummyComparator}) =>
       new Dynamic1DFix.sized(d.length, data: data, comparator: comparator);
 
-  Dynamic1DFix.single(dynamic data, {this.comparator})
+  Dynamic1DFix.single(dynamic data, {this.comparator: _dummyComparator})
       : _data = <dynamic>[data];
 
-  Dynamic1DFix.gen(int length, dynamic maker(int index), {this.comparator})
+  Dynamic1DFix.gen(int length, dynamic maker(int index),
+      {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.generate(length, maker, growable: false);
 
   Iterable<dynamic> get asIterable => _data;

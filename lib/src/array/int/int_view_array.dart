@@ -7,7 +7,7 @@ void checkLengths(ArrayView expected, ArrayView found, {String subject}) {
 }
 
 class Int1DView extends Object
-    with Int1DViewMixin, Array1DViewMixin<int>
+    with ArrayViewMixin<int>, Int1DViewMixin
     implements Numeric1DView<int> {
   final List<int> _data;
 
@@ -33,6 +33,10 @@ class Int1DView extends Object
 
   Int1DView.gen(int length, int maker(int index))
       : _data = new List<int>.generate(length, maker, growable: false);
+
+  Stats<int> _stats;
+
+  Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
 
   Iterable<int> get asIterable => _data;
 

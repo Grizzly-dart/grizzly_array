@@ -191,4 +191,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
     }
     return ret;
   }
+
+  @override
+  int compareValue(bool a, bool b) => a == b ? 0 : a ? 1 : -1;
 }

@@ -16,7 +16,7 @@ abstract class ArrayMixin<E> implements Array<E> {
   }
 }
 
-abstract class Array1DViewMixin<E> implements ArrayView<E> {
+abstract class ArrayViewMixin<E> implements ArrayView<E> {
   Index1D get shape => new Index1D(length);
 
   IntPair<E> pairAt(int index) => intPair<E>(index, this[index]);
@@ -113,7 +113,8 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] != other;
       }
-    } else if (other is ArrayView<E>) {
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] != other[i];
       }
@@ -130,7 +131,8 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] == other;
       }
-    } else if (other is ArrayView<E>) {
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] == other[i];
       }
@@ -139,9 +141,81 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
     }
     return ret;
   }
+
+  @override
+  BoolArray operator >=(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) >= 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) >= 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  BoolArray operator >(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) > 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) > 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  BoolArray operator <(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) < 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) < 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  BoolArray operator <=(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) <= 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) <= 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
 }
 
-abstract class Array1DFixMixin<E> implements ArrayFix<E> {
+abstract class ArrayFixMixin<E> implements ArrayFix<E> {
   /// Sets all elements in the array to given value [v]
   void set(E v) {
     for (int i = 0; i < length; i++) {

@@ -5,6 +5,7 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
 import '../common/common.dart';
+import 'package:text_table/text_table.dart';
 
 part 'int_fix_array.dart';
 part 'int_view_array.dart';
@@ -12,8 +13,8 @@ part 'int_mixin.dart';
 
 class Int1D extends Object
     with
-        Array1DViewMixin<int>,
-        Array1DFixMixin<int>,
+        ArrayViewMixin<int>,
+        ArrayFixMixin<int>,
         ArrayMixin<int>,
         Int1DViewMixin,
         IntFixMixin
@@ -41,6 +42,10 @@ class Int1D extends Object
 
   Int1D.gen(int length, int maker(int index))
       : _data = new List<int>.generate(length, maker);
+
+  Stats<int> _stats;
+
+  Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
 
   Iterable<int> get asIterable => _data;
 

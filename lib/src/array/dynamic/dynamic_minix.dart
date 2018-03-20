@@ -107,6 +107,9 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
   bool contains(dynamic value) => asIterable.contains(value);
 
   @override
+  int compareValue(dynamic a, dynamic b) => comparator(a, b);
+
+  @override
   Int1D toIntArray({int defaultValue, int onInvalid(value)}) {
     final ret = new Int1D.sized(length);
     for (int i = 0; i < length; i++) {

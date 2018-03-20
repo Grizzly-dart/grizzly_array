@@ -12,8 +12,8 @@ part 'double_mixin.dart';
 
 class Double1D extends Object
     with
-        Array1DViewMixin<double>,
-        Array1DFixMixin<double>,
+        ArrayViewMixin<double>,
+        ArrayFixMixin<double>,
         ArrayMixin<double>,
         Double1DViewMixin,
         DoubleFixMixin
@@ -54,6 +54,10 @@ class Double1D extends Object
     }
     throw new UnsupportedError('Unknown type!');
   }
+
+  Stats<double> _stats;
+
+  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
   Iterable<double> get asIterable => _data;
 

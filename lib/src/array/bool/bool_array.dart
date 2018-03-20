@@ -11,8 +11,8 @@ part 'bool_mixin.dart';
 
 class Bool1D extends Object
     with
-        Array1DViewMixin<bool>,
-        Array1DFixMixin<bool>,
+        ArrayViewMixin<bool>,
+        ArrayFixMixin<bool>,
         ArrayMixin<bool>,
         Bool1DViewMixin
     implements Array<bool>, Bool1DFix, BoolArray {
