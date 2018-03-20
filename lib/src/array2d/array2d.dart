@@ -57,9 +57,9 @@ part 'double_array2d.dart';
 Double2D array2D(
     /* Iterable<Iterable<num>> | Iterable<double> | Index2D */ data,
     {bool transpose: false}) {
-  if (data is Iterable<Iterable<num>>) {
+  if (data is Iterable<Iterable<double>>) {
     if (!transpose) {
-      return new Double2D.fromNum(data);
+      return new Double2D(data);
     } else {
       return new Double2D.columns(data);
     }
