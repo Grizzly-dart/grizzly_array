@@ -105,6 +105,40 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
     }
     return ret;
   }
+
+  @override
+  BoolArray ne(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] != other;
+      }
+    } else if (other is ArrayView<E>) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] != other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  BoolArray eq(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] == other;
+      }
+    } else if (other is ArrayView<E>) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] == other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
 }
 
 abstract class Array1DFixMixin<E> implements ArrayFix<E> {
