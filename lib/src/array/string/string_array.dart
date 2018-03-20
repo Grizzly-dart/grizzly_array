@@ -11,8 +11,8 @@ part 'string_minix.dart';
 
 class String1D extends Object
     with
-        Array1DViewMixin<String>,
-        Array1DFixMixin<String>,
+        ArrayViewMixin<String>,
+        ArrayFixMixin<String>,
         ArrayMixin<String>,
         String1DViewMixin,
         String1DFixMixin

@@ -64,10 +64,10 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
 
 class Double1DFix extends Object
     with
-        Array1DViewMixin<double>,
+        ArrayViewMixin<double>,
         Double1DViewMixin,
         DoubleFixMixin,
-        Array1DFixMixin<double>
+        ArrayFixMixin<double>
     implements Numeric1DFix<double>, Double1DView {
   final List<double> _data;
 
@@ -106,6 +106,10 @@ class Double1DFix extends Object
     }
     throw new UnsupportedError('Unknown type!');
   }
+
+  Stats<double> _stats;
+
+  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
   Iterable<double> get asIterable => _data;
 

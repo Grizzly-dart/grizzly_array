@@ -40,10 +40,10 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
 
 class Int1DFix extends Object
     with
+        ArrayViewMixin<int>,
+        ArrayFixMixin<int>,
         Int1DViewMixin,
-        IntFixMixin,
-        Array1DViewMixin<int>,
-        Array1DFixMixin<int>
+        IntFixMixin
     implements Numeric1DFix<int>, Int1DView {
   final List<int> _data;
 
@@ -69,6 +69,10 @@ class Int1DFix extends Object
 
   Int1DFix.gen(int length, int maker(int index))
       : _data = new List<int>.generate(length, maker, growable: false);
+
+  Stats<int> _stats;
+
+  Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
 
   Iterable<int> get asIterable => _data;
 

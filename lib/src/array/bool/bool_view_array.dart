@@ -1,7 +1,7 @@
 part of grizzly.series.array.bool;
 
 class Bool1DView extends Object
-    with Array1DViewMixin<bool>, Bool1DViewMixin
+    with ArrayViewMixin<bool>, Bool1DViewMixin
     implements ArrayView<bool>, BoolArrayView {
   final List<bool> _data;
 

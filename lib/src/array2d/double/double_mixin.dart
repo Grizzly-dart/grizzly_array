@@ -466,7 +466,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
   Double2D get covMatrix {
     final ret = new Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
-      ret[c] = col[c].covMatrix(view);
+      ret[c] = col[c].stats.covMatrix(view);
     }
     return ret;
   }
@@ -474,7 +474,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
   Double2D get corrcoefMatrix {
     final ret = new Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
-      ret[c] = col[c].corrcoefMatrix(view);
+      ret[c] = col[c].stats.corrcoefMatrix(view);
     }
     return ret;
   }

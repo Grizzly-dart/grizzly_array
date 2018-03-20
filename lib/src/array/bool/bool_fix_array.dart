@@ -1,7 +1,7 @@
 part of grizzly.series.array.bool;
 
 class Bool1DFix extends Object
-    with Array1DViewMixin<bool>, Array1DFixMixin<bool>, Bool1DViewMixin
+    with ArrayViewMixin<bool>, ArrayFixMixin<bool>, Bool1DViewMixin
     implements ArrayFix<bool>, Bool1DView {
   final List<bool> _data;
 

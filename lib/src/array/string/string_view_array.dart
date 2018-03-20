@@ -1,7 +1,7 @@
 part of grizzly.series.array.string;
 
 class String1DView extends Object
-    with String1DViewMixin, Array1DViewMixin<String>
+    with String1DViewMixin, ArrayViewMixin<String>
     implements ArrayView<String>, StringArrayView {
   List<String> _data;
 

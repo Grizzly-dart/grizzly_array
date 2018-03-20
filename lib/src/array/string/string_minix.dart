@@ -233,4 +233,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
 
   @override
   bool contains(String value) => asIterable.contains(value);
+
+  @override
+  int compareValue(String a, String b) => a.compareTo(b);
 }

@@ -1,7 +1,7 @@
 part of grizzly.series.array.double;
 
 class Double1DView extends Object
-    with Array1DViewMixin<double>, Double1DViewMixin
+    with ArrayViewMixin<double>, Double1DViewMixin
     implements Numeric1DView<double> {
   final List<double> _data;
 
@@ -35,6 +35,10 @@ class Double1DView extends Object
     }
     return new Double1DView.own(list);
   }
+
+  Stats<double> _stats;
+
+  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
   Iterable<double> get asIterable => _data;
 

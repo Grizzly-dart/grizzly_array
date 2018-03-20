@@ -11,8 +11,8 @@ part 'dynamic_minix.dart';
 
 class Dynamic1D extends Object
     with
-        Array1DViewMixin<dynamic>,
-        Array1DFixMixin<dynamic>,
+        ArrayViewMixin<dynamic>,
+        ArrayFixMixin<dynamic>,
         ArrayMixin<dynamic>,
         Dynamic1DViewMixin,
         Dynamic1DFixMixin
@@ -21,24 +21,26 @@ class Dynamic1D extends Object
 
   Comparator comparator;
 
-  Dynamic1D(Iterable<dynamic> data, {this.comparator})
+  Dynamic1D(Iterable<dynamic> data, {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.from(data);
 
-  Dynamic1D.copy(IterView<dynamic> other, {this.comparator})
+  Dynamic1D.copy(IterView<dynamic> other, {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.from(other.asIterable);
 
-  Dynamic1D.own(this._data, {this.comparator});
+  Dynamic1D.own(this._data, {this.comparator: _dummyComparator});
 
-  Dynamic1D.sized(int length, {dynamic data, this.comparator})
+  Dynamic1D.sized(int length, {dynamic data, this.comparator: _dummyComparator})
       : _data = new List<dynamic>.filled(length, data, growable: true);
 
   factory Dynamic1D.shapedLike(IterView d,
-          {dynamic data, Comparator comparator}) =>
+          {dynamic data, Comparator comparator: _dummyComparator}) =>
       new Dynamic1D.sized(d.length, data: data, comparator: comparator);
 
-  Dynamic1D.single(dynamic data, {this.comparator}) : _data = <dynamic>[data];
+  Dynamic1D.single(dynamic data, {this.comparator: _dummyComparator})
+      : _data = <dynamic>[data];
 
-  Dynamic1D.gen(int length, dynamic maker(int index), {this.comparator})
+  Dynamic1D.gen(int length, dynamic maker(int index),
+      {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.generate(length, maker);
 
   Iterable<dynamic> get asIterable => _data;
