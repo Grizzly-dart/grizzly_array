@@ -103,6 +103,21 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret;
   }
 
+  Int1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..addition(other);
+
+  Int1D operator -(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..subtract(other);
+
+  Int1D operator *(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..multiply(other);
+
+  Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..addition(other);
+
+  Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..truncDiv(other);
+
   Double1D sqrt() {
     final ret = new Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = math.sqrt(this[i]);
@@ -137,12 +152,12 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret;
   }
 
-  int dot(Iterable<num> other) {
-    if (length != other.length) throw new Exception('Lengths must match!');
+  int dot(IterView<num> other) {
+    checkLengths(this, other, subject: 'other');
 
     num ret = 0;
     for (int i = 0; i < length; i++) {
-      ret += this[i] * other.elementAt(i);
+      ret += this[i] * other[i];
     }
     return ret.toInt();
   }
@@ -383,23 +398,23 @@ class StatsImpl<T extends num> implements Stats<T> {
 
   int count(T v) {
     int ret = 0;
-    for(int i = 0; i < length; i++) {
-      if(_values[i] == v) ret++;
+    for (int i = 0; i < length; i++) {
+      if (_values[i] == v) ret++;
     }
     return ret;
   }
 
   int get countNonNull {
     int ret = 0;
-    for(int i = 0; i < length; i++) {
-      if(_values[i] != null) ret++;
+    for (int i = 0; i < length; i++) {
+      if (_values[i] != null) ret++;
     }
     return ret;
   }
 
   T get sum {
     T ret;
-    if(0 is T) {
+    if (0 is T) {
       ret = 0 as T;
     } else {
       ret = 0.0 as T;
@@ -414,7 +429,7 @@ class StatsImpl<T extends num> implements Stats<T> {
 
   T get prod {
     T ret;
-    if(0 is T) {
+    if (0 is T) {
       ret = 1 as T;
     } else {
       ret = 1.0 as T;

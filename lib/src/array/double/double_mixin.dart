@@ -9,39 +9,20 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   Double1D clone() => new Double1D.copy(this);
 
-  Int1DFix operator ~/(/* num | Iterable<num> */ other) {
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      final ret = new Int1D.sized(length);
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] ~/ other.elementAt(i).toInt();
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
+  Double1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..addition(other);
 
-    final ret = new Int1D.sized(length);
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] ~/ other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] ~/ other[i];
-      }
-    }
-    return ret;
-  }
+  Double1D operator -(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..subtract(other);
 
+  Double1D operator *(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..multiply(other);
+
+  Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..addition(other);
+
+  Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..truncDiv(other);
 
   @override
   int compareValue(double a, double b) => a.compareTo(b);
@@ -310,12 +291,12 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return true;
   }
 
-  double dot(Iterable<num> other) {
+  double dot(IterView<num> other) {
     if (length != other.length) throw new Exception('Lengths must match!');
 
     double ret = 0.0;
     for (int i = 0; i < length; i++) {
-      ret += this[i] * other.elementAt(i);
+      ret += this[i] * other[i];
     }
     return ret;
   }
