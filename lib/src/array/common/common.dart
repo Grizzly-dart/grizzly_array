@@ -20,6 +20,22 @@ abstract class ArrayMixin<E> implements Array<E> {
   }
 }
 
+abstract class ArrayFixMixin<E> implements ArrayFix<E> {
+  /// Sets all elements in the array to given value [v]
+  void set(E v) {
+    for (int i = 0; i < length; i++) {
+      this[i] = v;
+    }
+  }
+
+  void assign(ArrayView<E> other) {
+    if (other.length != length)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+
+    for (int i = 0; i < length; i++) this[i] = other[i];
+  }
+}
+
 abstract class ArrayViewMixin<E> implements ArrayView<E> {
   Index1D get shape => new Index1D(length);
 
@@ -216,21 +232,5 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       throw new UnsupportedError('Type not supported!');
     }
     return ret;
-  }
-}
-
-abstract class ArrayFixMixin<E> implements ArrayFix<E> {
-  /// Sets all elements in the array to given value [v]
-  void set(E v) {
-    for (int i = 0; i < length; i++) {
-      this[i] = v;
-    }
-  }
-
-  void assign(ArrayView<E> other) {
-    if (other.length != length)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-
-    for (int i = 0; i < length; i++) this[i] = other[i];
   }
 }

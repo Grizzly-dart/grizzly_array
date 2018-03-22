@@ -40,7 +40,7 @@ class Double1D extends Object
       : _data = new List<double>.generate(length, maker);
 
   factory Double1D.fromNum(iterable) {
-    if (iterable is ArrayView<num>) {
+    if (iterable is IterView<num>) {
       final list = new Double1D.sized(iterable.length);
       for (int i = 0; i < iterable.length; i++)
         list[i] = iterable[i].toDouble();
