@@ -1,11 +1,15 @@
 library grizzly.series.array.common;
 
+import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_series/grizzly_series.dart';
 import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import '../array.dart';
 import '../sample.dart';
+import 'package:text_table/text_table.dart';
+
+part 'stats.dart';
 
 abstract class ArrayMixin<E> implements Array<E> {
   void removeMany(IterView<E> values) {

@@ -5,7 +5,6 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
 import '../common/common.dart';
-import 'package:text_table/text_table.dart';
 
 part 'int_fix_array.dart';
 part 'int_view_array.dart';

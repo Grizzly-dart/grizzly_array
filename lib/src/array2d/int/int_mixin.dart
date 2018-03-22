@@ -358,7 +358,7 @@ abstract class Int2DMixin implements Numeric2DView<int> {
     return ret;
   }
 
-  Int1D dot(Iterable<num> other) {
+  Int1D dot(IterView<num> other) {
     if (numCols != other.length)
       throw new ArgumentError.value(other, 'other', 'Invalid shape!');
 

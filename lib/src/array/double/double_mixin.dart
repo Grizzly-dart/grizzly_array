@@ -9,6 +9,12 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   Double1D clone() => new Double1D.copy(this);
 
+  Double1D operator -() {
+    final ret = new Double1D.sized(length);
+    for (int i = 0; i < length; i++) ret[i] = -this[i];
+    return ret;
+  }
+
   Double1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
       toDouble..addition(other);
 
@@ -19,7 +25,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
       toDouble..multiply(other);
 
   Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toDouble..addition(other);
+      toDouble..divide(other);
 
   Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
       toInt..truncDiv(other);
@@ -182,12 +188,6 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   double get variance => stats.variance;
 
   double get std => math.sqrt(variance);
-
-  Double1D operator -() {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = -this[i];
-    return ret;
-  }
 
   Double1DFix sqrt() {
     final ret = new Double1D.sized(length);

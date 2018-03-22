@@ -9,6 +9,94 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
 
   Int1D clone() => new Int1D.copy(this);
 
+  Int1D operator -() {
+    final ret = new Int1D.sized(length);
+    for (int i = 0; i < length; i++) ret[i] = -this[i];
+    return ret;
+  }
+
+  Int1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..addition(other);
+
+  Int1D operator -(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..subtract(other);
+
+  Int1D operator *(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..multiply(other);
+
+  Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..divide(other);
+
+  Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..truncDiv(other);
+
+  @override
+  int compareValue(int a, int b) => a.compareTo(b);
+
+  Bool1D operator <(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] < other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] < other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator <=(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] <= other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] <= other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator >(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] > other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] > other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  Bool1D operator >=(/* Numeric1D | num */ other) {
+    final ret = new Bool1D.sized(length);
+    if (other is num) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] >= other;
+      }
+    } else if (other is Numeric1D) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] >= other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
   int get min => stats.min;
 
   int get max => stats.max;
@@ -96,27 +184,6 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   double get std => math.sqrt(variance);
-
-  Int1D operator -() {
-    final ret = new Int1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = -this[i];
-    return ret;
-  }
-
-  Int1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toInt..addition(other);
-
-  Int1D operator -(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toInt..subtract(other);
-
-  Int1D operator *(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toInt..multiply(other);
-
-  Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toDouble..addition(other);
-
-  Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toInt..truncDiv(other);
 
   Double1D sqrt() {
     final ret = new Double1D.sized(length);
@@ -208,282 +275,11 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   @override
-  int compareValue(int a, int b) => a.compareTo(b);
-
-  Bool1D operator <(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] < other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] < other[i];
-      }
-    } else {
-      throw new UnsupportedError('Type not supported!');
-    }
-    return ret;
-  }
-
-  Bool1D operator <=(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] <= other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] <= other[i];
-      }
-    } else {
-      throw new UnsupportedError('Type not supported!');
-    }
-    return ret;
-  }
-
-  Bool1D operator >(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] > other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] > other[i];
-      }
-    } else {
-      throw new UnsupportedError('Type not supported!');
-    }
-    return ret;
-  }
-
-  Bool1D operator >=(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] >= other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] >= other[i];
-      }
-    } else {
-      throw new UnsupportedError('Type not supported!');
-    }
-    return ret;
-  }
-
-  @override
   bool contains(int value) => asIterable.contains(value);
 
   Int1D abs() {
     final ret = new Int1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = this[i].abs();
     return ret;
-  }
-}
-
-class StatsImpl<T extends num> implements Stats<T> {
-  IterView<T> _values;
-
-  StatsImpl(this._values);
-
-  IterView<T> get values => _values;
-
-  int get length => _values.length;
-
-  T operator [](int index) => _values[index];
-
-  T get min {
-    T ret;
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      if (d == null) continue;
-      if (ret == null || d < ret) ret = d;
-    }
-    return ret;
-  }
-
-  T get max {
-    T ret;
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      if (d == null) continue;
-      if (ret == null || d > ret) ret = d;
-    }
-    return ret;
-  }
-
-  Extent<T> get extent {
-    T min;
-    T max;
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      if (d == null) continue;
-      if (max == null || d > max) max = d;
-      if (min == null || d < min) min = d;
-    }
-    return new Extent<T>(min, max);
-  }
-
-  T get ptp {
-    T min;
-    T max;
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      if (d == null) continue;
-      if (max == null || d > max) max = d;
-      if (min == null || d < min) min = d;
-    }
-
-    if (min == null) return null;
-    return max - min;
-  }
-
-  T get mode {
-    throw new UnimplementedError();
-  }
-
-  T get median {
-    if (length == 0) return null;
-    final list = _values.toList()..sort();
-    return list[length ~/ 2];
-  }
-
-  double average(Iterable<num> weights) {
-    if (weights.length != length) {
-      throw new Exception('Weights have mismatching length!');
-    }
-    if (length == 0) return 0.0;
-
-    double sum = 0.0;
-    num denom = 0.0;
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      final num w = weights.elementAt(i);
-      if (d == null) continue;
-      if (w == null) continue;
-      sum += d * w;
-      denom += w;
-    }
-    return sum / denom;
-  }
-
-  double get mean {
-    if (length == 0) return 0.0;
-
-    num sum = 0;
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      if (d == null) continue;
-      sum += d;
-    }
-    return sum / length;
-  }
-
-  double get variance {
-    if (length == 0) return 0.0;
-
-    final double mean = this.mean;
-    double ret = 0.0;
-    for (int i = 0; i < length; i++) {
-      final double val = _values[i] - mean;
-      ret += val * val;
-    }
-    return ret / length;
-  }
-
-  double get std => math.sqrt(variance);
-
-  int count(T v) {
-    int ret = 0;
-    for (int i = 0; i < length; i++) {
-      if (_values[i] == v) ret++;
-    }
-    return ret;
-  }
-
-  int get countNonNull {
-    int ret = 0;
-    for (int i = 0; i < length; i++) {
-      if (_values[i] != null) ret++;
-    }
-    return ret;
-  }
-
-  T get sum {
-    T ret;
-    if (0 is T) {
-      ret = 0 as T;
-    } else {
-      ret = 0.0 as T;
-    }
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      if (d == null) continue;
-      ret += d;
-    }
-    return ret;
-  }
-
-  T get prod {
-    T ret;
-    if (0 is T) {
-      ret = 1 as T;
-    } else {
-      ret = 1.0 as T;
-    }
-    for (int i = 0; i < length; i++) {
-      final T d = _values[i];
-      if (d == null) continue;
-      ret *= d;
-    }
-    return ret;
-  }
-
-  double cov(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
-    if (length == 0) return 0.0;
-    final double meanX = mean;
-    final double meanY = y.mean;
-    double sum = 0.0;
-    for (int i = 0; i < length; i++) {
-      sum += (_values[i] - meanX) * (y[i] - meanY);
-    }
-    return sum / length;
-  }
-
-  Numeric1D<double> covMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
-    final double meanX = mean;
-    final Double1D meanY = y.col.mean;
-    Double1D sum = new Double1D.sized(y.numCols);
-    for (int i = 0; i < length; i++) {
-      sum += (y.col[i] - meanY) * (_values[i] - meanX);
-    }
-    return sum / length;
-  }
-
-  double corrcoef(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
-    return cov(y) / (std * y.std);
-  }
-
-  Numeric1D<double> corrcoefMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
-    return covMatrix(y) / (y.std * std);
-  }
-
-  String describe() {
-    final ret = table(['', '']);
-    ret.row(['Count (non-null)', countNonNull]);
-    ret.row(['Mean', mean]);
-    ret.row(['std', std]);
-    ret.row(['min', min]);
-    // TODO
-    ret.row(['max', max]);
-    // TODO
-    return ret.toString();
   }
 }
