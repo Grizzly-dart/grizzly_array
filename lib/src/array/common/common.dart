@@ -133,7 +133,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] != other;
       }
-    } else if (other is ArrayView<E> || other is Iterable<E>) {
+    } else if (other is IterView<E> || other is Iterable<E>) {
       // TODO check length
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] != other[i];
