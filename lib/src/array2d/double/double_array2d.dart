@@ -42,19 +42,19 @@ class Double2D extends Object
     return ret;
   }
 
-  Double2D.from(Iterable<ArrayView<double>> data)
+  Double2D.from(Iterable<IterView<double>> data)
       : _data = new List<Double1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (Double1DView item in data) {
+      for (IterView item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        Double1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView<double> item = data.elementAt(i);
+        _data[i] = new Double1D.copy(item);
       }
     }
   }

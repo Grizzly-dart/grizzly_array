@@ -32,7 +32,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
 
   @override
   void negate() {
-    for(int i = 0; i < length; i++) {
+    for (int i = 0; i < length; i++) {
       this[i] = -this[i];
     }
   }
@@ -137,7 +137,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
   }
 
   void divide(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) =>
+          /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) =>
       truncDiv(this);
 
   void truncDiv(
@@ -175,11 +175,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
 }
 
 class Int1DFix extends Object
-    with
-        ArrayViewMixin<int>,
-        ArrayFixMixin<int>,
-        Int1DViewMixin,
-        IntFixMixin
+    with ArrayViewMixin<int>, ArrayFixMixin<int>, Int1DViewMixin, IntFixMixin
     implements Numeric1DFix<int>, Int1DView {
   final List<int> _data;
 

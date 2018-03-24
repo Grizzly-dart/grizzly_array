@@ -42,19 +42,19 @@ class String2D extends Object
     return ret;
   }
 
-  String2D.from(Iterable<ArrayView<String>> data)
+  String2D.from(Iterable<IterView<String>> data)
       : _data = new List<String1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (ArrayView<String> item in data) {
+      for (IterView<String> item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        String1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView<String> item = data.elementAt(i);
+        _data[i] = new String1D.copy(item);
       }
     }
   }

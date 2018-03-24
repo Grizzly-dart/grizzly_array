@@ -42,19 +42,19 @@ class Dynamic2D extends Object
     return ret;
   }
 
-  Dynamic2D.from(Iterable<ArrayView<dynamic>> data)
+  Dynamic2D.from(Iterable<IterView<dynamic>> data)
       : _data = new List<Dynamic1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (ArrayView<dynamic> item in data) {
+      for (IterView<dynamic> item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        Dynamic1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView item = data.elementAt(i);
+        _data[i] = new Dynamic1D.copy(item);
       }
     }
   }

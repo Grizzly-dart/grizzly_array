@@ -42,19 +42,19 @@ class Bool2D extends Object
     return ret;
   }
 
-  Bool2D.from(Iterable<Bool1DView> data)
+  Bool2D.from(Iterable<IterView<bool>> data)
       : _data = new List<Bool1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (Bool1DView item in data) {
+      for (IterView item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        Bool1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView item = data.elementAt(i);
+        _data[i] = new Bool1D.copy(item);
       }
     }
   }
