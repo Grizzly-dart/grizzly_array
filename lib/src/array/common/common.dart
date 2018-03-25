@@ -233,4 +233,24 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
     }
     return ret;
   }
+
+  bool operator ==(/* E | IterView<E> | Iterable<E> */ other) {
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        if (this[i] != other) return false;
+      }
+      return true;
+    } else if (other is IterView<E> || other is Iterable<E>) {
+      if (other is Iterable<E>) other = new IterView<E>(other);
+      if (other is IterView<E>) {
+        if (other.length != length) return false;
+        for (int i = 0; i < length; i++) {
+          if (this[i] != other[i]) return false;
+        }
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
 }

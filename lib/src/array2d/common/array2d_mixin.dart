@@ -30,6 +30,48 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
     //TODO
     throw new UnimplementedError();
   }
+
+  bool operator ==(/* E | IterView<E> | Iterable<E> */ other) {
+    if (other is E) {
+      for (int i = 0; i < numCols; i++) {
+        if (this[i] != other) return false;
+      }
+      return true;
+    } else if (other is IterView<E> || other is Iterable<E>) {
+      if (other is Iterable<E>) other = new IterView<E>(other);
+      if (other is IterView<E>) {
+        for (int i = 0; i < numCols; i++) {
+          if (this[i] != other) return false;
+        }
+        return true;
+      }
+      return false;
+    } else if (other is IterView<IterView<E>> ||
+        other is Iterable<Iterable<E>>) {
+      if (other.length != numCols) return false;
+      if (other is Iterable<Iterable<E>>) {
+        final nOther = new Iter<IterView<E>>([]);
+        for (int i = 0; i < numCols; i++) {
+          nOther.add(new IterView<E>(other.elementAt(i)));
+        }
+        other = nOther;
+      }
+      if (other is IterView<IterView<E>>) {
+        for (int i = 0; i < numCols; i++) {
+          if (this[i] != other[i]) return false;
+        }
+        return true;
+      }
+      return false;
+    } else if (other is Array2DView<E>) {
+      if (numCols != other.numCols || numRows != other.numRows) return false;
+      for (int i = 0; i < numCols; i++) {
+        if (this[i] != other[i]) return false;
+      }
+      return true;
+    }
+    return false;
+  }
 }
 
 abstract class AxisMixin<E> implements Axis2D<E> {}
