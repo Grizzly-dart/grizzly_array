@@ -45,7 +45,7 @@ class Double1D extends Object
       for (int i = 0; i < iterable.length; i++)
         list[i] = iterable[i].toDouble();
       return list;
-    } else if (iterable is Iterable<double>) {
+    } else if (iterable is Iterable<num>) {
       final list = new Double1D.sized(iterable.length);
       for (int i = 0; i < iterable.length; i++) {
         list[i] = iterable.elementAt(i).toDouble();

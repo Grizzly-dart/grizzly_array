@@ -90,6 +90,10 @@ class Double2D extends Object
   }
 
   Double2D.fromNum(data) : _data = <Double1D>[] {
+    // TODO handle Iterable<IterView<num>>
+    // TODO handle IterView<IterView<num>>
+    // TODO handle IterView<IterView<String>>
+    // TODO handle Iterable<num>
     if (data is Iterable) {
       if (data.length != 0) {
         final int len = data.first.length;
@@ -99,7 +103,7 @@ class Double2D extends Object
           }
         }
 
-        for (Numeric1DView item in data) {
+        for (Iterable<num> item in data) {
           _data.add(new Double1D.fromNum(item));
         }
       }

@@ -63,12 +63,20 @@ Double2D array2D(
     } else {
       return new Double2D.columns(data);
     }
+  } else if (data is Iterable<Iterable<num>>) {
+    if (!transpose) {
+      return new Double2D.fromNum(data);
+    } else {
+      return new Double2D.fromNum(data).transpose;
+    }
   } else if (data is Iterable<double>) {
     if (!transpose) {
       return new Double2D([data]);
     } else {
       return new Double2D.columns([data]);
     }
+  } else if (data is Iterable<num>) {
+    // TODO
   } else if (data is Index2D) {
     if (!transpose) {
       return new Double2D.shaped(data);
