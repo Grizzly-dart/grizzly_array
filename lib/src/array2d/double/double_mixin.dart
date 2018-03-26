@@ -432,22 +432,6 @@ abstract class Double2DMixin implements Numeric2DView<double> {
 
   Double2D get toDouble => new Double2D.from(_data);
 
-  String toString() {
-    final sb = new StringBuffer();
-    //TODO print as table
-    sb.writeln('Double[$numRows][$numCols] [');
-    for (int r = 0; r < numRows; r++) {
-      sb.write('[');
-      for (int c = 0; c < numCols; c++) {
-        sb.write('${_data[r][c]}\t\t');
-      }
-      sb.writeln('],');
-    }
-    sb.writeln(']');
-
-    return sb.toString();
-  }
-
   double get variance {
     if (numRows == 0) return 0.0;
     final double mean = this.mean;

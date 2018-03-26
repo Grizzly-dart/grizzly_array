@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
+import 'package:text_table/text_table.dart';
 
 import 'package:grizzly_array/src/array/array.dart';
 

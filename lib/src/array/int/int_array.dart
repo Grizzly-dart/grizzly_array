@@ -124,6 +124,4 @@ class Int1D extends Object
 
   Int1DFix _fixed;
   Int1DFix get fixed => _fixed ??= new Int1DFix.own(_data);
-
-  String toString() => _data.toString();
 }

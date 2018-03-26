@@ -155,20 +155,4 @@ abstract class String2DMixin implements Array2DView<String> {
     }
     return ret;
   }
-
-  String toString() {
-    final sb = new StringBuffer();
-    //TODO print as table
-    sb.writeln('Double[$numRows][$numCols] [');
-    for (int r = 0; r < numRows; r++) {
-      sb.write('[');
-      for (int c = 0; c < numCols; c++) {
-        sb.write('${_data[r][c]}\t\t');
-      }
-      sb.writeln('],');
-    }
-    sb.writeln(']');
-
-    return sb.toString();
-  }
 }

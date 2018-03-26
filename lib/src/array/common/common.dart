@@ -253,4 +253,10 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
     }
     return false;
   }
+
+  String toString() {
+    final tab = table(Ranger.indices(length).map((i) => i.toString()).toList());
+    tab.row(toStringArray().asIterable.toList());
+    return tab.toString();
+  }
 }
