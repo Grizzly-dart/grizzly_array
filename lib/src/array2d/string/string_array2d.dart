@@ -81,12 +81,19 @@ class String2D extends Object
   factory String2D.shapedLike(Array2DView like, {String data: ''}) =>
       new String2D.sized(like.numRows, like.numCols, data: data);
 
-  factory String2D.diagonal(Iterable<String> diagonal) {
-    final ret = new String2D.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
+  factory String2D.diagonal(
+      /* IterView<String> | Iterable<String> */ diagonal) {
+    if (diagonal is IterView<String>) {
+      diagonal = diagonal.asIterable;
     }
-    return ret;
+    if (diagonal is Iterable<String>) {
+      final ret = new String2D.sized(diagonal.length, diagonal.length);
+      for (int i = 0; i < diagonal.length; i++) {
+        ret[i][i] = diagonal.elementAt(i);
+      }
+      return ret;
+    }
+    throw new UnsupportedError('Type');
   }
 
   String2D.repeatRow(ArrayView<String> row, [int numRows = 1])
@@ -283,4 +290,26 @@ class String2D extends Object
 
   @override
   Iterable<ArrayFix<String>> get cols => new ColsListFix<String>(this);
+
+  void reshape(Index2D newShape, {String def}) {
+    if (shape == newShape) return;
+
+    if (shape.row > newShape.row) {
+      _data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        _data.add(new String1D.sized(newShape.col, data: def));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (String1D r in _data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (String1D r in _data) {
+        r.addAll(new String1D.sized(newShape.col - r.length, data: def));
+      }
+    }
+  }
 }

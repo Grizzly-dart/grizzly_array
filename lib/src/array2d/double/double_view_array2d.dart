@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Double2DView extends Object
-    with Double2DMixin, Array2DViewMixin<double>
+    with Double2DViewMixin, Array2DViewMixin<double>
     implements Numeric2DView<double> {
   final List<Double1DView> _data;
 
@@ -233,20 +233,6 @@ class Double2DView extends Object
   Double2DRowView get row => _row ??= new Double2DRowView(this);
 
   Double2DView get view => this;
-
-  Double2D addition(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this + other;
-
-  Double2D subtract(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this - other;
-
-  Double2D multiply(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this * other;
-
-  Double2D divide(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this / other;
-
-  Int2D truncDiv(/* int | Iterable<int> | Int2DArray */ other) => this ~/ other;
 
   @override
   Iterable<ArrayView<double>> get rows => _data;

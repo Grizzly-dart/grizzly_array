@@ -155,4 +155,9 @@ abstract class String2DMixin implements Array2DView<String> {
     }
     return ret;
   }
+
+  String2D reshaped(Index2D newShape, {String def}) =>
+      clone()..reshape(newShape, def: def);
+
+  String2D clone() => new String2D.copy(this);
 }

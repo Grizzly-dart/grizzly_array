@@ -72,6 +72,8 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
     }
   }
 
+  Dynamic2D diagonal() => new Dynamic2D.diagonal(this);
+
   Dynamic2D get transpose {
     final ret = new Dynamic2D.sized(length, 1);
     for (int i = 0; i < length; i++) {

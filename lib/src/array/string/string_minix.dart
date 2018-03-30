@@ -69,6 +69,8 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     }
   }
 
+  String2D diagonal() => new String2D.diagonal(this);
+
   String2D get transpose {
     final ret = new String2D.sized(length, 1);
     for (int i = 0; i < length; i++) {

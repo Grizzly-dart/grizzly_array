@@ -63,6 +63,8 @@ class Bool1D extends Object
   @override
   void add(bool a) => _data.add(a);
 
+  void addAll(IterView<bool> a) => _data.addAll(a.asIterable);
+
   @override
   void insert(int index, bool a) => _data.insert(index, a);
 

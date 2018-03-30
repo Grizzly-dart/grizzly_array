@@ -38,7 +38,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
   }
 
   void addition(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+      /* num | IterView<num> | Iterable<num> */ other) {
     if (other is IterView<int>) {
       checkLengths(this, other, subject: 'other');
     } else if (other is int) {
@@ -49,8 +49,8 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       checkLengths(this, other, subject: 'other');
       other = new IterView<int>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
         this[i] += other[i].toInt();
       }
@@ -71,7 +71,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
   }
 
   void subtract(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+      /* num | IterView<num> | Iterable<num> */ other) {
     if (other is IterView<int>) {
       checkLengths(this, other, subject: 'other');
     } else if (other is int) {
@@ -82,8 +82,8 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       checkLengths(this, other, subject: 'other');
       other = new IterView<int>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
         this[i] -= other[i].toInt();
       }
@@ -104,7 +104,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
   }
 
   void multiply(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+      /* num | IterView<num> | Iterable<num> */ other) {
     if (other is IterView<int>) {
       checkLengths(this, other, subject: 'other');
     } else if (other is int) {
@@ -115,8 +115,8 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       checkLengths(this, other, subject: 'other');
       other = new IterView<int>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
         this[i] *= other[i].toInt();
       }
@@ -137,11 +137,11 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
   }
 
   void divide(
-          /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) =>
+          /* num | IterView<num> | Iterable<num> */ other) =>
       truncDiv(this);
 
   void truncDiv(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+      /* num | IterView<num> | Iterable<num> */ other) {
     if (other is IterView<int>) {
       checkLengths(this, other, subject: 'other');
     } else if (other is int) {
@@ -152,8 +152,8 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       checkLengths(this, other, subject: 'other');
       other = new IterView<int>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
         this[i] ~/= other[i].toInt();
       }

@@ -276,6 +276,9 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     }
   }
 
+  Double2D diagonal({Index2D shape, num def: 0}) =>
+      new Double2D.diagonal(this, shape: shape, def: def?.toDouble());
+
   bool isAllClose(Iterable<num> v, {double absTol: 1e-8}) {
     if (length != v.length) return false;
     for (int i = 0; i < length; i++) {

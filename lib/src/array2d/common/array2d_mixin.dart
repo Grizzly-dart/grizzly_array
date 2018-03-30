@@ -74,8 +74,9 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
   }
 
   String toString() {
-    final tab = table(Ranger.indices(numCols).map((i) => i.toString()).toList());
-    for(int i = 0; i < numRows; i++) {
+    final tab =
+        table(Ranger.indices(numCols).map((i) => i.toString()).toList());
+    for (int i = 0; i < numRows; i++) {
       tab.row(row[i].toStringArray().toList());
     }
     return tab.toString();

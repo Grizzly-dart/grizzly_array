@@ -95,6 +95,8 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
     }
   }
 
+  Bool2D diagonal() => new Bool2D.diagonal(this);
+
   Int1D toIntArray({int trueVal: 1, int falseVal: 0}) {
     final ret = new Int1D.shapedLike(this);
     for (int i = 0; i < length; i++) {

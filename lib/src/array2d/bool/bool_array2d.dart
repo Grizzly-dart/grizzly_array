@@ -81,12 +81,18 @@ class Bool2D extends Object
   factory Bool2D.shapedLike(Array2DView like, {bool data: false}) =>
       new Bool2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Bool2D.diagonal(IterView<bool> diagonal) {
-    final ret = new Bool2D.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal[i];
+  factory Bool2D.diagonal(/* IterView<bool> | Iterable<bool> */ diagonal) {
+    if (diagonal is IterView<bool>) {
+      diagonal = diagonal.asIterable;
     }
-    return ret;
+    if (diagonal is Iterable<bool>) {
+      final ret = new Bool2D.sized(diagonal.length, diagonal.length);
+      for (int i = 0; i < diagonal.length; i++) {
+        ret[i][i] = diagonal.elementAt(i);
+      }
+      return ret;
+    }
+    throw new UnsupportedError('Type');
   }
 
   Bool2D.repeatRow(IterView<bool> row, [int numRows = 1])
@@ -284,4 +290,26 @@ class Bool2D extends Object
 
   @override
   Iterable<ArrayFix<bool>> get cols => new ColsListFix<bool>(this);
+
+  void reshape(Index2D newShape, {bool def: false}) {
+    if (shape == newShape) return;
+
+    if (shape.row > newShape.row) {
+      _data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        _data.add(new Bool1D.sized(newShape.col, data: def));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (Bool1D r in _data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (Bool1D r in _data) {
+        r.addAll(new Bool1D.sized(newShape.col - r.length, data: def));
+      }
+    }
+  }
 }

@@ -84,85 +84,145 @@ abstract class IntAxis2DViewMixin implements Numeric2DAxisView<int> {
 }
 
 abstract class Int2DRowViewMixin implements Numeric2DAxisView<int> {
-  Numeric2D<int> operator +(Numeric1DView<int> other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(length, otherDLength);
-    for (int r = 0; r < length; r++) ret[r] = this[r] + other;
-    return ret;
+  Numeric2D<int> operator +(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] + other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] + other[r];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<int> operator -(Numeric1DView<int> other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(length, otherDLength);
-    for (int r = 0; r < length; r++) ret[r] = this[r] - other;
-    return ret;
+  Numeric2D<int> operator -(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] - other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] - other[r];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<int> operator *(Numeric1DView<int> other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(length, otherDLength);
-    for (int r = 0; r < length; r++) ret[r] = this[r] * other;
-    return ret;
+  Numeric2D<int> operator *(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] * other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] * other[r];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<double> operator /(Numeric1DView other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Double2D ret = new Double2D.sized(length, otherDLength);
-    for (int r = 0; r < length; r++) ret[r] = this[r] / other;
-    return ret;
+  Numeric2D<double> operator /(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Double2D ret = new Double2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] / other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Double2D ret = new Double2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] / other[r];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<int> operator ~/(Numeric1DView other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(length, otherDLength);
-    for (int r = 0; r < length; r++) ret[r] = this[r] ~/ other;
-    return ret;
+  Numeric2D<int> operator ~/(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] ~/ other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int r = 0; r < length; r++) ret[r] = this[r] ~/ other[r];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 }
 
 abstract class Int2DColViewMixin implements Numeric2DAxisView<int> {
-  Numeric2D<int> operator +(Numeric1DView<int> other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(otherDLength, length);
-    for (int c = 0; c < length; c++) ret.col[c] = this[c] + other;
-    return ret;
+  Numeric2D<int> operator +(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(otherDLength, length);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] + other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] + other.col[c];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<int> operator -(Numeric1DView<int> other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(otherDLength, length);
-    for (int c = 0; c < length; c++) ret.col[c] = this[c] - other;
-    return ret;
+  Numeric2D<int> operator -(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(otherDLength, length);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] - other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] - other.col[c];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<int> operator *(Numeric1DView<int> other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(otherDLength, length);
-    for (int c = 0; c < length; c++) ret.col[c] = this[c] * other;
-    return ret;
+  Numeric2D<int> operator *(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(otherDLength, length);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] * other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] * other.col[c];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<double> operator /(Numeric1DView other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Double2D ret = new Double2D.sized(otherDLength, length);
-    for (int c = 0; c < length; c++) ret.col[c] = this[c] / other;
-    return ret;
+  Numeric2D<double> operator /(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Double2D ret = new Double2D.sized(otherDLength, length);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] / other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Double2D ret = new Double2D.sized(length, otherDLength);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] / other.col[c];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 
-  Numeric2D<int> operator ~/(Numeric1DView other) {
-    if (other.length != otherDLength)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-    Int2D ret = new Int2D.sized(otherDLength, length);
-    for (int c = 0; c < length; c++) ret.col[c] = this[c] ~/ other;
-    return ret;
+  Numeric2D<int> operator ~/(
+      /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
+    if (other is num || other is IterView<num> || other is Iterable<num>) {
+      Int2D ret = new Int2D.sized(otherDLength, length);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] ~/ other;
+      return ret;
+    } else if (other is Numeric2DView<int>) {
+      Int2D ret = new Int2D.sized(length, otherDLength);
+      for (int c = 0; c < length; c++) ret.col[c] = this[c] ~/ other.col[c];
+      return ret;
+    }
+    throw new UnsupportedError(other?.runtimeType?.toString());
   }
 }

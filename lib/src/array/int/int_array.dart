@@ -42,6 +42,21 @@ class Int1D extends Object
   Int1D.gen(int length, int maker(int index))
       : _data = new List<int>.generate(length, maker);
 
+  factory Int1D.fromNum(iterable) {
+    if (iterable is IterView<num>) {
+      final list = new Int1D.sized(iterable.length);
+      for (int i = 0; i < iterable.length; i++) list[i] = iterable[i].toInt();
+      return list;
+    } else if (iterable is Iterable<num>) {
+      final list = new Int1D.sized(iterable.length);
+      for (int i = 0; i < iterable.length; i++) {
+        list[i] = iterable.elementAt(i).toInt();
+      }
+      return list;
+    }
+    throw new UnsupportedError('Unknown type!');
+  }
+
   Stats<int> _stats;
 
   Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
@@ -71,6 +86,8 @@ class Int1D extends Object
 
   @override
   void add(int a) => _data.add(a);
+
+  void addAll(IterView<int> a) => _data.addAll(a.asIterable);
 
   @override
   void insert(int index, int a) => _data.insert(index, a);

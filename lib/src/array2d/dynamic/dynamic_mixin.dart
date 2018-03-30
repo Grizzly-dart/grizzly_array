@@ -142,4 +142,8 @@ abstract class Dynamic2DMixin implements DynamicArray2DView {
     }
     return ret;
   }
+
+  Dynamic2D reshaped(Index2D newShape, {dynamic def}) => clone()..reshape(newShape, def: def);
+
+  Dynamic2D clone() => new Dynamic2D.copy(this);
 }

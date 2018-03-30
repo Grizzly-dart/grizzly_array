@@ -65,6 +65,8 @@ class String1D extends Object
   @override
   void add(String a) => _data.add(a);
 
+  void addAll(IterView<String> a) => _data.addAll(a.asIterable);
+
   @override
   void insert(int index, String a) => _data.insert(index, a);
 

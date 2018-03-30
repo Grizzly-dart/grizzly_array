@@ -1,7 +1,209 @@
 part of grizzly.series.array2d;
 
+abstract class Int2DFixMixin implements Numeric2DFix<int> {
+  void negate() {
+    for (int r = 0; r < numRows; r++) {
+      for (int c = 0; c < numCols; c++) {
+        this[r][c] = -this[r][c];
+      }
+    }
+  }
+
+  void addition(
+      /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) {
+    if (other is int) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] += other;
+        }
+      }
+      return;
+    } else if (other is IterView<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] += other[c];
+        }
+      }
+      return;
+    } else if (other is Iterable<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] += other.elementAt(c);
+        }
+      }
+      return;
+    } else if (other is Numeric2D<int>) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] += other[r][c];
+        }
+      }
+      return;
+    } else if (other is num ||
+        other is IterView<num> ||
+        other is Iterable<num>) {
+      for (int r = 0; r < numRows; r++) {
+        this[r] += other;
+      }
+      return;
+    }
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+
+  void subtract(
+      /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) {
+    if (other is int) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] -= other;
+        }
+      }
+      return;
+    } else if (other is IterView<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] -= other[c];
+        }
+      }
+      return;
+    } else if (other is Iterable<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] -= other.elementAt(c);
+        }
+      }
+      return;
+    } else if (other is Numeric2D<int>) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] -= other[r][c];
+        }
+      }
+      return;
+    } else if (other is num ||
+        other is IterView<num> ||
+        other is Iterable<num>) {
+      for (int r = 0; r < numRows; r++) {
+        this[r] -= other;
+      }
+      return;
+    }
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+
+  void multiply(
+      /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) {
+    if (other is int) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] *= other;
+        }
+      }
+      return;
+    } else if (other is IterView<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] *= other[c];
+        }
+      }
+      return;
+    } else if (other is Iterable<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] *= other.elementAt(c);
+        }
+      }
+      return;
+    } else if (other is Numeric2D<int>) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] *= other[r][c];
+        }
+      }
+      return;
+    } else if (other is num ||
+        other is IterView<num> ||
+        other is Iterable<num>) {
+      for (int r = 0; r < numRows; r++) {
+        this[r] *= other;
+      }
+      return;
+    }
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+
+  void divide(
+          /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) =>
+      truncDiv(other);
+
+  void truncDiv(
+      /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) {
+    if (other is int) {
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] ~/= other;
+        }
+      }
+      return;
+    } else if (other is IterView<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] ~/= other[c];
+        }
+      }
+      return;
+    } else if (other is Iterable<int>) {
+      if (other.length != numCols)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] ~/= other.elementAt(c);
+        }
+      }
+      return;
+    } else if (other is Numeric2D<int>) {
+      if (shape != other.shape)
+        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      for (int r = 0; r < numRows; r++) {
+        for (int c = 0; c < numCols; c++) {
+          this[r][c] ~/= other[r][c];
+        }
+      }
+      return;
+    } else if (other is num ||
+        other is IterView<num> ||
+        other is Iterable<num>) {
+      for (int r = 0; r < numRows; r++) {
+        this[r] ~/= other;
+      }
+      return;
+    }
+    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+  }
+}
+
 class Int2DFix extends Object
-    with Int2DMixin, Array2DViewMixin<int>
+    with Array2DViewMixin<int>, Int2DViewMixin, Int2DFixMixin
     implements Numeric2DFix<int>, Int2DView {
   final List<Int1DFix> _data;
 
@@ -299,131 +501,4 @@ class Int2DFix extends Object
   Int2DView get view => _view ??= new Int2DView.own(_data);
 
   Int2DFix get fixed => this;
-
-  Int2D addition(/* int | Iterable<int> | Int2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this + other;
-
-    if (other is int) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] += other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<int>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] += other;
-      }
-      return this;
-    } else if (other is Int2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] += other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Int2D subtract(/* int | Iterable<int> | Int2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this - other;
-
-    if (other is int) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] -= other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<int>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] -= other;
-      }
-      return this;
-    } else if (other is Int2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] -= other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Int2D multiply(/* int | Iterable<int> | Int2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this * other;
-
-    if (other is int) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] *= other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<int>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] *= other;
-      }
-      return this;
-    } else if (other is Int2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] *= other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Double2D divide(/* int | Iterable<int> | Int2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this / other;
-
-    throw new Exception('self not allowed!');
-  }
-
-  Int2D truncDiv(/* int | Iterable<int> | Int2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this ~/ other;
-
-    if (other is int) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] ~/= other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<int>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] ~/= other;
-      }
-      return this;
-    } else if (other is Int2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] ~/= other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
 }

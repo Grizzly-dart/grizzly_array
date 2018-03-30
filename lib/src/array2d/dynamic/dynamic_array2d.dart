@@ -81,12 +81,19 @@ class Dynamic2D extends Object
   factory Dynamic2D.shapedLike(Array2DView like, {String data: ''}) =>
       new Dynamic2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Dynamic2D.diagonal(Iterable<dynamic> diagonal) {
-    final ret = new Dynamic2D.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
+  factory Dynamic2D.diagonal(
+      /* IterView<dynamic> | Iterable<dynamic> */ diagonal) {
+    if (diagonal is IterView<dynamic>) {
+      diagonal = diagonal.asIterable;
     }
-    return ret;
+    if (diagonal is Iterable<dynamic>) {
+      final ret = new Dynamic2D.sized(diagonal.length, diagonal.length);
+      for (int i = 0; i < diagonal.length; i++) {
+        ret[i][i] = diagonal.elementAt(i);
+      }
+      return ret;
+    }
+    throw new UnsupportedError('Type');
   }
 
   Dynamic2D.repeatRow(ArrayView<dynamic> row, [int numRows = 1])
@@ -285,4 +292,26 @@ class Dynamic2D extends Object
 
   @override
   Iterable<ArrayFix<dynamic>> get cols => new ColsListFix<dynamic>(this);
+
+  void reshape(Index2D newShape, {dynamic def}) {
+    if (shape == newShape) return;
+
+    if (shape.row > newShape.row) {
+      _data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        _data.add(new Dynamic1D.sized(newShape.col, data: def));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (Dynamic1D r in _data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (Dynamic1D r in _data) {
+        r.addAll(new Dynamic1D.sized(newShape.col - r.length, data: def));
+      }
+    }
+  }
 }

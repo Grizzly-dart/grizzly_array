@@ -70,6 +70,8 @@ class Dynamic1D extends Object
   @override
   void add(dynamic a) => _data.add(a);
 
+  void addAll(IterView<dynamic> a) => _data.addAll(a.asIterable);
+
   @override
   void insert(int index, dynamic a) => _data.insert(index, a);
 

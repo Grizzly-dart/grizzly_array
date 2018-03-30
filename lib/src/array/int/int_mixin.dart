@@ -15,19 +15,20 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret;
   }
 
-  Int1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
+  Int1D operator +(
+          /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) =>
       toInt..addition(other);
 
-  Int1D operator -(/* num | Numeric1DView | Numeric2DView */ other) =>
+  Int1D operator -(/* num | IterView<num> | Iterable<num> */ other) =>
       toInt..subtract(other);
 
-  Int1D operator *(/* num | Numeric1DView | Numeric2DView */ other) =>
+  Int1D operator *(/* num | IterView<num> | Iterable<num> */ other) =>
       toInt..multiply(other);
 
-  Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
+  Double1D operator /(/* num | IterView<num> | Iterable<num> */ other) =>
       toDouble..divide(other);
 
-  Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
+  Int1D operator ~/(/* num | IterView<num> | Iterable<num> */ other) =>
       toInt..truncDiv(other);
 
   @override
@@ -240,6 +241,9 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
       return new Int2D.repeatRow(this, repeat + 1);
     }
   }
+
+  Int2D diagonal({Index2D shape, num def: 0}) =>
+      new Int2D.diagonal(this, shape: shape, def: def?.toInt());
 
   bool operator ==(other) {
     if (other is! Array<int>) return false;

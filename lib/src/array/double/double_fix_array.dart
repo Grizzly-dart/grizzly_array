@@ -44,15 +44,15 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is double) {
       // Nothing here
     } else if (other is num) {
-      other = other.toInt();
+      other = other.toDouble();
     } else if (other is Iterable<double>) {
       checkLengths(this, other, subject: 'other');
       other = new IterView<double>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
-        this[i] += other[i].toInt();
+        this[i] += other[i].toDouble();
       }
       return;
     } else {
@@ -77,15 +77,15 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is double) {
       // Nothing here
     } else if (other is num) {
-      other = other.toInt();
+      other = other.toDouble();
     } else if (other is Iterable<double>) {
       checkLengths(this, other, subject: 'other');
       other = new IterView<double>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
-        this[i] -= other[i].toInt();
+        this[i] -= other[i].toDouble();
       }
       return;
     } else {
@@ -110,15 +110,15 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is double) {
       // Nothing here
     } else if (other is num) {
-      other = other.toInt();
+      other = other.toDouble();
     } else if (other is Iterable<double>) {
       checkLengths(this, other, subject: 'other');
       other = new IterView<double>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
-        this[i] *= other[i].toInt();
+        this[i] *= other[i].toDouble();
       }
       return;
     } else {
@@ -143,15 +143,15 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is double) {
       // Nothing here
     } else if (other is num) {
-      other = other.toInt();
+      other = other.toDouble();
     } else if (other is Iterable<double>) {
       checkLengths(this, other, subject: 'other');
       other = new IterView<double>(other);
     } else if (other is IterView<num> || other is Iterable<num>) {
-      checkLengths(this, other, subject: 'other');
       if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
       for (int i = 0; i < length; i++) {
-        this[i] /= other[i].toInt();
+        this[i] /= other[i].toDouble();
       }
       return;
     } else {

@@ -16,16 +16,16 @@ class Int2DCol extends Object
   Int1DFix operator [](int col) =>
       new Int1DFix.own(new ColList<int>(inner, col));
 
-  operator []=(int index, ArrayView<int> col) {
-    if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
+  operator []=(int col, ArrayView<int> val) {
+    if (col >= inner.numCols) {
+      throw new RangeError.range(col, 0, inner.numCols - 1, 'index');
     }
 
-    if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
+    if (val.length != inner.numRows) {
+      throw new ArgumentError.value(val, 'col', 'Size mismatch!');
     }
     for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col[i];
+      inner[i][col] = val[i];
     }
   }
 
