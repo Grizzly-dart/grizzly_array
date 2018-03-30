@@ -208,8 +208,6 @@ class Int1DFix extends Object
 
   Iterable<int> get asIterable => _data;
 
-  Iterator<int> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   int operator [](int i) => _data[i];
@@ -235,4 +233,6 @@ class Int1DFix extends Object
   Int1DView get view => _view ??= new Int1DView.own(_data);
 
   Int1DFix get fixed => this;
+
+  Int1D unique() => super.unique();
 }

@@ -217,4 +217,6 @@ class Int2DView extends Object
 
   @override
   Iterable<ArrayView<int>> get cols => new ColsListView<int>(this);
+
+  Int1D unique() => super.unique();
 }

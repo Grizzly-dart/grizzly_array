@@ -8,8 +8,6 @@ abstract class ColMixin<E> implements Axis2D<E> {
   int get otherDLength => inner.numRows;
 
   Iterable<ArrayFix<E>> get iterable => inner.cols;
-
-  Iterator<ArrayFix<E>> get iterator => iterable.iterator;
 }
 
 abstract class ColFixMixin<E> implements Axis2DFix<E> {
@@ -20,8 +18,6 @@ abstract class ColFixMixin<E> implements Axis2DFix<E> {
   int get otherDLength => inner.numRows;
 
   Iterable<ArrayFix<E>> get iterable => inner.cols;
-
-  Iterator<ArrayFix<E>> get iterator => iterable.iterator;
 }
 
 abstract class ColViewMixin<E> implements Axis2DView<E> {
@@ -32,6 +28,4 @@ abstract class ColViewMixin<E> implements Axis2DView<E> {
   int get otherDLength => inner.numRows;
 
   Iterable<ArrayView<E>> get iterable => inner.cols;
-
-  Iterator<ArrayView<E>> get iterator => iterable.iterator;
 }

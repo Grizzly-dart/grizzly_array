@@ -193,7 +193,11 @@ abstract class Double2DColViewMixin implements Numeric2DAxisView<double> {
       /* num | IterView<num> | Iterable<num> | Numeric2DView<int> */ other) {
     if (other is num || other is IterView<num> || other is Iterable<num>) {
       Double2D ret = new Double2D.sized(otherDLength, length);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] * other;
+      for (int c = 0; c < length; c++) {
+        print(this[c]);
+        ret.col[c] = this[c] * other;
+        print(ret.col[c]);
+      }
       return ret;
     } else if (other is Numeric2DView<int>) {
       Double2D ret = new Double2D.sized(length, otherDLength);

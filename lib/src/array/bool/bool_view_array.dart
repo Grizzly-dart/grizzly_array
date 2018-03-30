@@ -27,8 +27,6 @@ class Bool1DView extends Object
 
   Iterable<bool> get asIterable => _data;
 
-  Iterator<bool> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   bool operator [](int i) => _data[i];

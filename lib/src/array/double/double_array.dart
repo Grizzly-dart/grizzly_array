@@ -39,20 +39,18 @@ class Double1D extends Object
   Double1D.gen(int length, double maker(int index))
       : _data = new List<double>.generate(length, maker);
 
-  factory Double1D.fromNum(iterable) {
-    if (iterable is IterView<num>) {
-      final list = new Double1D.sized(iterable.length);
-      for (int i = 0; i < iterable.length; i++)
-        list[i] = iterable[i].toDouble();
-      return list;
-    } else if (iterable is Iterable<num>) {
-      final list = new Double1D.sized(iterable.length);
-      for (int i = 0; i < iterable.length; i++) {
-        list[i] = iterable.elementAt(i).toDouble();
-      }
-      return list;
+  factory Double1D.nums(Iterable<num> iterable) {
+    final list = new Double1D.sized(iterable.length);
+    for (int i = 0; i < iterable.length; i++) {
+      list[i] = iterable.elementAt(i)?.toDouble();
     }
-    throw new UnsupportedError('Unknown type!');
+    return list;
+  }
+
+  factory Double1D.copyNums(IterView<num> iterable) {
+    final list = new Double1D.sized(iterable.length);
+    for (int i = 0; i < iterable.length; i++) list[i] = iterable[i]?.toDouble();
+    return list;
   }
 
   Stats<double> _stats;
@@ -61,20 +59,13 @@ class Double1D extends Object
 
   Iterable<double> get asIterable => _data;
 
-  Iterator<double> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   double operator [](int i) => _data[i];
 
   operator []=(int i, double val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -126,16 +117,12 @@ class Double1D extends Object
       _data.sort((double a, double b) => b.compareTo(a));
   }
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.count(true);
-    final ret = new List<double>()..length = retLength;
-    int idx = 0;
-    for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = _data[i];
+    for (int i = length - 1; i >= 0; i--) {
+      if (!mask[i]) _data.removeAt(i);
     }
-    _data = ret;
   }
 
   void removeAt(int pos) => _data.removeAt(pos);
@@ -175,4 +162,6 @@ class Double1D extends Object
 
   Double1DFix _fixed;
   Double1DFix get fixed => _fixed ??= new Double1DFix.own(_data);
+
+  Double1D unique() => super.unique();
 }

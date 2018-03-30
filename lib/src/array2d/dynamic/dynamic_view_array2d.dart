@@ -206,8 +206,6 @@ class Dynamic2DView extends Object
     return ret.view;
   }
 
-  Iterator<ArrayView<dynamic>> get iterator => _data.iterator;
-
   covariant Dynamic2DColView _col;
 
   Dynamic2DColView get col => _col ??= new Dynamic2DColView(this);

@@ -39,20 +39,13 @@ class Bool1D extends Object
 
   Iterable<bool> get asIterable => _data;
 
-  Iterator<bool> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   bool operator [](int i) => _data[i];
 
   operator []=(int i, bool val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -75,7 +68,7 @@ class Bool1D extends Object
       _data.sort((bool a, bool b) => b ? 1 : 0);
   }
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

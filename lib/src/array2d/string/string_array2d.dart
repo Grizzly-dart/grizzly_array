@@ -215,11 +215,9 @@ class String2D extends Object
 
   String2DRow get row => _row ??= new String2DRow(this);
 
-  Iterator<String1D> get iterator => _data.iterator;
-
   String1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<String> val) {
+  operator []=(final int i, final IterView<String> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
@@ -264,13 +262,13 @@ class String2D extends Object
   }
 
   @override
-  void add(ArrayView<String> row) => this[numRows] = row;
+  void add(IterView<String> row) => this[numRows] = row;
 
   @override
   void addScalar(String v) => _data.add(new String1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<String> row) {
+  void insert(int index, IterView<String> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');

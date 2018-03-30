@@ -1,6 +1,6 @@
 name: grizzly_array
 description: A starting point for Dart libraries or applications.
-version: 0.2.1
+version: 0.2.2
 homepage: https://github.com/Grizzly-dart/grizzly_array
 author: Ravi Teja Gudapati <tejainece@gmail.com>
 documentation:
@@ -9,7 +9,7 @@ environment:
   sdk: '>=1.20.1 <2.0.0'
 
 dependencies:
-  grizzly_primitives: ^0.2.3
+  grizzly_primitives: ^0.2.4
   grizzly_scales: ^0.0.3-dev
   grizzly_series: ^0.2.0
   collection: ^1.14.7

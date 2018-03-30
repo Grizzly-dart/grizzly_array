@@ -105,7 +105,7 @@ class Double2DView extends Object
 
       for (int i = 0; i < data.length; i++) {
         Iterable<num> item = data.elementAt(i);
-        _data[i] = new Double1DView.fromNum(item);
+        _data[i] = new Double1DView.nums(item);
       }
     }
   }
@@ -222,8 +222,6 @@ class Double2DView extends Object
     return ret.view;
   }
 
-  Iterator<Numeric1DView<double>> get iterator => _data.iterator;
-
   covariant Double2DColView _col;
 
   Double2DColView get col => _col ??= new Double2DColView(this);
@@ -239,4 +237,6 @@ class Double2DView extends Object
 
   @override
   Iterable<ArrayView<double>> get cols => new ColsListView<double>(this);
+
+  Double1D unique() => super.unique();
 }

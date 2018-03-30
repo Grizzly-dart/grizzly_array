@@ -313,7 +313,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   }
 
   @override
-  Double1D pickByIndices(ArrayView<int> indices) {
+  Double1D pickByIndices(IterView<int> indices) {
     final ret = new Double1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices[i]];
@@ -336,5 +336,30 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     final ret = new Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = this[i].abs();
     return ret;
+  }
+
+  Double1D selectIf(IterView<bool> mask) {
+    if (mask.length != length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.asIterable.where((v) => v).length;
+    final ret = new List<double>()..length = retLength;
+    int idx = 0;
+    for (int i = 0; i < mask.length; i++) {
+      if (mask[i]) ret[idx++] = this[i];
+    }
+    return new Double1D.own(ret);
+  }
+
+  bool operator ==(/* IterView<num> | Iterable<num> */ other) {
+    if (other is IterView<num>) other = other.asIterable;
+
+    if (other is Iterable<num>) {
+      if (other.length != length) return false;
+      for (int i = 0; i < length; i++) {
+        if (this[i] != other.elementAt(i)) return false;
+      }
+      return true;
+    }
+    return false;
   }
 }

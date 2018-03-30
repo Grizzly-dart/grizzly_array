@@ -79,20 +79,6 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     return ret;
   }
 
-  bool operator ==(other) {
-    if (other is! Array<String>) return false;
-
-    if (other is Array<String>) {
-      if (length != other.length) return false;
-      for (int i = 0; i < length; i++) {
-        if (this[i] != other[i]) return false;
-      }
-      return true;
-    }
-
-    return false;
-  }
-
   Array<bool> get isAlphaNum {
     final ret = new Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
@@ -225,7 +211,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   }
 
   @override
-  String1D pickByIndices(ArrayView<int> indices) {
+  String1D pickByIndices(IterView<int> indices) {
     final ret = new String1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices[i]];
@@ -238,4 +224,16 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
 
   @override
   int compareValue(String a, String b) => a.compareTo(b);
+
+  String1D selectIf(IterView<bool> mask) {
+    if (mask.length != length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.asIterable.where((v) => v).length;
+    final ret = new List<String>()..length = retLength;
+    int idx = 0;
+    for (int i = 0; i < mask.length; i++) {
+      if (mask[i]) ret[idx++] = this[i];
+    }
+    return new String1D.own(ret);
+  }
 }

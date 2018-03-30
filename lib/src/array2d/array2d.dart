@@ -53,9 +53,7 @@ part 'dynamic/dynamic_mixin.dart';
 part 'dynamic/dynamic_row.dart';
 part 'dynamic/dynamic_view_array2d.dart';
 
-part 'double_array2d.dart';
-
-Double2D array2D(
+Double2D array2(
     /* Iterable<Iterable<num>> | Iterable<double> | Index2D */ data,
     {bool transpose: false}) {
   if (data is Iterable<Iterable<double>>) {
@@ -89,9 +87,9 @@ Double2D array2D(
   }
 }
 
-Double2D double2D(Iterable<Iterable<num>> matrix) => array2D(matrix);
+Double2D doubles2(Iterable<Iterable<num>> matrix) => array2(matrix);
 
-Int2D int2D(/* Iterable<Iterable<int>> | Iterable<int> | Index2D */ data,
+Int2D ints2(/* Iterable<Iterable<int>> | Iterable<int> | Index2D */ data,
     {bool transpose: false}) {
   if (data is Iterable<Iterable<int>>) {
     if (!transpose) {

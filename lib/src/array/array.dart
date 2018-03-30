@@ -20,7 +20,7 @@ export 'dynamic/dynamic_array.dart';
 Double1D array(
     /* Iterable<num> | ArrayView<num> | double | int | Index1D */ data) {
   if (data is Iterable<num>) {
-    return new Double1D.fromNum(data);
+    return new Double1D.nums(data);
   } else if (data is Numeric1DView<num>) {
     return data.toDouble;
   } else if (data is double) {
@@ -35,9 +35,15 @@ Double1D array(
 }
 
 /// Creates a 1-dimensional array of integers from given [data]
-Int1D int1D(/* Iterable<num> | double | int | Index1D */ data) {
+Int1D ints(/* Iterable<num> | num | Index1D */ data) {
   if (data is Iterable<int>) {
     return new Int1D(data);
+  } else if (data is IterView<int>) {
+    return new Int1D.copy(data);
+  } else if (data is Iterable<num>) {
+    return new Int1D.nums(data);
+  } else if (data is IterView<num>) {
+    return new Int1D.nums(data);
   } else if (data is int) {
     return new Int1D.single(data);
   } else if (data is double) {
@@ -50,9 +56,9 @@ Int1D int1D(/* Iterable<num> | double | int | Index1D */ data) {
 }
 
 /// Creates a 1-dimensional array of double from given [data]
-Double1D double1D(/* Iterable<num> | double | int | Index1D */ data) {
+Double1D doubles(/* Iterable<num> | double | int | Index1D */ data) {
   if (data is Iterable<num>) {
-    return new Double1D.fromNum(data);
+    return new Double1D.nums(data);
   } else if (data is double) {
     return new Double1D.single(data);
   } else if (data is num) {
@@ -65,7 +71,7 @@ Double1D double1D(/* Iterable<num> | double | int | Index1D */ data) {
 }
 
 /// Creates a 1-dimensional array of double from given [data]
-Bool1D bool1D(/* Iterable<bool> | bool | Index1D */ data) {
+Bool1D bools(/* Iterable<bool> | bool | Index1D */ data) {
   if (data is Iterable<bool>) {
     return new Bool1D(data);
   } else if (data is bool) {
@@ -78,7 +84,7 @@ Bool1D bool1D(/* Iterable<bool> | bool | Index1D */ data) {
 }
 
 /// Creates a 1-dimensional array of double from given [data]
-String1D string1D(/* Iterable<String> | bool | Index1D */ data) {
+String1D strings(/* Iterable<String> | bool | Index1D */ data) {
   if (data is Iterable<String>) {
     return new String1D(data);
   } else if (data is String) {

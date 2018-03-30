@@ -419,7 +419,7 @@ class Int2DFix extends Object
 
   Int1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, ArrayView<int> val) {
+  operator []=(final int i, IterView<int> val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
@@ -501,4 +501,6 @@ class Int2DFix extends Object
   Int2DView get view => _view ??= new Int2DView.own(_data);
 
   Int2DFix get fixed => this;
+
+  Int1D unique() => super.unique();
 }

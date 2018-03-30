@@ -27,8 +27,6 @@ class String1DView extends Object
 
   Iterable<String> get asIterable => _data;
 
-  Iterator<String> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   String operator [](int i) => _data[i];

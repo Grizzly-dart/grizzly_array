@@ -213,11 +213,9 @@ class Bool2D extends Object
 
   Bool2DRow get row => _row ??= new Bool2DRow(this);
 
-  Iterator<Bool1D> get iterator => _data.iterator;
-
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<bool> val) {
+  operator []=(final int i, final IterView<bool> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
@@ -264,13 +262,13 @@ class Bool2D extends Object
   }
 
   @override
-  void add(ArrayView<bool> row) => this[numRows] = row;
+  void add(IterView<bool> row) => this[numRows] = row;
 
   @override
   void addScalar(bool v) => _data.add(new Bool1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<bool> row) {
+  void insert(int index, IterView<bool> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');

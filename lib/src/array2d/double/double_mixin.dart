@@ -378,21 +378,30 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
   Double2D clone() => new Double2D.copy(this);
 
   Double2D matmul(Numeric2DView<double> other) {
-    if(numCols != other.numRows) throw new Exception('Invalid size!');
+    if (numCols != other.numRows) throw new Exception('Invalid size!');
 
     Double2D ret = new Double2D.sized(numRows, other.numCols);
 
-    for(int i = 0; i < numRows; i++) {
-      for(int j = 0; j < other.numCols; j++) {
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < other.numCols; j++) {
         double v = 0.0;
-        for(int ri = 0; ri < numCols; ri++) {
-          for(int li = 0; li < other.numRows; li++) {
-            v += this[i][ri] * other[li][j];
-          }
+        for (int ri = 0; ri < numCols; ri++) {
+          v += this[i][ri] * other[ri][j];
         }
         ret[i][j] = v;
       }
     }
     return ret;
+  }
+
+  bool operator ==(/* Numeric2D */ other) {
+    if (other is Numeric2D) {
+      if (shape != other.shape) return false;
+      for (int i = 0; i < numRows; i++) {
+        if (this[i] != other[i]) return false;
+      }
+      return true;
+    }
+    return false;
   }
 }

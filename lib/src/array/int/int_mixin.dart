@@ -230,7 +230,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret.toInt();
   }
 
-  Double1D get toDouble => new Double1D.fromNum(this);
+  Double1D get toDouble => new Double1D.copyNums(this);
 
   Int1D get toInt => new Int1D.copy(this);
 
@@ -245,20 +245,6 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   Int2D diagonal({Index2D shape, num def: 0}) =>
       new Int2D.diagonal(this, shape: shape, def: def?.toInt());
 
-  bool operator ==(other) {
-    if (other is! Array<int>) return false;
-
-    if (other is Array<int>) {
-      if (length != other.length) return false;
-      for (int i = 0; i < length; i++) {
-        if (this[i] != other[i]) return false;
-      }
-      return true;
-    }
-
-    return false;
-  }
-
   Int2D to2D() => new Int2D.from([this]);
 
   Int2D get transpose {
@@ -270,7 +256,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   @override
-  Int1D pickByIndices(ArrayView<int> indices) {
+  Int1D pickByIndices(IterView<int> indices) {
     final ret = new Int1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices[i]];
@@ -285,5 +271,30 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     final ret = new Int1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = this[i].abs();
     return ret;
+  }
+
+  Int1D selectIf(IterView<bool> mask) {
+    if (mask.length != length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.asIterable.where((v) => v).length;
+    final ret = new List<int>()..length = retLength;
+    int idx = 0;
+    for (int i = 0; i < mask.length; i++) {
+      if (mask[i]) ret[idx++] = this[i];
+    }
+    return new Int1D.own(ret);
+  }
+
+  bool operator ==(other) {
+    if (other is IterView<num>) other = other.asIterable;
+
+    if (other is Iterable<num>) {
+      if (other.length != length) return false;
+      for (int i = 0; i < length; i++) {
+        if (this[i] != other.elementAt(i)) return false;
+      }
+      return true;
+    }
+    return false;
   }
 }

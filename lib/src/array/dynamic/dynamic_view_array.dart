@@ -37,8 +37,6 @@ class Dynamic1DView extends Object
 
   Iterable<dynamic> get asIterable => _data;
 
-  Iterator<dynamic> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   dynamic operator [](int i) => _data[i];

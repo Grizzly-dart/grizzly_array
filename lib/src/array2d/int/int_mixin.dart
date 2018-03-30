@@ -332,13 +332,22 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
       for (int j = 0; j < other.numCols; j++) {
         int v = 0;
         for (int ri = 0; ri < numCols; ri++) {
-          for (int li = 0; li < other.numRows; li++) {
-            v += this[i][ri] * other[li][j];
-          }
+          v += this[i][ri] * other[ri][j];
         }
         ret[i][j] = v;
       }
     }
     return ret;
+  }
+
+  bool operator ==(/* Numeric2D */ other) {
+    if (other is Numeric2D) {
+      if (shape != other.shape) return false;
+      for (int i = 0; i < numRows; i++) {
+        if (this[i] != other[i]) return false;
+      }
+      return true;
+    }
+    return false;
   }
 }

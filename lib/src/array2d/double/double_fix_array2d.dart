@@ -346,7 +346,7 @@ class Double2DFix extends Object
 
       for (int i = 0; i < data.length; i++) {
         Iterable<num> item = data.elementAt(i);
-        _data[i] = new Double1DFix.fromNum(item);
+        _data[i] = new Double1DFix.nums(item);
       }
     }
   }
@@ -463,8 +463,6 @@ class Double2DFix extends Object
     return ret;
   }
 
-  Iterator<Numeric1DFix<double>> get iterator => _data.iterator;
-
   covariant Double2DColFix _col;
 
   Double2DColFix get col => _col ??= new Double2DColFix(this);
@@ -475,7 +473,7 @@ class Double2DFix extends Object
 
   Double1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, ArrayView<double> val) {
+  operator []=(final int i, IterView<double> val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
@@ -593,4 +591,6 @@ class Double2DFix extends Object
 
   @override
   Iterable<ArrayFix<double>> get cols => new ColsListFix<double>(this);
+
+  Double1D unique() => super.unique();
 }

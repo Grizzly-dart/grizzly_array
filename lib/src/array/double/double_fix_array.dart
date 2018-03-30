@@ -181,7 +181,7 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
 
   @override
   Double1DFix get log10Self {
-    for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.LN10;
+    for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.ln10;
     return this;
   }
 
@@ -227,7 +227,7 @@ class Double1DFix extends Object
   Double1DFix.gen(int length, double maker(int index))
       : _data = new List<double>.generate(length, maker, growable: false);
 
-  factory Double1DFix.fromNum(iterable) {
+  factory Double1DFix.nums(iterable) {
     if (iterable is Numeric1DView) {
       final list = new Double1DFix.sized(iterable.length);
       for (int i = 0; i < iterable.length; i++)
@@ -248,8 +248,6 @@ class Double1DFix extends Object
   Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
   Iterable<double> get asIterable => _data;
-
-  Iterator<double> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -306,4 +304,6 @@ class Double1DFix extends Object
 
   @override
   Double1DFix get fixed => this;
+
+  Double1D unique() => super.unique();
 }

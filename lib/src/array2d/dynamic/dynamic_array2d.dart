@@ -217,11 +217,9 @@ class Dynamic2D extends Object
 
   Dynamic2DRow get row => _row ??= new Dynamic2DRow(this);
 
-  Iterator<Dynamic1D> get iterator => _data.iterator;
-
   Dynamic1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<dynamic> val) {
+  operator []=(final int i, final IterView<dynamic> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
@@ -266,13 +264,13 @@ class Dynamic2D extends Object
   }
 
   @override
-  void add(ArrayView<dynamic> row) => this[numRows] = row;
+  void add(IterView<dynamic> row) => this[numRows] = row;
 
   @override
   void addScalar(dynamic v) => _data.add(new Dynamic1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<dynamic> row) {
+  void insert(int index, IterView<dynamic> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');

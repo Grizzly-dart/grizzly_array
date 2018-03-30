@@ -1,6 +1,6 @@
 part of grizzly.series.array.int;
 
-void checkLengths(IterView expected, IterView found, {String subject}) {
+void checkLengths(expected, found, {String subject}) {
   if (expected.length != found.length)
     new LengthMismatch(
         expected: expected.length, found: found.length, subject: subject);
@@ -40,8 +40,6 @@ class Int1DView extends Object
 
   Iterable<int> get asIterable => _data;
 
-  Iterator<int> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   int operator [](int i) => _data[i];
@@ -52,4 +50,6 @@ class Int1DView extends Object
 
   @override
   int get hashCode => _data.hashCode;
+
+  Int1D unique() => super.unique();
 }

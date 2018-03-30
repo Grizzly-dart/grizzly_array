@@ -81,12 +81,12 @@ class Int2D extends Object
         }
 
         for (dynamic item in data) {
-          _data.add(new Int1D.fromNum(item));
+          _data.add(new Int1D.nums(item));
         }
       }
     } else if (data is Array2DView<num>) {
       for (ArrayView<num> item in data.rows) {
-        _data.add(new Int1D.fromNum(item));
+        _data.add(new Int1D.nums(item));
       }
     }
   }
@@ -113,9 +113,11 @@ class Int2D extends Object
   factory Int2D.shapedLike(Array2DView like, {int data: 0}) =>
       new Int2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Int2D.diagonal(/* IterView<int> | Iterable<int> */ diagonal,
+  factory Int2D.diagonal(/* IterView<num> | Iterable<num> */ diagonal,
       {Index2D shape, int def: 0}) {
     if (diagonal is IterView<int>) {
+      diagonal = diagonal.asIterable;
+    } else if (diagonal is IterView<num>) {
       diagonal = diagonal.asIterable;
     }
     if (diagonal is Iterable<int>) {
@@ -129,32 +131,94 @@ class Int2D extends Object
       int max = math.min(shape.row, shape.col);
       if (def != 0) for (int i = min; i < max; i++) ret[i][i] = def;
       return ret;
+    } else if (diagonal is Iterable<num>) {
+      if (shape == null) shape = new Index2D(diagonal.length, diagonal.length);
+
+      final ret = new Int2D.shaped(shape);
+      int min = math.min(math.min(diagonal.length, shape.row), shape.col);
+      for (int i = 0; i < min; i++) {
+        ret[i][i] = diagonal.elementAt(i)?.toInt();
+      }
+      int max = math.min(shape.row, shape.col);
+      if (def != 0) for (int i = min; i < max; i++) ret[i][i] = def;
+      return ret;
     }
     throw new UnsupportedError('Type');
   }
 
-  Int2D.repeatRow(IterView<int> row, [int numRows = 1])
+  Int2D.repeatRow(/* IterView<num> | Iterable<num> */ row, [int numRows = 1])
       : _data = new List<Int1D>()..length = numRows {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.copy(row);
+    if (row is IterView<int>) {
+      row = row.asIterable;
+    }
+    if (row is Iterable<int>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D(row);
+      }
+    } else if (row is Iterable<num> || row is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.nums(row);
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
-  Int2D.repeatCol(IterView<int> column, [int numCols = 1])
+  Int2D.repeatCol(/* IterView<num> | Iterable<num> */ column, [int numCols = 1])
       : _data = new List<Int1D>()..length = column.length {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.sized(numCols, data: column[i]);
+    if (column is IterView<int>) {
+      column = column.asIterable;
+    }
+    if (column is Iterable<int>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.sized(numCols, data: column.elementAt(i));
+      }
+    } else if (column is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.sized(numCols, data: column[i]?.toInt());
+      }
+    } else if (column is Iterable<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.sized(numCols, data: column.elementAt(i)?.toInt());
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
-  Int2D.aRow(IterView<int> row) : _data = new List<Int1D>()..length = 1 {
-    _data[0] = new Int1D.copy(row);
+  Int2D.aRow(/* IterView<num> | Iterable<num> */ row)
+      : _data = new List<Int1D>()..length = 1 {
+    if (row is IterView<int>) {
+      _data[0] = new Int1D.copy(row);
+    } else if (row is Iterable<int>) {
+      _data[0] = new Int1D(row);
+    } else if (row is Iterable<num> || row is IterView<num>) {
+      _data[0] = new Int1D.nums(row);
+    } else {
+      throw new UnsupportedError('Type');
+    }
   }
 
-  Int2D.aCol(IterView<int> column)
+  Int2D.aCol(/* IterView<num> | Iterable<num> */ column)
       : _data = new List<Int1D>()..length = column.length {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Int1D.single(column[i]);
+    if (column is IterView<int>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.single(column[i]);
+      }
+    } else if (column is Iterable<int>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.single(column.elementAt(i));
+      }
+    } else if (column is Iterable<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.single(column.elementAt(i)?.toInt());
+      }
+    } else if (column is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Int1D.single(column[i]?.toInt());
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
@@ -302,13 +366,13 @@ class Int2D extends Object
   }
 
   @override
-  void add(ArrayView<int> row) => this[numRows] = row;
+  void add(IterView<int> row) => this[numRows] = row;
 
   @override
   void addScalar(int v) => _data.add(new Int1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<int> row) {
+  void insert(int index, IterView<int> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
@@ -389,4 +453,6 @@ class Int2D extends Object
       }
     }
   }
+
+  Int1D unique() => super.unique();
 }

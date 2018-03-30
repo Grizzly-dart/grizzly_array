@@ -22,8 +22,6 @@ abstract class String2DMixin implements Array2DView<String> {
 
   Iterable<Iterable<String>> get iterable => _data.map((a) => a.asIterable);
 
-  Iterator<ArrayView<String>> get iterator => _data.iterator;
-
   int get numCols {
     if (numRows == 0) return 0;
     return _data.first.length;

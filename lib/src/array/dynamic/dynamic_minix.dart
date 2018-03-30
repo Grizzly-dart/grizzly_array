@@ -82,22 +82,8 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
     return ret;
   }
 
-  bool operator ==(other) {
-    if (other is! Array) return false;
-
-    if (other is Array) {
-      if (length != other.length) return false;
-      for (int i = 0; i < length; i++) {
-        if (this[i] != other[i]) return false;
-      }
-      return true;
-    }
-
-    return false;
-  }
-
   @override
-  Dynamic1D pickByIndices(ArrayView<int> indices) {
+  Dynamic1D pickByIndices(IterView<int> indices) {
     final ret = new Dynamic1D.sized(indices.length, comparator: comparator);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices[i]];
@@ -177,5 +163,17 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
       }
     }
     return ret;
+  }
+
+  Dynamic1D selectIf(IterView<bool> mask) {
+    if (mask.length != length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.asIterable.where((v) => v).length;
+    final ret = new List<dynamic>()..length = retLength;
+    int idx = 0;
+    for (int i = 0; i < mask.length; i++) {
+      if (mask[i]) ret[idx++] = this[i];
+    }
+    return new Dynamic1D.own(ret);
   }
 }

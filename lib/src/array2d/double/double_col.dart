@@ -16,7 +16,7 @@ class Double2DCol extends Object
   Double1DFix operator [](int col) =>
       new Double1DFix.own(new ColList<double>(inner, col));
 
-  operator []=(int index, ArrayView<double> col) {
+  operator []=(int index, IterView<double> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
@@ -28,7 +28,7 @@ class Double2DCol extends Object
     }
   }
 
-  void add(ArrayView<double> col) {
+  void add(IterView<double> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -43,7 +43,7 @@ class Double2DCol extends Object
     }
   }
 
-  void insert(int index, ArrayView<double> col) {
+  void insert(int index, IterView<double> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -67,7 +67,7 @@ class Double2DColFix extends Object
   Double1DFix operator [](int col) =>
       new Double1DFix.own(new ColList<double>(inner, col));
 
-  operator []=(int index, ArrayView<double> col) {
+  operator []=(int index, IterView<double> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }

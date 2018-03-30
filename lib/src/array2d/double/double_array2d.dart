@@ -81,9 +81,11 @@ class Double2D extends Object
   factory Double2D.shapedLike(Array2DView like, {double data: 0.0}) =>
       new Double2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Double2D.diagonal(/* IterView<double> | Iterable<double> */ diagonal,
+  factory Double2D.diagonal(/* IterView<num> | Iterable<num> */ diagonal,
       {Index2D shape, double def: 0.0}) {
     if (diagonal is IterView<double>) {
+      diagonal = diagonal.asIterable;
+    } else if (diagonal is IterView<num>) {
       diagonal = diagonal.asIterable;
     }
     if (diagonal is Iterable<double>) {
@@ -93,6 +95,17 @@ class Double2D extends Object
       int min = math.min(math.min(diagonal.length, shape.row), shape.col);
       for (int i = 0; i < min; i++) {
         ret[i][i] = diagonal.elementAt(i);
+      }
+      int max = math.min(shape.row, shape.col);
+      if (def != 0) for (int i = min; i < max; i++) ret[i][i] = def;
+      return ret;
+    } else if (diagonal is Iterable<num>) {
+      if (shape == null) shape = new Index2D(diagonal.length, diagonal.length);
+
+      final ret = new Double2D.shaped(shape);
+      int min = math.min(math.min(diagonal.length, shape.row), shape.col);
+      for (int i = 0; i < min; i++) {
+        ret[i][i] = diagonal.elementAt(i)?.toDouble();
       }
       int max = math.min(shape.row, shape.col);
       if (def != 0) for (int i = min; i < max; i++) ret[i][i] = def;
@@ -115,39 +128,91 @@ class Double2D extends Object
         }
 
         for (dynamic item in data) {
-          _data.add(new Double1D.fromNum(item));
+          _data.add(new Double1D.nums(item));
         }
       }
     } else if (data is Array2DView<num>) {
       for (ArrayView<num> item in data.rows) {
-        _data.add(new Double1D.fromNum(item));
+        _data.add(new Double1D.copyNums(item));
       }
     }
   }
 
-  Double2D.repeatRow(ArrayView<double> row, [int numRows = 1])
+  Double2D.repeatRow(/* IterView<num> | Iterable<num> */ row, [int numRows = 1])
       : _data = new List<Double1D>()..length = numRows {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.copy(row);
+    if (row is IterView<double>) {
+      row = row.asIterable;
+    }
+    if (row is Iterable<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D(row);
+      }
+    } else if (row is Iterable<num> || row is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.nums(row);
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
-  Double2D.repeatCol(ArrayView<double> column, [int numCols = 1])
+  Double2D.repeatCol(/* IterView<num> | Iterable<num> */ column,
+      [int numCols = 1])
       : _data = new List<Double1D>()..length = column.length {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.sized(numCols, data: column[i]);
+    if (column is IterView<double>) {
+      column = column.asIterable;
+    }
+    if (column is Iterable<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.sized(numCols, data: column.elementAt(i));
+      }
+    } else if (column is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.sized(numCols, data: column[i]?.toDouble());
+      }
+    } else if (column is Iterable<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] =
+            new Double1D.sized(numCols, data: column.elementAt(i)?.toDouble());
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
-  Double2D.aRow(ArrayView<double> row)
+  Double2D.aRow(/* IterView<num> | Iterable<num> */ row)
       : _data = new List<Double1D>()..length = 1 {
-    _data[0] = new Double1D.copy(row);
+    if (row is IterView<double>) {
+      _data[0] = new Double1D.copy(row);
+    } else if (row is Iterable<double>) {
+      _data[0] = new Double1D(row);
+    } else if (row is Iterable<num> || row is IterView<num>) {
+      _data[0] = new Double1D.nums(row);
+    } else {
+      throw new UnsupportedError('Type');
+    }
   }
 
-  Double2D.aCol(ArrayView<double> column)
+  Double2D.aCol(/* IterView<num> | Iterable<num> */ column)
       : _data = new List<Double1D>()..length = column.length {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.single(column[i]);
+    if (column is IterView<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column[i]);
+      }
+    } else if (column is Iterable<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column.elementAt(i));
+      }
+    } else if (column is Iterable<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column.elementAt(i)?.toDouble());
+      }
+    } else if (column is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column[i]?.toDouble());
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
@@ -246,7 +311,7 @@ class Double2D extends Object
 
   Double1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<double> val) {
+  operator []=(final int i, final IterView<double> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
@@ -293,19 +358,17 @@ class Double2D extends Object
   }
 
   @override
-  void add(ArrayView<double> row) => this[numRows] = row;
+  void add(IterView<double> row) => this[numRows] = row;
 
   @override
   void addScalar(double v) => _data.add(new Double1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<double> row) {
+  void insert(int index, IterView<double> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols) throw new ArgumentError.value(row, 'row');
     _data.insert(index, new Double1D.copy(row));
   }
-
-  Iterator<Double1D> get iterator => _data.iterator;
 
   void clip({double min, double max}) {
     if (numRows == 0) return;
@@ -405,4 +468,6 @@ class Double2D extends Object
       }
     }
   }
+
+  Double1D unique() => super.unique();
 }

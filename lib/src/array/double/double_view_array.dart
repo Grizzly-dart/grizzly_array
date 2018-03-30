@@ -25,14 +25,17 @@ class Double1DView extends Object
   Double1DView.gen(int length, double maker(int index))
       : _data = new List<double>.generate(length, maker, growable: false);
 
-  factory Double1DView.fromNum(Iterable<num> iterable) {
+  factory Double1DView.nums(Iterable<num> iterable) {
     final list = new List<double>(iterable.length);
-    final Iterator<num> ite = iterable.iterator;
-    ite.moveNext();
     for (int i = 0; i < list.length; i++) {
-      list[i] = ite.current.toDouble();
-      ite.moveNext();
+      list[i] = iterable.elementAt(i)?.toDouble();
     }
+    return new Double1DView.own(list);
+  }
+
+  factory Double1DView.copyNums(IterView<num> iterable) {
+    final list = new List<double>(iterable.length);
+    for (int i = 0; i < list.length; i++) list[i] = iterable[i]?.toDouble();
     return new Double1DView.own(list);
   }
 
@@ -41,8 +44,6 @@ class Double1DView extends Object
   Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
   Iterable<double> get asIterable => _data;
-
-  Iterator<double> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -56,4 +57,6 @@ class Double1DView extends Object
   int count(double v, {double absTol: 1e-8}) => super.count(v, absTol: absTol);
 
   Double1DView get view => this;
+
+  Double1D unique() => super.unique();
 }

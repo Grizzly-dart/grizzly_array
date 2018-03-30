@@ -15,7 +15,7 @@ class Dynamic2DCol extends Object
   Dynamic1DFix operator [](int col) =>
       new Dynamic1DFix.own(new ColList<dynamic>(inner, col));
 
-  operator []=(int index, ArrayView<dynamic> col) {
+  operator []=(int index, IterView<dynamic> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
@@ -27,7 +27,7 @@ class Dynamic2DCol extends Object
     }
   }
 
-  void add(ArrayView<dynamic> col) {
+  void add(IterView<dynamic> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -42,7 +42,7 @@ class Dynamic2DCol extends Object
     }
   }
 
-  void insert(int index, ArrayView<dynamic> col) {
+  void insert(int index, IterView<dynamic> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -65,7 +65,7 @@ class Dynamic2DColFix extends Object
   Dynamic1DFix operator [](int col) =>
       new Dynamic1DFix.own(new ColList<dynamic>(inner, col));
 
-  operator []=(int index, ArrayView<dynamic> col) {
+  operator []=(int index, IterView<dynamic> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }

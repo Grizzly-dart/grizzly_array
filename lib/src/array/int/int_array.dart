@@ -18,7 +18,7 @@ class Int1D extends Object
         Int1DViewMixin,
         IntFixMixin
     implements Numeric1D<int>, Int1DFix {
-  List<int> _data;
+  final List<int> _data;
 
   Int1D([Iterable<int> data = const <int>[]])
       : _data = new List<int>.from(data);
@@ -42,7 +42,7 @@ class Int1D extends Object
   Int1D.gen(int length, int maker(int index))
       : _data = new List<int>.generate(length, maker);
 
-  factory Int1D.fromNum(iterable) {
+  factory Int1D.nums(iterable) {
     if (iterable is IterView<num>) {
       final list = new Int1D.sized(iterable.length);
       for (int i = 0; i < iterable.length; i++) list[i] = iterable[i].toInt();
@@ -63,20 +63,13 @@ class Int1D extends Object
 
   Iterable<int> get asIterable => _data;
 
-  Iterator<int> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   int operator [](int i) => _data[i];
 
   operator []=(int i, int val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -99,16 +92,12 @@ class Int1D extends Object
       _data.sort((int a, int b) => b.compareTo(a));
   }
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.count(true);
-    final ret = new List<int>()..length = retLength;
-    int idx = 0;
-    for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = _data[i];
+    for (int i = length - 1; i >= 0; i--) {
+      if (!mask[i]) _data.removeAt(i);
     }
-    _data = ret;
   }
 
   void removeAt(int pos) => _data.removeAt(pos);
@@ -141,4 +130,6 @@ class Int1D extends Object
 
   Int1DFix _fixed;
   Int1DFix get fixed => _fixed ??= new Int1DFix.own(_data);
+
+  Int1D unique() => super.unique();
 }

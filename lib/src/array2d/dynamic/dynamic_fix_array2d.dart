@@ -211,7 +211,7 @@ class Dynamic2DFix extends Object
 
   Dynamic1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, ArrayView<dynamic> val) {
+  operator []=(final int i, IterView<dynamic> val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i');
     }

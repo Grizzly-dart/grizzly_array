@@ -28,7 +28,7 @@ abstract class ArrayFixMixin<E> implements ArrayFix<E> {
     }
   }
 
-  void assign(ArrayView<E> other) {
+  void assign(IterView<E> other) {
     if (other.length != length)
       throw new ArgumentError.value(other, 'other', 'Size mismatch!');
 
@@ -234,22 +234,15 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
     return ret;
   }
 
-  bool operator ==(/* E | IterView<E> | Iterable<E> */ other) {
-    if (other is E) {
+  bool operator ==(/* IterView<E> | Iterable<E> */ other) {
+    if (other is IterView<E>) other = other.asIterable;
+
+    if (other is Iterable<E>) {
+      if (other.length != length) return false;
       for (int i = 0; i < length; i++) {
-        if (this[i] != other) return false;
+        if (this[i] != other.elementAt(i)) return false;
       }
       return true;
-    } else if (other is IterView<E> || other is Iterable<E>) {
-      if (other is Iterable<E>) other = new IterView<E>(other);
-      if (other is IterView<E>) {
-        if (other.length != length) return false;
-        for (int i = 0; i < length; i++) {
-          if (this[i] != other[i]) return false;
-        }
-        return true;
-      }
-      return false;
     }
     return false;
   }

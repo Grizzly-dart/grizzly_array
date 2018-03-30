@@ -45,20 +45,13 @@ class Dynamic1D extends Object
 
   Iterable<dynamic> get asIterable => _data;
 
-  Iterator<dynamic> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   dynamic operator [](int i) => _data[i];
 
   operator []=(int i, dynamic val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -77,7 +70,7 @@ class Dynamic1D extends Object
 
   void sort({bool descending: false}) {}
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

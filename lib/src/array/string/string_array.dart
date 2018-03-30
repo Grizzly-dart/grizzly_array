@@ -40,20 +40,13 @@ class String1D extends Object
 
   Iterable<String> get asIterable => _data;
 
-  Iterator<String> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   String operator [](int i) => _data[i];
 
   operator []=(int i, String val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -77,7 +70,7 @@ class String1D extends Object
       _data.sort((String a, String b) => b.compareTo(a));
   }
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

@@ -15,7 +15,7 @@ class Bool2DCol extends Object
   Bool1DFix operator [](int col) =>
       new Bool1DFix(new ColList<bool>(inner, col));
 
-  operator []=(int index, ArrayView<bool> col) {
+  operator []=(int index, IterView<bool> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
@@ -27,7 +27,7 @@ class Bool2DCol extends Object
     }
   }
 
-  void add(ArrayView<bool> col) {
+  void add(IterView<bool> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -42,7 +42,7 @@ class Bool2DCol extends Object
     }
   }
 
-  void insert(int index, ArrayView<bool> col) {
+  void insert(int index, IterView<bool> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -65,7 +65,7 @@ class Bool2DColFix extends Object
   Bool1DFix operator [](int col) =>
       new Bool1DFix(new ColList<bool>(inner, col));
 
-  operator []=(int index, ArrayView<bool> col) {
+  operator []=(int index, IterView<bool> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }

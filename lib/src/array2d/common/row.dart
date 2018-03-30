@@ -9,17 +9,15 @@ abstract class RowMixin<E> implements Axis2D<E> {
 
   ArrayFix<E> operator [](int row) => inner[row];
 
-  operator []=(int index, ArrayView<E> row) => inner[index] = row;
+  operator []=(int index, IterView<E> row) => inner[index] = row;
 
-  void add(ArrayView<E> row) => inner.add(row);
+  void add(IterView<E> row) => inner.add(row);
 
   void addScalar(E v) => inner.addScalar(v);
 
-  void insert(int index, ArrayView<E> row) => inner.insert(index, row);
+  void insert(int index, IterView<E> row) => inner.insert(index, row);
 
   Iterable<ArrayFix<E>> get iterable => inner.rows;
-
-  Iterator<ArrayFix<E>> get iterator => inner.rows.iterator;
 }
 
 abstract class RowFixMixin<E> implements Axis2DFix<E> {
@@ -31,11 +29,9 @@ abstract class RowFixMixin<E> implements Axis2DFix<E> {
 
   ArrayFix<E> operator [](int row) => inner[row];
 
-  operator []=(int index, ArrayView<E> row) => inner[index] = row;
+  operator []=(int index, IterView<E> row) => inner[index] = row;
 
   Iterable<ArrayFix<E>> get iterable => inner.rows;
-
-  Iterator<ArrayFix<E>> get iterator => inner.rows.iterator;
 }
 
 abstract class RowViewMixin<E> implements Axis2DView<E> {
@@ -48,6 +44,4 @@ abstract class RowViewMixin<E> implements Axis2DView<E> {
   ArrayView<E> operator [](int row) => inner[row];
 
   Iterable<ArrayView<E>> get iterable => inner.rows;
-
-  Iterator<ArrayView<E>> get iterator => inner.rows.iterator;
 }
