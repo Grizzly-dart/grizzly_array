@@ -76,17 +76,19 @@ void main() {
     });
 
     test('assign', () {
-      final a = int2D([
+      final a = ints2([
         [1, 4],
         [2, 5],
         [3, 6],
       ]);
-      final b = new Int2D.shapedLike(a);
-      expect(b, [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-      ]);
+      final b = ints2(a.shape);
+      expect(
+          b,
+          ints2([
+            [0, 0],
+            [0, 0],
+            [0, 0],
+          ]));
       b.assign(a);
       expect(b, a);
     });

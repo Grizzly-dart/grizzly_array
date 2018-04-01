@@ -1,7 +1,7 @@
 part of grizzly.series.array.double;
 
 class Double1DView extends Object
-    with Array1DViewMixin<double>, Double1DViewMixin
+    with ArrayViewMixin<double>, Double1DViewMixin
     implements Numeric1DView<double> {
   final List<double> _data;
 
@@ -25,20 +25,25 @@ class Double1DView extends Object
   Double1DView.gen(int length, double maker(int index))
       : _data = new List<double>.generate(length, maker, growable: false);
 
-  factory Double1DView.fromNum(Iterable<num> iterable) {
+  factory Double1DView.nums(Iterable<num> iterable) {
     final list = new List<double>(iterable.length);
-    final Iterator<num> ite = iterable.iterator;
-    ite.moveNext();
     for (int i = 0; i < list.length; i++) {
-      list[i] = ite.current.toDouble();
-      ite.moveNext();
+      list[i] = iterable.elementAt(i)?.toDouble();
     }
     return new Double1DView.own(list);
   }
 
-  Iterable<double> get asIterable => _data;
+  factory Double1DView.copyNums(IterView<num> iterable) {
+    final list = new List<double>(iterable.length);
+    for (int i = 0; i < list.length; i++) list[i] = iterable[i]?.toDouble();
+    return new Double1DView.own(list);
+  }
 
-  Iterator<double> get iterator => _data.iterator;
+  Stats<double> _stats;
+
+  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
+
+  Iterable<double> get asIterable => _data;
 
   int get length => _data.length;
 
@@ -49,147 +54,9 @@ class Double1DView extends Object
   Double1D slice(int start, [int end]) =>
       new Double1D(_data.sublist(start, end));
 
-  Double1DFix operator +(/* num | Iterable<num> */ other) => addition(other);
-
-  Double1DFix addition(/* num | Iterable<num> */ other) {
-    Double1D ret = new Double1D.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other;
-      }
-    } else if (other is Double1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1DFix operator -(/* num | Iterable<num> */ other) => subtract(other);
-
-  Double1DFix subtract(/* num | Iterable<num> */ other) {
-    Double1D ret = new Double1D.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1DFix operator *(/* num | Iterable<num> */ other) => multiply(other);
-
-  Double1DFix multiply(/* num | Iterable<num> */ other) {
-    Double1D ret = new Double1D.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1DFix operator /(/* num | Iterable<num> */ other) => divide(other);
-
-  Double1DFix divide(/* E | Iterable<E> */ other) {
-    Double1D ret = new Double1D.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other[i];
-      }
-    }
-    return ret;
-  }
-
-  Int1DFix truncDiv(/* num | Iterable<num> */ other) => this ~/ other;
+  int count(double v, {double absTol: 1e-8}) => super.count(v, absTol: absTol);
 
   Double1DView get view => this;
+
+  Double1D unique() => super.unique();
 }

@@ -1,7 +1,11 @@
 part of grizzly.series.array2d;
 
 class Double2D extends Object
-    with Double2DMixin, Array2DViewMixin<double>
+    with
+        Array2DViewMixin<double>,
+        Array2DFixMixin<double>,
+        Double2DViewMixin,
+        Double2DFixMixin
     implements Numeric2D<double>, Double2DFix {
   final List<Double1D> _data;
 
@@ -42,19 +46,19 @@ class Double2D extends Object
     return ret;
   }
 
-  Double2D.from(Iterable<ArrayView<double>> data)
+  Double2D.from(Iterable<IterView<double>> data)
       : _data = new List<Double1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (Double1DView item in data) {
+      for (IterView item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        Double1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView<double> item = data.elementAt(i);
+        _data[i] = new Double1D.copy(item);
       }
     }
   }
@@ -81,16 +85,43 @@ class Double2D extends Object
   factory Double2D.shapedLike(Array2DView like, {double data: 0.0}) =>
       new Double2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Double2D.diagonal(IterView<double> diagonal) {
-    final ret = new Double2D.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal[i];
+  factory Double2D.diagonal(/* IterView<num> | Iterable<num> */ diagonal,
+      {Index2D shape, double def: 0.0}) {
+    if (diagonal is IterView<double>) {
+      diagonal = diagonal.asIterable;
+    } else if (diagonal is IterView<num>) {
+      diagonal = diagonal.asIterable;
     }
-    return ret;
+    if (diagonal is Iterable<double>) {
+      if (shape == null) shape = new Index2D(diagonal.length, diagonal.length);
+
+      final ret = new Double2D.shaped(shape);
+      int min = math.min(math.min(diagonal.length, shape.row), shape.col);
+      for (int i = 0; i < min; i++) {
+        ret[i][i] = diagonal.elementAt(i);
+      }
+      int max = math.min(shape.row, shape.col);
+      if (def != 0) for (int i = min; i < max; i++) ret[i][i] = def;
+      return ret;
+    } else if (diagonal is Iterable<num>) {
+      if (shape == null) shape = new Index2D(diagonal.length, diagonal.length);
+
+      final ret = new Double2D.shaped(shape);
+      int min = math.min(math.min(diagonal.length, shape.row), shape.col);
+      for (int i = 0; i < min; i++) {
+        ret[i][i] = diagonal.elementAt(i)?.toDouble();
+      }
+      int max = math.min(shape.row, shape.col);
+      if (def != 0) for (int i = min; i < max; i++) ret[i][i] = def;
+      return ret;
+    }
+    throw new UnsupportedError('Type');
   }
 
   Double2D.fromNum(data) : _data = <Double1D>[] {
-    if (data is Iterable) {
+    // TODO handle IterView<IterView<num>>
+    // TODO handle IterView<IterView<String>>
+    if (data is Iterable<Iterable<num>>) {
       if (data.length != 0) {
         final int len = data.first.length;
         for (dynamic item in data) {
@@ -99,40 +130,107 @@ class Double2D extends Object
           }
         }
 
-        for (Numeric1DView item in data) {
-          _data.add(new Double1D.fromNum(item));
+        for (Iterable<num> item in data) {
+          _data.add(new Double1D.nums(item));
+        }
+      }
+    } else if (data is Iterable<IterView<num>>) {
+      if (data.length != 0) {
+        final int len = data.first.length;
+        for (dynamic item in data) {
+          if (item.length != len) {
+            throw new Exception('All rows must have same number of columns!');
+          }
+        }
+
+        for (IterView<num> item in data) {
+          _data.add(new Double1D.copyNums(item));
         }
       }
     } else if (data is Array2DView<num>) {
       for (ArrayView<num> item in data.rows) {
-        _data.add(new Double1D.fromNum(item));
+        _data.add(new Double1D.copyNums(item));
       }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
-  Double2D.repeatRow(ArrayView<double> row, [int numRows = 1])
+  Double2D.repeatRow(/* IterView<num> | Iterable<num> */ row, [int numRows = 1])
       : _data = new List<Double1D>()..length = numRows {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.copy(row);
+    if (row is IterView<double>) {
+      row = row.asIterable;
+    }
+    if (row is Iterable<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D(row);
+      }
+    } else if (row is Iterable<num> || row is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.nums(row);
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
-  Double2D.repeatCol(ArrayView<double> column, [int numCols = 1])
+  Double2D.repeatCol(/* IterView<num> | Iterable<num> */ column,
+      [int numCols = 1])
       : _data = new List<Double1D>()..length = column.length {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.sized(numCols, data: column[i]);
+    if (column is IterView<double>) {
+      column = column.asIterable;
+    }
+    if (column is Iterable<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.sized(numCols, data: column.elementAt(i));
+      }
+    } else if (column is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.sized(numCols, data: column[i]?.toDouble());
+      }
+    } else if (column is Iterable<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] =
+            new Double1D.sized(numCols, data: column.elementAt(i)?.toDouble());
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
-  Double2D.aRow(ArrayView<double> row)
+  Double2D.aRow(/* IterView<num> | Iterable<num> */ row)
       : _data = new List<Double1D>()..length = 1 {
-    _data[0] = new Double1D.copy(row);
+    if (row is IterView<double>) {
+      _data[0] = new Double1D.copy(row);
+    } else if (row is Iterable<double>) {
+      _data[0] = new Double1D(row);
+    } else if (row is Iterable<num> || row is IterView<num>) {
+      _data[0] = new Double1D.nums(row);
+    } else {
+      throw new UnsupportedError('Type');
+    }
   }
 
-  Double2D.aCol(ArrayView<double> column)
+  Double2D.aCol(/* IterView<num> | Iterable<num> */ column)
       : _data = new List<Double1D>()..length = column.length {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Double1D.single(column[i]);
+    if (column is IterView<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column[i]);
+      }
+    } else if (column is Iterable<double>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column.elementAt(i));
+      }
+    } else if (column is Iterable<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column.elementAt(i)?.toDouble());
+      }
+    } else if (column is IterView<num>) {
+      for (int i = 0; i < numRows; i++) {
+        _data[i] = new Double1D.single(column[i]?.toDouble());
+      }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 
@@ -231,7 +329,7 @@ class Double2D extends Object
 
   Double1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<double> val) {
+  operator []=(final int i, final IterView<double> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
@@ -278,19 +376,17 @@ class Double2D extends Object
   }
 
   @override
-  void add(ArrayView<double> row) => this[numRows] = row;
+  void add(IterView<double> row) => this[numRows] = row;
 
   @override
   void addScalar(double v) => _data.add(new Double1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<double> row) {
+  void insert(int index, IterView<double> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols) throw new ArgumentError.value(row, 'row');
     _data.insert(index, new Double1D.copy(row));
   }
-
-  Iterator<Double1D> get iterator => _data.iterator;
 
   void clip({double min, double max}) {
     if (numRows == 0) return;
@@ -335,7 +431,7 @@ class Double2D extends Object
   Double2D get log10Self {
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++)
-        _data[r][c] = math.log(_data[r][c]) / math.LN10;
+        _data[r][c] = math.log(_data[r][c]) / math.ln10;
     }
     return this;
   }
@@ -363,136 +459,33 @@ class Double2D extends Object
 
   Double2DFix get fixed => _fixed ??= new Double2DFix.own(_data);
 
-  Double2D addition(/* int | Iterable<int> | Numeric2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this + other;
-
-    if (other is num) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] += other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] += other;
-      }
-      return this;
-    } else if (other is Numeric2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] += other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Double2D subtract(/* int | Iterable<int> | Numeric2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this - other;
-
-    if (other is num) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] -= other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] -= other;
-      }
-      return this;
-    } else if (other is Numeric2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] -= other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Double2D multiply(/* int | Iterable<int> | Numeric2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this * other;
-
-    if (other is num) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] *= other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] *= other;
-      }
-      return this;
-    } else if (other is Numeric2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] *= other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Double2D divide(/* int | Iterable<int> | Numeric2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this / other;
-
-    if (other is num) {
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          _data[r][c] /= other;
-        }
-      }
-      return this;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] /= other;
-      }
-      return this;
-    } else if (other is Numeric2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      for (int r = 0; r < numRows; r++) {
-        _data[r] /= other[r];
-      }
-      return this;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Int2D truncDiv(/* int | Iterable<int> | Int2DArray */ other,
-      {bool self: false}) {
-    if (!self) return this ~/ other;
-
-    throw new Exception('self not allowed!');
-  }
-
   @override
   Iterable<ArrayFix<double>> get rows => _data;
 
   @override
   Iterable<ArrayFix<double>> get cols => new ColsListFix<double>(this);
+
+  void reshape(Index2D newShape, {double def: 0.0}) {
+    if (shape == newShape) return;
+
+    if (shape.row > newShape.row) {
+      _data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        _data.add(new Double1D.sized(newShape.col, data: def));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (Double1D r in _data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (Double1D r in _data) {
+        r.addAll(new Double1D.sized(newShape.col - r.length, data: def));
+      }
+    }
+  }
+
+  Double1D unique() => super.unique();
 }

@@ -28,8 +28,6 @@ class Bool2DRowFix extends Object
   Bool2DRowFix(this.inner);
 
   Bool1DFix operator [](int row) => inner[row];
-
-  operator []=(int index, ArrayView<bool> row) => inner[index] = row;
 }
 
 class Bool2DRowView extends Object

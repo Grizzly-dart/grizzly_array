@@ -95,6 +95,8 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
     }
   }
 
+  Bool2D diagonal() => new Bool2D.diagonal(this);
+
   Int1D toIntArray({int trueVal: 1, int falseVal: 0}) {
     final ret = new Int1D.shapedLike(this);
     for (int i = 0; i < length; i++) {
@@ -119,20 +121,6 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
     return ret;
   }
 
-  bool operator ==(final other) {
-    if (other is! Array<bool>) return false;
-
-    if (other is Array<bool>) {
-      if (length != other.length) return false;
-      for (int i = 0; i < length; i++) {
-        if (this[i] != other[i]) return false;
-      }
-      return true;
-    }
-
-    return false;
-  }
-
   bool get isTrue {
     for (int i = 0; i < length; i++) {
       final bool val = this[i];
@@ -152,7 +140,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   }
 
   @override
-  Bool1D pickByIndices(ArrayView<int> indices) {
+  Bool1D pickByIndices(IterView<int> indices) {
     final ret = new Bool1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices[i]];
@@ -167,7 +155,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   BoolArrayView operator ~() {
     final ret = new Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = ~this[i];
+      ret[i] = !this[i];
     }
     return ret;
   }
@@ -190,5 +178,20 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
       ret[i] = this[i] && other[i];
     }
     return ret;
+  }
+
+  @override
+  int compareValue(bool a, bool b) => a == b ? 0 : a ? 1 : -1;
+
+  Bool1D selectIf(IterView<bool> mask) {
+    if (mask.length != length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.asIterable.where((v) => v).length;
+    final ret = new List<bool>()..length = retLength;
+    int idx = 0;
+    for (int i = 0; i < mask.length; i++) {
+      if (mask[i]) ret[idx++] = this[i];
+    }
+    return new Bool1D.own(ret);
   }
 }

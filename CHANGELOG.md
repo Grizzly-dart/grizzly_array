@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
++ Fixed bugs in Array creators
+
 ## 0.0.3
 
 + Do not inherit from `Iterable`

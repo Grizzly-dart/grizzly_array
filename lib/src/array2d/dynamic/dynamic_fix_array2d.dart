@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Dynamic2DFix extends Object
-    with Dynamic2DMixin, Array2DViewMixin<dynamic>
+    with Array2DViewMixin<dynamic>, Array2DFixMixin<dynamic>, Dynamic2DMixin
     implements Array2DFix<dynamic>, Dynamic2DView {
   final List<Dynamic1DFix> _data;
 
@@ -211,7 +211,7 @@ class Dynamic2DFix extends Object
 
   Dynamic1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, ArrayView<dynamic> val) {
+  operator []=(final int i, IterView<dynamic> val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i');
     }

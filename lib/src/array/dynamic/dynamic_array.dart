@@ -11,8 +11,8 @@ part 'dynamic_minix.dart';
 
 class Dynamic1D extends Object
     with
-        Array1DViewMixin<dynamic>,
-        Array1DFixMixin<dynamic>,
+        ArrayViewMixin<dynamic>,
+        ArrayFixMixin<dynamic>,
         ArrayMixin<dynamic>,
         Dynamic1DViewMixin,
         Dynamic1DFixMixin
@@ -21,42 +21,37 @@ class Dynamic1D extends Object
 
   Comparator comparator;
 
-  Dynamic1D(Iterable<dynamic> data, {this.comparator})
+  Dynamic1D(Iterable<dynamic> data, {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.from(data);
 
-  Dynamic1D.copy(IterView<dynamic> other, {this.comparator})
+  Dynamic1D.copy(IterView<dynamic> other, {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.from(other.asIterable);
 
-  Dynamic1D.own(this._data, {this.comparator});
+  Dynamic1D.own(this._data, {this.comparator: _dummyComparator});
 
-  Dynamic1D.sized(int length, {dynamic data, this.comparator})
+  Dynamic1D.sized(int length, {dynamic data, this.comparator: _dummyComparator})
       : _data = new List<dynamic>.filled(length, data, growable: true);
 
   factory Dynamic1D.shapedLike(IterView d,
-          {dynamic data, Comparator comparator}) =>
+          {dynamic data, Comparator comparator: _dummyComparator}) =>
       new Dynamic1D.sized(d.length, data: data, comparator: comparator);
 
-  Dynamic1D.single(dynamic data, {this.comparator}) : _data = <dynamic>[data];
+  Dynamic1D.single(dynamic data, {this.comparator: _dummyComparator})
+      : _data = <dynamic>[data];
 
-  Dynamic1D.gen(int length, dynamic maker(int index), {this.comparator})
+  Dynamic1D.gen(int length, dynamic maker(int index),
+      {this.comparator: _dummyComparator})
       : _data = new List<dynamic>.generate(length, maker);
 
   Iterable<dynamic> get asIterable => _data;
-
-  Iterator<dynamic> get iterator => _data.iterator;
 
   int get length => _data.length;
 
   dynamic operator [](int i) => _data[i];
 
   operator []=(int i, dynamic val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -68,12 +63,16 @@ class Dynamic1D extends Object
   @override
   void add(dynamic a) => _data.add(a);
 
+  void addAll(IterView<dynamic> a) => _data.addAll(a.asIterable);
+
   @override
   void insert(int index, dynamic a) => _data.insert(index, a);
 
+  void clear() => _data.clear();
+
   void sort({bool descending: false}) {}
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2D extends Object
-    with Bool2DViewMixin, Array2DViewMixin<bool>
+    with Array2DViewMixin<bool>, Array2DFixMixin<bool>, Bool2DViewMixin
     implements Array2D<bool>, Bool2DFix {
   final List<Bool1D> _data;
 
@@ -42,19 +42,19 @@ class Bool2D extends Object
     return ret;
   }
 
-  Bool2D.from(Iterable<Bool1DView> data)
+  Bool2D.from(Iterable<IterView<bool>> data)
       : _data = new List<Bool1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (Bool1DView item in data) {
+      for (IterView item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        Bool1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView item = data.elementAt(i);
+        _data[i] = new Bool1D.copy(item);
       }
     }
   }
@@ -81,12 +81,18 @@ class Bool2D extends Object
   factory Bool2D.shapedLike(Array2DView like, {bool data: false}) =>
       new Bool2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Bool2D.diagonal(IterView<bool> diagonal) {
-    final ret = new Bool2D.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal[i];
+  factory Bool2D.diagonal(/* IterView<bool> | Iterable<bool> */ diagonal) {
+    if (diagonal is IterView<bool>) {
+      diagonal = diagonal.asIterable;
     }
-    return ret;
+    if (diagonal is Iterable<bool>) {
+      final ret = new Bool2D.sized(diagonal.length, diagonal.length);
+      for (int i = 0; i < diagonal.length; i++) {
+        ret[i][i] = diagonal.elementAt(i);
+      }
+      return ret;
+    }
+    throw new UnsupportedError('Type');
   }
 
   Bool2D.repeatRow(IterView<bool> row, [int numRows = 1])
@@ -207,11 +213,9 @@ class Bool2D extends Object
 
   Bool2DRow get row => _row ??= new Bool2DRow(this);
 
-  Iterator<Bool1D> get iterator => _data.iterator;
-
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<bool> val) {
+  operator []=(final int i, final IterView<bool> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
@@ -258,13 +262,13 @@ class Bool2D extends Object
   }
 
   @override
-  void add(ArrayView<bool> row) => this[numRows] = row;
+  void add(IterView<bool> row) => this[numRows] = row;
 
   @override
   void addScalar(bool v) => _data.add(new Bool1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<bool> row) {
+  void insert(int index, IterView<bool> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
@@ -284,4 +288,26 @@ class Bool2D extends Object
 
   @override
   Iterable<ArrayFix<bool>> get cols => new ColsListFix<bool>(this);
+
+  void reshape(Index2D newShape, {bool def: false}) {
+    if (shape == newShape) return;
+
+    if (shape.row > newShape.row) {
+      _data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        _data.add(new Bool1D.sized(newShape.col, data: def));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (Bool1D r in _data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (Bool1D r in _data) {
+        r.addAll(new Bool1D.sized(newShape.col - r.length, data: def));
+      }
+    }
+  }
 }

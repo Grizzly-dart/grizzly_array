@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Double2DView extends Object
-    with Double2DMixin, Array2DViewMixin<double>
+    with Double2DViewMixin, Array2DViewMixin<double>
     implements Numeric2DView<double> {
   final List<Double1DView> _data;
 
@@ -105,7 +105,7 @@ class Double2DView extends Object
 
       for (int i = 0; i < data.length; i++) {
         Iterable<num> item = data.elementAt(i);
-        _data[i] = new Double1DView.fromNum(item);
+        _data[i] = new Double1DView.nums(item);
       }
     }
   }
@@ -222,8 +222,6 @@ class Double2DView extends Object
     return ret.view;
   }
 
-  Iterator<Numeric1DView<double>> get iterator => _data.iterator;
-
   covariant Double2DColView _col;
 
   Double2DColView get col => _col ??= new Double2DColView(this);
@@ -234,23 +232,11 @@ class Double2DView extends Object
 
   Double2DView get view => this;
 
-  Double2D addition(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this + other;
-
-  Double2D subtract(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this - other;
-
-  Double2D multiply(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this * other;
-
-  Double2D divide(/* int | Iterable<int> | Numeric2DArray */ other) =>
-      this / other;
-
-  Int2D truncDiv(/* int | Iterable<int> | Int2DArray */ other) => this ~/ other;
-
   @override
   Iterable<ArrayView<double>> get rows => _data;
 
   @override
   Iterable<ArrayView<double>> get cols => new ColsListView<double>(this);
+
+  Double1D unique() => super.unique();
 }

@@ -1,6 +1,6 @@
 part of grizzly.series.array.string;
 
-abstract class String1DFixMixin implements ArrayFix<String>, StringFixArray {
+abstract class String1DFixMixin implements ArrayFix<String>, StringArrayFix {
   void toLowerCase() {
     for (int i = 0; i < length; i++) {
       this[i] = this[i].toLowerCase();
@@ -35,10 +35,10 @@ abstract class String1DFixMixin implements ArrayFix<String>, StringFixArray {
 class String1DFix extends Object
     with
         String1DViewMixin,
-        Array1DViewMixin<String>,
-        Array1DFixMixin<String>,
+        ArrayViewMixin<String>,
+        ArrayFixMixin<String>,
         String1DFixMixin
-    implements ArrayFix<String>, String1DView, StringFixArray {
+    implements ArrayFix<String>, String1DView, StringArrayFix {
   List<String> _data;
 
   String1DFix(Iterable<String> data)
@@ -61,8 +61,6 @@ class String1DFix extends Object
       : _data = new List<String>.generate(length, maker, growable: false);
 
   Iterable<String> get asIterable => _data;
-
-  Iterator<String> get iterator => _data.iterator;
 
   int get length => _data.length;
 

@@ -2,18 +2,11 @@ import 'package:grizzly_array/grizzly_array.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Int1DView', () {
+  group('Double1DView', () {
     setUp(() {});
 
     test('average', () {
-      Int1D s1 = ints([1, 5]);
-      expect(s1.average([1, 2]), 3.6666666666666665);
-      s1 = new Int1D([2, 6]);
-      expect(s1.average([1, 2]), 4.6666666666666667);
-      s1 = new Int1D([3, 7]);
-      expect(s1.average([1, 2]), 5.6666666666666667);
-      s1 = new Int1D([4, 8]);
-      expect(s1.average([1, 2]), 6.6666666666666667);
+      // TODO
     });
 
     test('to2D', () {
@@ -81,7 +74,7 @@ void main() {
     });
 
     test('equality', () {
-      expect(ints([1, 2, 3]) == [1.0, 2.0, 3.0], true);
+      expect(doubles([1.0, 2.0, 3.0]) == [1, 2, 3], true);
     });
   });
 }

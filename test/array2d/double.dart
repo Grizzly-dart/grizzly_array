@@ -6,19 +6,20 @@ void main() {
     setUp(() {});
 
     test('multiply', () {
-      final res = array2D([
-            [3.0, 1.0],
-            [1.0, 2.0]
-          ]) *
-          array2D([
-            [2.0],
-            [3.0]
-          ]);
+      final res = doubles2([
+        [3.0, 1.0],
+        [1.0, 2.0]
+      ]).matmul(doubles2([
+        [2.0],
+        [3.0]
+      ]));
 
-      expect(res, [
-        [9.0],
-        [8.0],
-      ]);
+      expect(
+          res,
+          doubles2([
+            [9.0],
+            [8.0],
+          ]));
     });
   });
 }

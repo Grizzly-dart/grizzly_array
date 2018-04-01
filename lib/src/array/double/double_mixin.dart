@@ -9,38 +9,32 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   Double1D clone() => new Double1D.copy(this);
 
-  Int1DFix operator ~/(/* num | Iterable<num> */ other) {
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      final ret = new Int1D.sized(length);
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] ~/ other.elementAt(i).toInt();
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    final ret = new Int1D.sized(length);
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] ~/ other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = this[i] ~/ other[i];
-      }
-    }
+  Double1D operator -() {
+    final ret = new Double1D.sized(length);
+    for (int i = 0; i < length; i++) ret[i] = -this[i];
     return ret;
   }
+
+  Double1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..addition(other);
+
+  Double1D operator -(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..subtract(other);
+
+  Double1D operator *(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..multiply(other);
+
+  Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..divide(other);
+
+  Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toInt..truncDiv(other);
+
+  Double1D rdiv(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..rdivMe(other);
+
+  @override
+  int compareValue(double a, double b) => a.compareTo(b);
 
   Bool1D operator <(/* Numeric1D | num */ other) {
     final ret = new Bool1D.sized(length);
@@ -116,43 +110,11 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  double get min {
-    double ret;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
+  double get min => stats.min;
 
-      if (d == null) continue;
+  double get max => stats.max;
 
-      if (ret == null || d < ret) ret = d;
-    }
-    return ret;
-  }
-
-  double get max {
-    double ret;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
-
-      if (d == null) continue;
-
-      if (ret == null || d > ret) ret = d;
-    }
-    return ret;
-  }
-
-  Extent<double> get extent {
-    double min;
-    double max;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
-
-      if (d == null) continue;
-
-      if (max == null || d > max) max = d;
-      if (min == null || d < min) min = d;
-    }
-    return new Extent<double>(min, max);
-  }
+  Extent<double> get extent => stats.extent;
 
   int get argMin {
     int ret;
@@ -186,72 +148,15 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  double get ptp {
-    double min;
-    double max;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
+  double get ptp => stats.ptp;
 
-      if (d == null) continue;
+  double get mean => stats.mean;
 
-      if (max == null || d > max) max = d;
-      if (min == null || d < min) min = d;
-    }
+  double get sum => stats.sum;
 
-    if (min == null) return null;
-    return max - min;
-  }
+  double get prod => stats.prod;
 
-  double get mean {
-    if (length == 0) return 0.0;
-
-    double sum = 0.0;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
-      if (d == null) continue;
-      sum += d;
-    }
-    return sum / length;
-  }
-
-  double get sum {
-    double sum = 0.0;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
-      if (d == null) continue;
-      sum += d;
-    }
-    return sum;
-  }
-
-  double get prod {
-    double prod = 1.0;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
-      if (d == null) continue;
-      prod *= d;
-    }
-    return prod;
-  }
-
-  double average(Iterable<num> weights) {
-    if (weights.length != length) {
-      throw new Exception('Weights have mismatching length!');
-    }
-    if (length == 0) return 0.0;
-
-    double sum = 0.0;
-    num denom = 0.0;
-    for (int i = 0; i < length; i++) {
-      final double d = this[i];
-      final int w = weights.elementAt(i);
-      if (d == null) continue;
-      if (w == null) continue;
-      sum += d * w;
-      denom += w;
-    }
-    return sum / denom;
-  }
+  double average(Iterable<num> weights) => stats.average(weights);
 
   Double1D get cumsum {
     final Double1D ret = new Double1D.sized(length);
@@ -283,25 +188,9 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  double get variance {
-    if (length == 0) return 0.0;
-
-    final double mean = this.mean;
-    double ret = 0.0;
-    for (int i = 0; i < length; i++) {
-      final double val = this[i] - mean;
-      ret += val * val;
-    }
-    return ret / length;
-  }
+  double get variance => stats.variance;
 
   double get std => math.sqrt(variance);
-
-  Double1D operator -() {
-    final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = -this[i];
-    return ret;
-  }
 
   Double1DFix sqrt() {
     final ret = new Double1D.sized(length);
@@ -319,7 +208,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   @override
   Double1D get log10 {
     final ret = new Double1D.sized(length);
-    for (int i = 0; i < length; i++) ret[i] = math.log(this[i]) / math.LN10;
+    for (int i = 0; i < length; i++) ret[i] = math.log(this[i]) / math.ln10;
     return ret;
   }
 
@@ -390,40 +279,10 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     }
   }
 
-  double cov(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
-    if (length == 0) return 0.0;
-    final double meanX = mean;
-    final double meanY = y.mean;
-    double sum = 0.0;
-    for (int i = 0; i < length; i++) {
-      sum += (this[i] - meanX) * (y[i] - meanY);
-    }
-    return sum / length;
-  }
+  Double2D diagonal({Index2D shape, num def: 0}) =>
+      new Double2D.diagonal(this, shape: shape, def: def?.toDouble());
 
-  Double1D covMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
-    final double meanX = mean;
-    final Double1D meanY = y.col.mean;
-    Double1D sum = new Double1D.sized(y.numCols);
-    for (int i = 0; i < length; i++) {
-      sum += (y.col[i] - meanY) * (this[i] - meanX);
-    }
-    return sum / length;
-  }
-
-  double corrcoef(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
-    return cov(y) / (std * y.std);
-  }
-
-  Double1D corrcoefMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
-    return covMatrix(y) / (y.std * std);
-  }
-
-  bool isAllClose(Iterable<num> v, {double absTol: 1e-8}) {
+  bool isClose(Iterable<num> v, {double absTol: 1e-8}) {
     if (length != v.length) return false;
     for (int i = 0; i < length; i++) {
       if ((this[i] - v.elementAt(i)).abs() > absTol) return false;
@@ -431,19 +290,19 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return true;
   }
 
-  bool isAllCloseScalar(num v, {double absTol: 1e-8}) {
+  bool isCloseScalar(num v, {double absTol: 1e-8}) {
     for (int i = 0; i < length; i++) {
       if ((this[i] - v).abs() > absTol) return false;
     }
     return true;
   }
 
-  double dot(Iterable<num> other) {
+  double dot(IterView<num> other) {
     if (length != other.length) throw new Exception('Lengths must match!');
 
     double ret = 0.0;
     for (int i = 0; i < length; i++) {
-      ret += this[i] * other.elementAt(i);
+      ret += this[i] * other[i];
     }
     return ret;
   }
@@ -457,7 +316,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   }
 
   @override
-  Double1D pickByIndices(ArrayView<int> indices) {
+  Double1D pickByIndices(IterView<int> indices) {
     final ret = new Double1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices[i]];
@@ -480,5 +339,42 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     final ret = new Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = this[i].abs();
     return ret;
+  }
+
+  Double1D selectIf(IterView<bool> mask) {
+    if (mask.length != length) throw new Exception('Length mismatch!');
+
+    int retLength = mask.asIterable.where((v) => v).length;
+    final ret = new List<double>()..length = retLength;
+    int idx = 0;
+    for (int i = 0; i < mask.length; i++) {
+      if (mask[i]) ret[idx++] = this[i];
+    }
+    return new Double1D.own(ret);
+  }
+
+  bool operator ==(/* IterView<num> | Iterable<num> */ other) {
+    if (other is IterView<num>) other = other.asIterable;
+
+    if (other is Iterable<num>) {
+      if (other.length != length) return false;
+      for (int i = 0; i < length; i++) {
+        if (this[i] != other.elementAt(i)) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  String toDecString() {
+    StringBuffer sb = new StringBuffer();
+    sb.write('[');
+    for (int i = 0; i < length; i++) {
+      sb.write(' ');
+      sb.write(this[i]);
+      sb.write(',');
+    }
+    sb.write(']');
+    return sb.toString();
   }
 }

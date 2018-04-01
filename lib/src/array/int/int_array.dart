@@ -12,13 +12,13 @@ part 'int_mixin.dart';
 
 class Int1D extends Object
     with
-        Array1DViewMixin<int>,
-        Array1DFixMixin<int>,
+        ArrayViewMixin<int>,
+        ArrayFixMixin<int>,
         ArrayMixin<int>,
         Int1DViewMixin,
         IntFixMixin
     implements Numeric1D<int>, Int1DFix {
-  List<int> _data;
+  final List<int> _data;
 
   Int1D([Iterable<int> data = const <int>[]])
       : _data = new List<int>.from(data);
@@ -42,22 +42,34 @@ class Int1D extends Object
   Int1D.gen(int length, int maker(int index))
       : _data = new List<int>.generate(length, maker);
 
-  Iterable<int> get asIterable => _data;
+  factory Int1D.nums(iterable) {
+    if (iterable is IterView<num>) {
+      final list = new Int1D.sized(iterable.length);
+      for (int i = 0; i < iterable.length; i++) list[i] = iterable[i].toInt();
+      return list;
+    } else if (iterable is Iterable<num>) {
+      final list = new Int1D.sized(iterable.length);
+      for (int i = 0; i < iterable.length; i++) {
+        list[i] = iterable.elementAt(i).toInt();
+      }
+      return list;
+    }
+    throw new UnsupportedError('Unknown type!');
+  }
 
-  Iterator<int> get iterator => _data.iterator;
+  Stats<int> _stats;
+
+  Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
+
+  Iterable<int> get asIterable => _data;
 
   int get length => _data.length;
 
   int operator [](int i) => _data[i];
 
   operator []=(int i, int val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -68,250 +80,12 @@ class Int1D extends Object
   @override
   void add(int a) => _data.add(a);
 
+  void addAll(IterView<int> a) => _data.addAll(a.asIterable);
+
   @override
   void insert(int index, int a) => _data.insert(index, a);
 
-  Int1D operator +(/* num | Iterable<num> */ other) => addition(other);
-
-  Int1D addition(/* num | Iterable<num> */ other, {bool self: false}) {
-    Int1D ret = this;
-    if (!self) ret = new Int1D.sized(length);
-
-    if (other is Int1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
-      other = other.toInt();
-    } else if (other is Iterable<int>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other.elementAt(i);
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other.elementAt(i).toInt();
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is int) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other;
-      }
-    } else if (other is Int1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other[i];
-      }
-    }
-    return ret;
-  }
-
-  Int1D operator -(/* num | Iterable<num> */ other) => subtract(other);
-
-  Int1D subtract(/* num | Iterable<num> */ other, {bool self: false}) {
-    Int1D ret = this;
-    if (!self) {
-      ret = new Int1D.sized(length);
-    }
-
-    if (other is Int1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
-      other = other.toInt();
-    } else if (other is Iterable<int>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other.elementAt(i);
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other.elementAt(i).toInt();
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is int) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other;
-      }
-    } else if (other is Int1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other[i];
-      }
-    }
-    return ret;
-  }
-
-  Int1D operator *(/* num | Iterable<num> */ other) => multiply(other);
-
-  Int1D multiply(/* num | Iterable<num> */ other, {bool self: false}) {
-    Int1D ret = this;
-
-    if (!self) {
-      ret = new Int1D.sized(length);
-    }
-
-    if (other is Int1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
-      other = other.toInt();
-    } else if (other is Iterable<int>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other.elementAt(i);
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other.elementAt(i).toInt();
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is int) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other;
-      }
-    } else if (other is Int1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1D operator /(/* num | Iterable<num> */ other) {
-    if (other is Int1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
-      other = other;
-    } else if (other is Iterable<int>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      final ret = new Double1D.sized(length);
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other.elementAt(i);
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      final ret = new Double1D.sized(length);
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    final ret = new Double1D.sized(length);
-    if (other is int) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other;
-      }
-    } else if (other is Int1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1D divide(/* E | Iterable<E> */ other, {bool self: false}) {
-    if (!self) return this / other;
-
-    throw new Exception('Operation not supported!');
-  }
-
-  Int1D operator ~/(/* num | Iterable<num> */ other) => truncDiv(other);
-
-  Int1D truncDiv(/* num | Iterable<num> */ other, {bool self: false}) {
-    Int1D ret = this;
-
-    if (!self) {
-      ret = new Int1D.sized(length);
-    }
-
-    if (other is Int1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
-      other = other.toInt();
-    } else if (other is Iterable<int>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] ~/ other.elementAt(i);
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] ~/ other.elementAt(i).toInt();
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is int) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] ~/ other;
-      }
-    } else if (other is Int1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] ~/ other[i];
-      }
-    }
-    return ret;
-  }
+  void clear() => _data.clear();
 
   void sort({bool descending: false}) {
     if (!descending)
@@ -320,16 +94,12 @@ class Int1D extends Object
       _data.sort((int a, int b) => b.compareTo(a));
   }
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.count(true);
-    final ret = new List<int>()..length = retLength;
-    int idx = 0;
-    for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = _data[i];
+    for (int i = length - 1; i >= 0; i--) {
+      if (!mask[i]) _data.removeAt(i);
     }
-    _data = ret;
   }
 
   void removeAt(int pos) => _data.removeAt(pos);
@@ -363,5 +133,5 @@ class Int1D extends Object
   Int1DFix _fixed;
   Int1DFix get fixed => _fixed ??= new Int1DFix.own(_data);
 
-  String toString() => _data.toString();
+  Int1D unique() => super.unique();
 }

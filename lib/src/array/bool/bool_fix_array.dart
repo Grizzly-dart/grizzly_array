@@ -1,7 +1,7 @@
 part of grizzly.series.array.bool;
 
 class Bool1DFix extends Object
-    with Array1DViewMixin<bool>, Array1DFixMixin<bool>, Bool1DViewMixin
+    with ArrayViewMixin<bool>, ArrayFixMixin<bool>, Bool1DViewMixin
     implements ArrayFix<bool>, Bool1DView {
   final List<bool> _data;
 
@@ -25,8 +25,6 @@ class Bool1DFix extends Object
       : _data = new List<bool>.generate(length, maker, growable: false);
 
   Iterable<bool> get asIterable => _data;
-
-  Iterator<bool> get iterator => _data.iterator;
 
   int get length => _data.length;
 

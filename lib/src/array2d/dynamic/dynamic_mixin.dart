@@ -22,8 +22,6 @@ abstract class Dynamic2DMixin implements DynamicArray2DView {
 
   Iterable<Iterable<dynamic>> get iterable => _data.map((a) => a.asIterable);
 
-  Iterator<ArrayView<dynamic>> get iterator => _data.iterator;
-
   int get numCols {
     if (numRows == 0) return 0;
     return _data.first.length;
@@ -143,19 +141,8 @@ abstract class Dynamic2DMixin implements DynamicArray2DView {
     return ret;
   }
 
-  String toString() {
-    final sb = new StringBuffer();
-    //TODO print as table
-    sb.writeln('Double[$numRows][$numCols] [');
-    for (int r = 0; r < numRows; r++) {
-      sb.write('[');
-      for (int c = 0; c < numCols; c++) {
-        sb.write('${_data[r][c]}\t\t');
-      }
-      sb.writeln('],');
-    }
-    sb.writeln(']');
+  Dynamic2D reshaped(Index2D newShape, {dynamic def}) =>
+      clone()..reshape(newShape, def: def);
 
-    return sb.toString();
-  }
+  Dynamic2D clone() => new Dynamic2D.copy(this);
 }

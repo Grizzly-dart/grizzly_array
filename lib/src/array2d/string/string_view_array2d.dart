@@ -205,8 +205,6 @@ class String2DView extends Object
     return ret.view;
   }
 
-  Iterator<ArrayView<String>> get iterator => _data.iterator;
-
   covariant String2DColView _col;
 
   String2DColView get col => _col ??= new String2DColView(this);

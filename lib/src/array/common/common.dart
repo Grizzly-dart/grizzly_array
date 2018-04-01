@@ -1,11 +1,15 @@
 library grizzly.series.array.common;
 
+import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_series/grizzly_series.dart';
 import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import '../array.dart';
 import '../sample.dart';
+import 'package:text_table/text_table.dart';
+
+part 'stats.dart';
 
 abstract class ArrayMixin<E> implements Array<E> {
   void removeMany(IterView<E> values) {
@@ -14,9 +18,41 @@ abstract class ArrayMixin<E> implements Array<E> {
       if (set.contains(this[i])) removeAt(i);
     }
   }
+
+  set assign(IterView<E> other) {
+    if(length == other.length) {
+      for (int i = 0; i < length; i++) this[i] = other[i];
+      return;
+    }
+    
+    if(length > other.length) {
+      removeRange(other.length);
+      for (int i = 0; i < length; i++) this[i] = other[i];
+      return;
+    }
+    
+    for (int i = 0; i < length; i++) this[i] = other[i];
+    addAll(other.slice(length));
+  }
 }
 
-abstract class Array1DViewMixin<E> implements ArrayView<E> {
+abstract class ArrayFixMixin<E> implements ArrayFix<E> {
+  /// Sets all elements in the array to given value [v]
+  set set(E v) {
+    for (int i = 0; i < length; i++) {
+      this[i] = v;
+    }
+  }
+
+  set assign(IterView<E> other) {
+    if (other.length != length)
+      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+
+    for (int i = 0; i < length; i++) this[i] = other[i];
+  }
+}
+
+abstract class ArrayViewMixin<E> implements ArrayView<E> {
   Index1D get shape => new Index1D(length);
 
   IntPair<E> pairAt(int index) => intPair<E>(index, this[index]);
@@ -105,20 +141,131 @@ abstract class Array1DViewMixin<E> implements ArrayView<E> {
     }
     return ret;
   }
-}
 
-abstract class Array1DFixMixin<E> implements ArrayFix<E> {
-  /// Sets all elements in the array to given value [v]
-  void set(E v) {
-    for (int i = 0; i < length; i++) {
-      this[i] = v;
+  @override
+  BoolArray ne(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] != other;
+      }
+    } else if (other is IterView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] != other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
     }
+    return ret;
   }
 
-  void assign(ArrayView<E> other) {
-    if (other.length != length)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+  @override
+  BoolArray eq(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] == other;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] == other[i];
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
 
-    for (int i = 0; i < length; i++) this[i] = other[i];
+  @override
+  BoolArray operator >=(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) >= 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) >= 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  BoolArray operator >(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) > 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) > 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  BoolArray operator <(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) < 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) < 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  @override
+  BoolArray operator <=(other) {
+    final ret = new Bool1D.sized(length);
+    if (other is E) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other) <= 0;
+      }
+    } else if (other is ArrayView<E> || other is Iterable<E>) {
+      // TODO check length
+      for (int i = 0; i < length; i++) {
+        ret[i] = compareValue(this[i], other[i]) <= 0;
+      }
+    } else {
+      throw new UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  bool operator ==(/* IterView<E> | Iterable<E> */ other) {
+    if (other is IterView<E>) other = other.asIterable;
+
+    if (other is Iterable<E>) {
+      if (other.length != length) return false;
+      for (int i = 0; i < length; i++) {
+        if (this[i] != other.elementAt(i)) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  String toString() {
+    final tab = table(Ranger.indices(length).map((i) => i.toString()).toList());
+    tab.row(toStringArray().asIterable.toList());
+    return tab.toString();
   }
 }

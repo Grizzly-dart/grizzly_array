@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Dynamic2D extends Object
-    with Dynamic2DMixin, Array2DViewMixin<dynamic>
+    with Array2DViewMixin<dynamic>, Array2DFixMixin<dynamic>, Dynamic2DMixin
     implements Array2D<dynamic>, Dynamic2DFix {
   final List<Dynamic1D> _data;
 
@@ -42,19 +42,19 @@ class Dynamic2D extends Object
     return ret;
   }
 
-  Dynamic2D.from(Iterable<ArrayView<dynamic>> data)
+  Dynamic2D.from(Iterable<IterView<dynamic>> data)
       : _data = new List<Dynamic1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (ArrayView<dynamic> item in data) {
+      for (IterView<dynamic> item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        Dynamic1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView item = data.elementAt(i);
+        _data[i] = new Dynamic1D.copy(item);
       }
     }
   }
@@ -81,12 +81,19 @@ class Dynamic2D extends Object
   factory Dynamic2D.shapedLike(Array2DView like, {String data: ''}) =>
       new Dynamic2D.sized(like.numRows, like.numCols, data: data);
 
-  factory Dynamic2D.diagonal(Iterable<dynamic> diagonal) {
-    final ret = new Dynamic2D.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
+  factory Dynamic2D.diagonal(
+      /* IterView<dynamic> | Iterable<dynamic> */ diagonal) {
+    if (diagonal is IterView<dynamic>) {
+      diagonal = diagonal.asIterable;
     }
-    return ret;
+    if (diagonal is Iterable<dynamic>) {
+      final ret = new Dynamic2D.sized(diagonal.length, diagonal.length);
+      for (int i = 0; i < diagonal.length; i++) {
+        ret[i][i] = diagonal.elementAt(i);
+      }
+      return ret;
+    }
+    throw new UnsupportedError('Type');
   }
 
   Dynamic2D.repeatRow(ArrayView<dynamic> row, [int numRows = 1])
@@ -210,11 +217,9 @@ class Dynamic2D extends Object
 
   Dynamic2DRow get row => _row ??= new Dynamic2DRow(this);
 
-  Iterator<Dynamic1D> get iterator => _data.iterator;
-
   Dynamic1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<dynamic> val) {
+  operator []=(final int i, final IterView<dynamic> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
@@ -259,13 +264,13 @@ class Dynamic2D extends Object
   }
 
   @override
-  void add(ArrayView<dynamic> row) => this[numRows] = row;
+  void add(IterView<dynamic> row) => this[numRows] = row;
 
   @override
   void addScalar(dynamic v) => _data.add(new Dynamic1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<dynamic> row) {
+  void insert(int index, IterView<dynamic> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
@@ -285,4 +290,26 @@ class Dynamic2D extends Object
 
   @override
   Iterable<ArrayFix<dynamic>> get cols => new ColsListFix<dynamic>(this);
+
+  void reshape(Index2D newShape, {dynamic def}) {
+    if (shape == newShape) return;
+
+    if (shape.row > newShape.row) {
+      _data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        _data.add(new Dynamic1D.sized(newShape.col, data: def));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (Dynamic1D r in _data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (Dynamic1D r in _data) {
+        r.addAll(new Dynamic1D.sized(newShape.col - r.length, data: def));
+      }
+    }
+  }
 }

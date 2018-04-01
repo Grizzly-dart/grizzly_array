@@ -22,8 +22,6 @@ abstract class String2DMixin implements Array2DView<String> {
 
   Iterable<Iterable<String>> get iterable => _data.map((a) => a.asIterable);
 
-  Iterator<ArrayView<String>> get iterator => _data.iterator;
-
   int get numCols {
     if (numRows == 0) return 0;
     return _data.first.length;
@@ -156,19 +154,8 @@ abstract class String2DMixin implements Array2DView<String> {
     return ret;
   }
 
-  String toString() {
-    final sb = new StringBuffer();
-    //TODO print as table
-    sb.writeln('Double[$numRows][$numCols] [');
-    for (int r = 0; r < numRows; r++) {
-      sb.write('[');
-      for (int c = 0; c < numCols; c++) {
-        sb.write('${_data[r][c]}\t\t');
-      }
-      sb.writeln('],');
-    }
-    sb.writeln(']');
+  String2D reshaped(Index2D newShape, {String def}) =>
+      clone()..reshape(newShape, def: def);
 
-    return sb.toString();
-  }
+  String2D clone() => new String2D.copy(this);
 }

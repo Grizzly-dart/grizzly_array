@@ -30,22 +30,202 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     }
   }
 
-  Double1DFix get logSelf {
+  @override
+  void negate() {
+    for (int i = 0; i < length; i++) {
+      this[i] = -this[i];
+    }
+  }
+
+  void addition(
+      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+    if (other is IterView<double>) {
+      checkLengths(this, other, subject: 'other');
+    } else if (other is double) {
+      // Nothing here
+    } else if (other is num) {
+      other = other.toDouble();
+    } else if (other is Iterable<double>) {
+      checkLengths(this, other, subject: 'other');
+      other = new IterView<double>(other);
+    } else if (other is IterView<num> || other is Iterable<num>) {
+      if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
+      for (int i = 0; i < length; i++) {
+        this[i] += other[i].toDouble();
+      }
+      return;
+    } else {
+      throw new UnimplementedError();
+    }
+
+    if (other is double) {
+      for (int i = 0; i < length; i++) {
+        this[i] += other;
+      }
+    } else if (other is IterView<double>) {
+      for (int i = 0; i < length; i++) {
+        this[i] += other[i];
+      }
+    }
+  }
+
+  void subtract(
+      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+    if (other is IterView<double>) {
+      checkLengths(this, other, subject: 'other');
+    } else if (other is double) {
+      // Nothing here
+    } else if (other is num) {
+      other = other.toDouble();
+    } else if (other is Iterable<double>) {
+      checkLengths(this, other, subject: 'other');
+      other = new IterView<double>(other);
+    } else if (other is IterView<num> || other is Iterable<num>) {
+      if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
+      for (int i = 0; i < length; i++) {
+        this[i] -= other[i].toDouble();
+      }
+      return;
+    } else {
+      throw new UnimplementedError();
+    }
+
+    if (other is double) {
+      for (int i = 0; i < length; i++) {
+        this[i] -= other;
+      }
+    } else if (other is IterView<double>) {
+      for (int i = 0; i < length; i++) {
+        this[i] -= other[i];
+      }
+    }
+  }
+
+  void multiply(
+      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+    if (other is IterView<double>) {
+      checkLengths(this, other, subject: 'other');
+    } else if (other is double) {
+      // Nothing here
+    } else if (other is num) {
+      other = other.toDouble();
+    } else if (other is Iterable<double>) {
+      checkLengths(this, other, subject: 'other');
+      other = new IterView<double>(other);
+    } else if (other is IterView<num> || other is Iterable<num>) {
+      if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
+      for (int i = 0; i < length; i++) {
+        this[i] *= other[i].toDouble();
+      }
+      return;
+    } else {
+      throw new UnimplementedError();
+    }
+
+    if (other is double) {
+      for (int i = 0; i < length; i++) {
+        this[i] *= other;
+      }
+    } else if (other is IterView<double>) {
+      for (int i = 0; i < length; i++) {
+        this[i] *= other[i];
+      }
+    }
+  }
+
+  void divide(
+      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+    if (other is IterView<double>) {
+      checkLengths(this, other, subject: 'other');
+    } else if (other is double) {
+      // Nothing here
+    } else if (other is num) {
+      other = other.toDouble();
+    } else if (other is Iterable<double>) {
+      checkLengths(this, other, subject: 'other');
+      other = new IterView<double>(other);
+    } else if (other is IterView<num> || other is Iterable<num>) {
+      if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
+      for (int i = 0; i < length; i++) {
+        this[i] /= other[i].toDouble();
+      }
+      return;
+    } else {
+      throw new UnimplementedError();
+    }
+
+    if (other is double) {
+      for (int i = 0; i < length; i++) {
+        this[i] /= other;
+      }
+    } else if (other is IterView<double>) {
+      for (int i = 0; i < length; i++) {
+        this[i] /= other[i];
+      }
+    }
+  }
+
+  void truncDiv(
+          /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) =>
+      truncDiv(this);
+
+  void rdivMe(
+      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+    if (other is IterView<double>) {
+      checkLengths(this, other, subject: 'other');
+    } else if (other is double) {
+      // Nothing here
+    } else if (other is num) {
+      other = other.toDouble();
+    } else if (other is Iterable<double>) {
+      checkLengths(this, other, subject: 'other');
+      other = new IterView<double>(other);
+    } else if (other is IterView<num> || other is Iterable<num>) {
+      if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
+      for (int i = 0; i < length; i++) {
+        this[i] = other[i].toDouble() / this[i];
+      }
+      return;
+    } else {
+      throw new UnimplementedError();
+    }
+
+    if (other is double) {
+      for (int i = 0; i < length; i++) {
+        this[i] = other / this[i];
+      }
+    } else if (other is IterView<double>) {
+      for (int i = 0; i < length; i++) {
+        this[i] = other[i] / this[i];
+      }
+    }
+  }
+
+  @override
+  Double1DFix get logMe {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]);
     return this;
   }
 
-  Double1DFix get log10Self {
-    for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.LN10;
+  @override
+  Double1DFix get log10Me {
+    for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.ln10;
     return this;
   }
 
-  Double1D expSelf(num x) {
+  @override
+  Double1D expMe(num x) {
     for (int i = 0; i < length; i++) this[i] = math.exp(this[i]);
     return this;
   }
 
-  Double1DFix logNSelf(double n) {
+  @override
+  Double1DFix logNMe(double n) {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.log(n);
     return this;
   }
@@ -53,10 +233,10 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
 
 class Double1DFix extends Object
     with
-        Array1DViewMixin<double>,
+        ArrayViewMixin<double>,
         Double1DViewMixin,
         DoubleFixMixin,
-        Array1DFixMixin<double>
+        ArrayFixMixin<double>
     implements Numeric1DFix<double>, Double1DView {
   final List<double> _data;
 
@@ -80,7 +260,7 @@ class Double1DFix extends Object
   Double1DFix.gen(int length, double maker(int index))
       : _data = new List<double>.generate(length, maker, growable: false);
 
-  factory Double1DFix.fromNum(iterable) {
+  factory Double1DFix.nums(iterable) {
     if (iterable is Numeric1DView) {
       final list = new Double1DFix.sized(iterable.length);
       for (int i = 0; i < iterable.length; i++)
@@ -96,9 +276,11 @@ class Double1DFix extends Object
     throw new UnsupportedError('Unknown type!');
   }
 
-  Iterable<double> get asIterable => _data;
+  Stats<double> _stats;
 
-  Iterator<double> get iterator => _data.iterator;
+  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
+
+  Iterable<double> get asIterable => _data;
 
   int get length => _data.length;
 
@@ -114,192 +296,6 @@ class Double1DFix extends Object
 
   Double1D slice(int start, [int end]) =>
       new Double1D(_data.sublist(start, end));
-
-  Double1DFix operator +(/* num | Iterable<num> */ other) => addition(other);
-
-  Double1DFix addition(/* num | Iterable<num> */ other, {bool self: false}) {
-    Double1DFix ret = this;
-
-    if (!self) ret = new Double1DFix.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other;
-      }
-    } else if (other is Double1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] + other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1DFix operator -(/* num | Iterable<num> */ other) => subtract(other);
-
-  Double1DFix subtract(/* num | Iterable<num> */ other, {bool self: false}) {
-    Double1DFix ret = this;
-
-    if (!self) ret = new Double1DFix.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] - other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1DFix operator *(/* num | Iterable<num> */ other) => multiply(other);
-
-  Double1DFix multiply(/* num | Iterable<num> */ other, {bool self: false}) {
-    Double1DFix ret = this;
-
-    if (!self) ret = new Double1DFix.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] * other[i];
-      }
-    }
-    return ret;
-  }
-
-  Double1DFix operator /(/* num | Iterable<num> */ other) => divide(other);
-
-  Double1DFix divide(/* E | Iterable<E> */ other, {bool self: false}) {
-    Double1DFix ret = this;
-
-    if (!self) ret = new Double1DFix.sized(length);
-
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other.elementAt(i);
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] / other[i];
-      }
-    }
-    return ret;
-  }
-
-  Int1DFix operator ~/(/* num | Iterable<num> */ other) {
-    if (other is Numeric1D) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-    } else if (other is num) {
-      // Nothing here
-    } else if (other is Iterable<num>) {
-      if (other.length != length) {
-        throw new Exception('Length mismatch!');
-      }
-      final ret = new Int1DFix.sized(length);
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] ~/ other.elementAt(i).toInt();
-      }
-      return ret;
-    } else {
-      throw new Exception('Expects num or Iterable<num>');
-    }
-
-    final ret = new Int1DFix.sized(length);
-    if (other is num) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] ~/ other;
-      }
-    } else if (other is Numeric1D) {
-      for (int i = 0; i < length; i++) {
-        ret[i] = _data[i] ~/ other[i];
-      }
-    }
-    return ret;
-  }
-
-  Int1DFix truncDiv(/* num | Iterable<num> */ other, {bool self: false}) {
-    if (!self) return this ~/ other;
-    throw new Exception('Operation not supported!');
-  }
 
   Double1DFix sqrt({bool self: false}) {
     if (self) {
@@ -341,4 +337,6 @@ class Double1DFix extends Object
 
   @override
   Double1DFix get fixed => this;
+
+  Double1D unique() => super.unique();
 }

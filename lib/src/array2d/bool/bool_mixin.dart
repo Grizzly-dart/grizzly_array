@@ -173,22 +173,6 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
     return ret;
   }
 
-  String toString() {
-    final sb = new StringBuffer();
-    //TODO print as table
-    sb.writeln('Double[$numRows][$numCols] [');
-    for (int r = 0; r < numRows; r++) {
-      sb.write('[');
-      for (int c = 0; c < numCols; c++) {
-        sb.write('${_data[r][c]}\t\t');
-      }
-      sb.writeln('],');
-    }
-    sb.writeln(']');
-
-    return sb.toString();
-  }
-
   bool get isTrue {
     for (int i = 0; i < numRows; i++) {
       if (!_data[i].isTrue) return false;
@@ -202,4 +186,9 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
     }
     return true;
   }
+
+  Bool2D reshaped(Index2D newShape, {bool def: false}) =>
+      clone()..reshape(newShape, def: def);
+
+  Bool2D clone() => new Bool2D.copy(this);
 }

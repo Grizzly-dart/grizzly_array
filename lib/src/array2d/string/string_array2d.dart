@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2D extends Object
-    with String2DMixin, Array2DViewMixin<String>
+    with Array2DViewMixin<String>, Array2DFixMixin<String>, String2DMixin
     implements Array2D<String>, String2DFix {
   final List<String1D> _data;
 
@@ -42,19 +42,19 @@ class String2D extends Object
     return ret;
   }
 
-  String2D.from(Iterable<ArrayView<String>> data)
+  String2D.from(Iterable<IterView<String>> data)
       : _data = new List<String1D>()..length = data.length {
     if (data.length != 0) {
       final int len = data.first.length;
-      for (ArrayView<String> item in data) {
+      for (IterView<String> item in data) {
         if (item.length != len) {
           throw new Exception('All rows must have same number of columns!');
         }
       }
 
       for (int i = 0; i < data.length; i++) {
-        String1DView item = data.elementAt(i);
-        _data[i] = item.clone();
+        IterView<String> item = data.elementAt(i);
+        _data[i] = new String1D.copy(item);
       }
     }
   }
@@ -81,12 +81,19 @@ class String2D extends Object
   factory String2D.shapedLike(Array2DView like, {String data: ''}) =>
       new String2D.sized(like.numRows, like.numCols, data: data);
 
-  factory String2D.diagonal(Iterable<String> diagonal) {
-    final ret = new String2D.sized(diagonal.length, diagonal.length);
-    for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal.elementAt(i);
+  factory String2D.diagonal(
+      /* IterView<String> | Iterable<String> */ diagonal) {
+    if (diagonal is IterView<String>) {
+      diagonal = diagonal.asIterable;
     }
-    return ret;
+    if (diagonal is Iterable<String>) {
+      final ret = new String2D.sized(diagonal.length, diagonal.length);
+      for (int i = 0; i < diagonal.length; i++) {
+        ret[i][i] = diagonal.elementAt(i);
+      }
+      return ret;
+    }
+    throw new UnsupportedError('Type');
   }
 
   String2D.repeatRow(ArrayView<String> row, [int numRows = 1])
@@ -208,11 +215,9 @@ class String2D extends Object
 
   String2DRow get row => _row ??= new String2DRow(this);
 
-  Iterator<String1D> get iterator => _data.iterator;
-
   String1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, final ArrayView<String> val) {
+  operator []=(final int i, final IterView<String> val) {
     if (i > numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i');
     }
@@ -257,13 +262,13 @@ class String2D extends Object
   }
 
   @override
-  void add(ArrayView<String> row) => this[numRows] = row;
+  void add(IterView<String> row) => this[numRows] = row;
 
   @override
   void addScalar(String v) => _data.add(new String1D.sized(numCols, data: v));
 
   @override
-  void insert(int index, ArrayView<String> row) {
+  void insert(int index, IterView<String> row) {
     if (index > numRows) throw new RangeError.range(index, 0, numRows);
     if (row.length != numCols)
       throw new ArgumentError.value(row, 'row', 'Size mismatch!');
@@ -283,4 +288,26 @@ class String2D extends Object
 
   @override
   Iterable<ArrayFix<String>> get cols => new ColsListFix<String>(this);
+
+  void reshape(Index2D newShape, {String def}) {
+    if (shape == newShape) return;
+
+    if (shape.row > newShape.row) {
+      _data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        _data.add(new String1D.sized(newShape.col, data: def));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (String1D r in _data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (String1D r in _data) {
+        r.addAll(new String1D.sized(newShape.col - r.length, data: def));
+      }
+    }
+  }
 }

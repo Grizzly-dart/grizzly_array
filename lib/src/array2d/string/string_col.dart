@@ -15,7 +15,7 @@ class String2DCol extends Object
   String1DFix operator [](int col) =>
       new String1DFix.own(new ColList<String>(inner, col));
 
-  operator []=(int index, ArrayView<String> col) {
+  operator []=(int index, IterView<String> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
@@ -27,7 +27,7 @@ class String2DCol extends Object
     }
   }
 
-  void add(ArrayView<String> col) {
+  void add(IterView<String> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -42,7 +42,7 @@ class String2DCol extends Object
     }
   }
 
-  void insert(int index, ArrayView<String> col) {
+  void insert(int index, IterView<String> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
@@ -65,7 +65,7 @@ class String2DColFix extends Object
   String1DFix operator [](int col) =>
       new String1DFix.own(new ColList<String>(inner, col));
 
-  operator []=(int index, ArrayView<String> col) {
+  operator []=(int index, IterView<String> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }

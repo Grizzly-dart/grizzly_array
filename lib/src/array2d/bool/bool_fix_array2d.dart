@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2DFix extends Object
-    with Bool2DViewMixin, Array2DViewMixin<bool>
+    with Array2DViewMixin<bool>, Array2DFixMixin<bool>, Bool2DViewMixin
     implements Array2DFix<bool>, Bool2DView {
   final List<Bool1DFix> _data;
 
@@ -205,8 +205,6 @@ class Bool2DFix extends Object
     return ret;
   }
 
-  Iterator<ArrayFix<bool>> get iterator => _data.iterator;
-
   covariant Bool2DColFix _col;
 
   Bool2DColFix get col => _col ??= new Bool2DColFix(this);
@@ -217,7 +215,7 @@ class Bool2DFix extends Object
 
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, ArrayView<bool> val) {
+  operator []=(final int i, IterView<bool> val) {
     if (i >= numRows) {
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }

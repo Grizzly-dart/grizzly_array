@@ -1,7 +1,7 @@
 part of grizzly.series.array.string;
 
 class String1DView extends Object
-    with String1DViewMixin, Array1DViewMixin<String>
+    with String1DViewMixin, ArrayViewMixin<String>
     implements ArrayView<String>, StringArrayView {
   List<String> _data;
 
@@ -26,8 +26,6 @@ class String1DView extends Object
       : _data = new List<String>.generate(length, maker, growable: false);
 
   Iterable<String> get asIterable => _data;
-
-  Iterator<String> get iterator => _data.iterator;
 
   int get length => _data.length;
 

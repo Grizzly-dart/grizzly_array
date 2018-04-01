@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class Double2DMixin implements Numeric2DView<double> {
+abstract class Double2DViewMixin implements Numeric2DView<double> {
   List<Double1DView> get _data;
 
   Double2DView makeView(Iterable<Iterable<double>> newData) =>
@@ -190,157 +190,23 @@ abstract class Double2DMixin implements Numeric2DView<double> {
     return sum;
   }
 
-  Double2D operator +(/* num | Iterable<num> | Numeric2DArray */ other) {
-    if (other is num) {
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          ret[r][c] += other;
-        }
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = ret[r] + other;
-      }
-      return ret;
-    } else if (other is Numeric2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = ret[r] + other[r];
-      }
-      return ret;
-    }
+  Double2D operator +(/* num | Iterable<num> | Numeric2DArray */ other) =>
+      toDouble()..addition(other);
 
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
+  Double2D operator -(/* num | Iterable<num> | Numeric2DArray */ other) =>
+      toDouble()..subtract(other);
 
-  Double2D operator -(/* num | Iterable<num> | Numeric2DArray */ other) {
-    if (other is num) {
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          ret[r][c] -= other;
-        }
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = ret[r] - other;
-      }
-      return ret;
-    } else if (other is Numeric2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = ret[r] - other[r];
-      }
-      return ret;
-    }
+  Double2D operator *(/* num | Iterable<num> | Numeric2DArray */ other) =>
+      toDouble()..multiply(other);
 
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
+  Double2D operator /(/* num | Iterable<num> | Numeric2DArray */ other) =>
+      toDouble()..divide(other);
 
-  Double2D operator *(/* num | Iterable<num> | Numeric2DArray */ other) {
-    if (other is num) {
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          ret[r][c] *= other;
-        }
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = ret[r] * other;
-      }
-      return ret;
-    } else if (other is Numeric2D) {
-      if (numCols != other.numRows)
-        throw new ArgumentError.value(other, 'other', 'Invalid shape!');
-      final ret = new Double2D.sized(numRows, other.numCols);
-      for (int r = 0; r < ret.numRows; r++) {
-        for (int c = 0; c < ret.numCols; c++) {
-          ret[r][c] = _data[r].dot(other.col[c].asIterable);
-        }
-      }
-      return ret;
-    }
+  Int2D operator ~/(/* int | Iterable<int> | Int2DArray */ other) =>
+      toInt()..truncDiv(other);
 
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Double2D operator /(/* num | Iterable<num> | Numeric2DArray */ other) {
-    if (other is num) {
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          ret[r][c] /= other;
-        }
-      }
-      return ret;
-    } else if (other is Iterable<num>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = ret[r] / other;
-      }
-      return ret;
-    } else if (other is Numeric2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Double2D ret = new Double2D.from(_data);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = _data[r] / other[r];
-      }
-      return ret;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
-
-  Int2D operator ~/(/* int | Iterable<int> | Int2DArray */ other) {
-    if (other is int) {
-      Int2D ret = new Int2D.shaped(shape);
-      for (int r = 0; r < numRows; r++) {
-        for (int c = 0; c < numCols; c++) {
-          ret[r][c] = _data[r][c] ~/ other;
-        }
-      }
-      return ret;
-    } else if (other is Iterable<int>) {
-      if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D.shaped(shape);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = _data[r] ~/ other;
-      }
-      return ret;
-    } else if (other is Int2D) {
-      if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
-      Int2D ret = new Int2D.shaped(shape);
-      for (int r = 0; r < numRows; r++) {
-        ret[r] = _data[r] ~/ other[r];
-      }
-      return ret;
-    }
-
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
-  }
+  Double2D rdiv(/* num | Iterable<num> | Numeric2DArray */ other) =>
+      toDouble()..rdivMe(other);
 
   Double2D operator -() {
     final ret = new Double2D.sized(numRows, numCols);
@@ -361,7 +227,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
     final ret = new Double2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++)
-        ret[r][c] = math.log(_data[r][c]) / math.LN10;
+        ret[r][c] = math.log(_data[r][c]) / math.ln10;
     }
     return ret;
   }
@@ -383,7 +249,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
     return ret;
   }
 
-  Double1D dot(Iterable<num> other) {
+  Double1D dot(IterView<num> other) {
     if (numCols != other.length)
       throw new ArgumentError.value(other, 'other', 'Invalid shape!');
 
@@ -430,23 +296,9 @@ abstract class Double2DMixin implements Numeric2DView<double> {
     return ret;
   }
 
-  Double2D get toDouble => new Double2D.from(_data);
+  Int2D toInt() => new Int2D.fromNum(this);
 
-  String toString() {
-    final sb = new StringBuffer();
-    //TODO print as table
-    sb.writeln('Double[$numRows][$numCols] [');
-    for (int r = 0; r < numRows; r++) {
-      sb.write('[');
-      for (int c = 0; c < numCols; c++) {
-        sb.write('${_data[r][c]}\t\t');
-      }
-      sb.writeln('],');
-    }
-    sb.writeln(']');
-
-    return sb.toString();
-  }
+  Double2D toDouble() => new Double2D.from(_data);
 
   double get variance {
     if (numRows == 0) return 0.0;
@@ -466,7 +318,7 @@ abstract class Double2DMixin implements Numeric2DView<double> {
   Double2D get covMatrix {
     final ret = new Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
-      ret[c] = col[c].covMatrix(view);
+      ret[c] = col[c].stats.covMatrix(view);
     }
     return ret;
   }
@@ -474,30 +326,110 @@ abstract class Double2DMixin implements Numeric2DView<double> {
   Double2D get corrcoefMatrix {
     final ret = new Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
-      ret[c] = col[c].corrcoefMatrix(view);
+      ret[c] = col[c].stats.corrcoefMatrix(view);
     }
     return ret;
   }
 
-  bool isAllClose(Numeric2D v, {double absTol: 1e-8}) {
+  bool isClose(Numeric2D v, {double absTol: 1e-8}) {
     if (v.shape != shape) return false;
     for (int i = 0; i < numRows; i++) {
-      if (_data[i].isAllClose(v[i].asIterable)) return false;
+      if (!_data[i].isClose(v[i].asIterable, absTol: absTol)) return false;
     }
     return true;
   }
 
-  bool isAllCloseVector(Iterable<num> v, {double absTol: 1e-8}) {
+  bool isCloseVector(Iterable<num> v, {double absTol: 1e-8}) {
     for (int i = 0; i < numRows; i++) {
-      if (!_data[i].isAllClose(v, absTol: absTol)) return false;
+      if (!_data[i].isClose(v, absTol: absTol)) return false;
     }
     return true;
   }
 
-  bool isAllCloseScalar(num v, {double absTol: 1e-8}) {
+  bool isCloseScalar(num v, {double absTol: 1e-8}) {
     for (int i = 0; i < numRows; i++) {
-      if (!_data[i].isAllCloseScalar(v, absTol: absTol)) return false;
+      if (!_data[i].isCloseScalar(v, absTol: absTol)) return false;
     }
     return true;
+  }
+
+  Double2D reshaped(Index2D newShape, {double def: 0.0}) {
+    if (shape == newShape) return clone();
+
+    List<List<double>> data = _data.map((i) => i.toList()).toList();
+
+    if (shape.row > newShape.row) {
+      data.removeRange(newShape.row, shape.row);
+    } else {
+      for (int i = shape.row; i < newShape.row; i++) {
+        data.add(new List<double>.filled(newShape.col, def, growable: true));
+      }
+    }
+
+    if (shape.col > newShape.col) {
+      for (List<double> r in data) {
+        r.removeRange(newShape.col, r.length);
+      }
+    } else {
+      for (List<double> r in data) {
+        r.addAll(new List<double>.filled(newShape.col - r.length, def));
+      }
+    }
+    return new Double2D(data);
+  }
+
+  Double2D clone() => new Double2D.copy(this);
+
+  Double2D matmul(Array2DView<num> other) {
+    if (numCols != other.numRows) throw new Exception('Invalid size!');
+
+    Double2D ret = new Double2D.sized(numRows, other.numCols);
+
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < other.numCols; j++) {
+        double v = 0.0;
+        for (int ri = 0; ri < numCols; ri++) {
+          v += this[i][ri] * other[ri][j];
+        }
+        ret[i][j] = v;
+      }
+    }
+    return ret;
+  }
+
+  Double2D matmulDiag(ArrayView<num> other) {
+    if (numCols != other.length) throw new Exception('Invalid size!');
+
+    Double2D ret = new Double2D.sized(numRows, other.length);
+
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < other.length; j++) {
+        ret[i][j] = this[i][j] * other[j];
+      }
+    }
+    return ret;
+  }
+
+  bool operator ==(/* Numeric2D */ other) {
+    if (other is Numeric2D) {
+      if (shape != other.shape) return false;
+      for (int i = 0; i < numRows; i++) {
+        if (this[i] != other[i]) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  String toDecString() {
+    StringBuffer sb = new StringBuffer();
+    sb.writeln('[');
+    for (int i = 0; i < numRows; i++) {
+      sb.write('  ');
+      sb.write(this[i].toDecString());
+      sb.writeln(',');
+    }
+    sb.writeln(']');
+    return sb.toString();
   }
 }

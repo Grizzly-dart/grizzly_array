@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
+import 'package:text_table/text_table.dart';
 
 import 'package:grizzly_array/src/array/array.dart';
 
@@ -52,16 +53,20 @@ part 'dynamic/dynamic_mixin.dart';
 part 'dynamic/dynamic_row.dart';
 part 'dynamic/dynamic_view_array2d.dart';
 
-part 'double_array2d.dart';
-
-Double2D array2D(
+Double2D array2(
     /* Iterable<Iterable<num>> | Iterable<double> | Index2D */ data,
     {bool transpose: false}) {
-  if (data is Iterable<Iterable<num>>) {
+  if (data is Iterable<Iterable<double>>) {
+    if (!transpose) {
+      return new Double2D(data);
+    } else {
+      return new Double2D.columns(data);
+    }
+  } else if (data is Iterable<Iterable<num>>) {
     if (!transpose) {
       return new Double2D.fromNum(data);
     } else {
-      return new Double2D.columns(data);
+      return new Double2D.fromNum(data).transpose;
     }
   } else if (data is Iterable<double>) {
     if (!transpose) {
@@ -69,6 +74,8 @@ Double2D array2D(
     } else {
       return new Double2D.columns([data]);
     }
+  } else if (data is Iterable<num>) {
+    // TODO
   } else if (data is Index2D) {
     if (!transpose) {
       return new Double2D.shaped(data);
@@ -80,9 +87,20 @@ Double2D array2D(
   }
 }
 
-Double2D double2D(Iterable<Iterable<num>> matrix) => array2D(matrix);
+Double2D zeros(/* Index2D | Index1D | Array2DView */ spec) {
+  if (spec is Index2D) {
+    return new Double2D.shaped(spec);
+  } else if (spec is Index1D) {
+    return new Double2D.sized(spec.x, spec.x);
+  } else if (spec is Array2DView) {
+    return new Double2D.shapedLike(spec);
+  }
+  throw new ArgumentError.value(spec, 'spec', 'Invalid value!');
+}
 
-Int2D int2D(/* Iterable<Iterable<int>> | Iterable<int> | Index2D */ data,
+Double2D doubles2(Iterable<Iterable<num>> matrix) => array2(matrix);
+
+Int2D ints2(/* Iterable<Iterable<int>> | Iterable<int> | Index2D */ data,
     {bool transpose: false}) {
   if (data is Iterable<Iterable<int>>) {
     if (!transpose) {

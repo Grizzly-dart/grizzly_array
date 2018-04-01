@@ -11,8 +11,8 @@ part 'bool_mixin.dart';
 
 class Bool1D extends Object
     with
-        Array1DViewMixin<bool>,
-        Array1DFixMixin<bool>,
+        ArrayViewMixin<bool>,
+        ArrayFixMixin<bool>,
         ArrayMixin<bool>,
         Bool1DViewMixin
     implements Array<bool>, Bool1DFix, BoolArray {
@@ -39,20 +39,13 @@ class Bool1D extends Object
 
   Iterable<bool> get asIterable => _data;
 
-  Iterator<bool> get iterator => _data.iterator;
-
   int get length => _data.length;
 
   bool operator [](int i) => _data[i];
 
   operator []=(int i, bool val) {
-    if (i > _data.length) {
+    if (i >= _data.length) {
       throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
-    }
-
-    if (i == _data.length) {
-      _data.add(val);
-      return;
     }
 
     _data[i] = val;
@@ -63,8 +56,12 @@ class Bool1D extends Object
   @override
   void add(bool a) => _data.add(a);
 
+  void addAll(IterView<bool> a) => _data.addAll(a.asIterable);
+
   @override
   void insert(int index, bool a) => _data.insert(index, a);
+
+  void clear() => _data.clear();
 
   void sort({bool descending: false}) {
     if (!descending)
@@ -73,7 +70,7 @@ class Bool1D extends Object
       _data.sort((bool a, bool b) => b ? 1 : 0);
   }
 
-  void mask(ArrayView<bool> mask) {
+  void keepIf(IterView<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

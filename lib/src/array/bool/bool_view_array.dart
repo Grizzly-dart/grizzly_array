@@ -1,7 +1,7 @@
 part of grizzly.series.array.bool;
 
 class Bool1DView extends Object
-    with Array1DViewMixin<bool>, Bool1DViewMixin
+    with ArrayViewMixin<bool>, Bool1DViewMixin
     implements ArrayView<bool>, BoolArrayView {
   final List<bool> _data;
 
@@ -26,8 +26,6 @@ class Bool1DView extends Object
       : _data = new List<bool>.generate(length, maker, growable: false);
 
   Iterable<bool> get asIterable => _data;
-
-  Iterator<bool> get iterator => _data.iterator;
 
   int get length => _data.length;
 

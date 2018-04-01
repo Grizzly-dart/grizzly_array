@@ -1,5 +1,27 @@
 part of grizzly.series.array2d;
 
+abstract class Array2DFixMixin<E> implements Array2DFix<E> {
+  set diagonal(val) {
+    int d = math.min(numRows, numCols);
+    if (val is E) {
+      for (int r = 0; r < d; r++) this[r][r] = val;
+    } else if (val is Iterable<E>) {
+      if (val.length != d)
+        throw lengthMismatch(expected: d, found: val.length, subject: 'val');
+      for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r);
+    } else if (val is IterView<E>) {
+      if (val.length != d)
+        throw lengthMismatch(expected: d, found: val.length, subject: 'val');
+      for (int r = 0; r < d; r++) this[r][r] = val[r];
+    } else if (val is Array2DView<E>) {
+      if (val.numRows < d || val.numCols < d) throw new Exception();
+      for (int r = 0; r < d; r++) this[r][r] = val[r][r];
+    } else {
+      throw new UnsupportedError('Type!');
+    }
+  }
+}
+
 abstract class Array2DViewMixin<E> implements Array2DView<E> {
   Index2D get shape => new Index2D(numRows, numCols);
 
@@ -30,6 +52,26 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
     //TODO
     throw new UnimplementedError();
   }
+
+  bool operator ==(/* E | IterView<E> | Iterable<E> */ other) {
+    if (other is Array2DView<E>) {
+      if (shape != other.shape) return false;
+      for (int i = 0; i < numRows; i++) {
+        if (this[i] != other[i]) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  String toString() {
+    final tab =
+        table(Ranger.indices(numCols).map((i) => i.toString()).toList());
+    for (int i = 0; i < numRows; i++) {
+      tab.row(row[i].toStringArray().toList());
+    }
+    return tab.toString();
+  }
 }
 
 abstract class AxisMixin<E> implements Axis2D<E> {}
@@ -38,6 +80,19 @@ abstract class AxisFixMixin<E> implements Axis2DFix<E> {
   @override
   void sort({bool descending: false}) {
     for (int i = 0; i < length; i++) this[i].sort(descending: descending);
+  }
+
+  void swap(int i, int j) {
+    if (i == j) return;
+
+    if (i > length) throw new RangeError.range(i, 0, length - 1);
+    if (j > length) throw new RangeError.range(j, 0, length - 1);
+
+    for (int r = 0; r < otherDLength; r++) {
+      E temp = this[i][r];
+      this[i][r] = this[j][r];
+      this[j][r] = temp;
+    }
   }
 }
 
