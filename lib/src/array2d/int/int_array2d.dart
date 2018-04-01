@@ -1,7 +1,11 @@
 part of grizzly.series.array2d;
 
 class Int2D extends Object
-    with Array2DViewMixin<int>, Int2DViewMixin, Int2DFixMixin
+    with
+        Array2DViewMixin<int>,
+        Array2DFixMixin<int>,
+        Int2DViewMixin,
+        Int2DFixMixin
     implements Numeric2D<int>, Int2DFix {
   final List<Int1D> _data;
 

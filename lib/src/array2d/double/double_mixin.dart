@@ -205,6 +205,9 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
   Int2D operator ~/(/* int | Iterable<int> | Int2DArray */ other) =>
       toInt()..truncDiv(other);
 
+  Double2D rdiv(/* num | Iterable<num> | Numeric2DArray */ other) =>
+      toDouble()..rdivMe(other);
+
   Double2D operator -() {
     final ret = new Double2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++)
@@ -328,24 +331,24 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     return ret;
   }
 
-  bool isAllClose(Numeric2D v, {double absTol: 1e-8}) {
+  bool isClose(Numeric2D v, {double absTol: 1e-8}) {
     if (v.shape != shape) return false;
     for (int i = 0; i < numRows; i++) {
-      if (_data[i].isAllClose(v[i].asIterable)) return false;
+      if (!_data[i].isClose(v[i].asIterable, absTol: absTol)) return false;
     }
     return true;
   }
 
-  bool isAllCloseVector(Iterable<num> v, {double absTol: 1e-8}) {
+  bool isCloseVector(Iterable<num> v, {double absTol: 1e-8}) {
     for (int i = 0; i < numRows; i++) {
-      if (!_data[i].isAllClose(v, absTol: absTol)) return false;
+      if (!_data[i].isClose(v, absTol: absTol)) return false;
     }
     return true;
   }
 
-  bool isAllCloseScalar(num v, {double absTol: 1e-8}) {
+  bool isCloseScalar(num v, {double absTol: 1e-8}) {
     for (int i = 0; i < numRows; i++) {
-      if (!_data[i].isAllCloseScalar(v, absTol: absTol)) return false;
+      if (!_data[i].isCloseScalar(v, absTol: absTol)) return false;
     }
     return true;
   }
@@ -377,7 +380,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
 
   Double2D clone() => new Double2D.copy(this);
 
-  Double2D matmul(Numeric2DView<double> other) {
+  Double2D matmul(Array2DView<num> other) {
     if (numCols != other.numRows) throw new Exception('Invalid size!');
 
     Double2D ret = new Double2D.sized(numRows, other.numCols);
@@ -394,6 +397,19 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     return ret;
   }
 
+  Double2D matmulDiag(ArrayView<num> other) {
+    if (numCols != other.length) throw new Exception('Invalid size!');
+
+    Double2D ret = new Double2D.sized(numRows, other.length);
+
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < other.length; j++) {
+        ret[i][j] = this[i][j] * other[j];
+      }
+    }
+    return ret;
+  }
+
   bool operator ==(/* Numeric2D */ other) {
     if (other is Numeric2D) {
       if (shape != other.shape) return false;
@@ -403,5 +419,17 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
       return true;
     }
     return false;
+  }
+
+  String toDecString() {
+    StringBuffer sb = new StringBuffer();
+    sb.writeln('[');
+    for (int i = 0; i < numRows; i++) {
+      sb.write('  ');
+      sb.write(this[i].toDecString());
+      sb.writeln(',');
+    }
+    sb.writeln(']');
+    return sb.toString();
   }
 }

@@ -11,7 +11,7 @@ environment:
 dependencies:
   grizzly_primitives: ^0.2.4
   grizzly_scales: ^0.0.3-dev
-  grizzly_series: ^0.2.0
+  grizzly_series: ^0.2.1
   collection: ^1.14.7
   text_table: ^2.5.3
 

@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2D extends Object
-    with Bool2DViewMixin, Array2DViewMixin<bool>
+    with Array2DViewMixin<bool>, Array2DFixMixin<bool>, Bool2DViewMixin
     implements Array2D<bool>, Bool2DFix {
   final List<Bool1D> _data;
 

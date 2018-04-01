@@ -30,6 +30,9 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
       toInt..truncDiv(other);
 
+  Double1D rdiv(/* num | Numeric1DView | Numeric2DView */ other) =>
+      toDouble..rdivMe(other);
+
   @override
   int compareValue(double a, double b) => a.compareTo(b);
 
@@ -279,7 +282,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   Double2D diagonal({Index2D shape, num def: 0}) =>
       new Double2D.diagonal(this, shape: shape, def: def?.toDouble());
 
-  bool isAllClose(Iterable<num> v, {double absTol: 1e-8}) {
+  bool isClose(Iterable<num> v, {double absTol: 1e-8}) {
     if (length != v.length) return false;
     for (int i = 0; i < length; i++) {
       if ((this[i] - v.elementAt(i)).abs() > absTol) return false;
@@ -287,7 +290,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return true;
   }
 
-  bool isAllCloseScalar(num v, {double absTol: 1e-8}) {
+  bool isCloseScalar(num v, {double absTol: 1e-8}) {
     for (int i = 0; i < length; i++) {
       if ((this[i] - v).abs() > absTol) return false;
     }
@@ -361,5 +364,17 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
       return true;
     }
     return false;
+  }
+
+  String toDecString() {
+    StringBuffer sb = new StringBuffer();
+    sb.write('[');
+    for (int i = 0; i < length; i++) {
+      sb.write(' ');
+      sb.write(this[i]);
+      sb.write(',');
+    }
+    sb.write(']');
+    return sb.toString();
   }
 }

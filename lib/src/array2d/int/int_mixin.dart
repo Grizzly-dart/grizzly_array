@@ -176,6 +176,9 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   Int2D operator ~/(/* int | Numeric1DView | Int2DArray */ other) =>
       toInt()..truncDiv(other);
 
+  Double2D rdiv(/* num | Iterable<num> | Numeric2DArray */ other) =>
+      toDouble()..rdivMe(other);
+
   int get sum {
     if (numRows == 0) return 0;
     int sum = 0;
@@ -323,7 +326,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
 
   Int2D clone() => new Int2D.copy(this);
 
-  Int2D matmul(Numeric2DView<int> other) {
+  Int2D matmul(Array2DView<int> other) {
     if (numCols != other.numRows) throw new Exception('Invalid size!');
 
     Int2D ret = new Int2D.sized(numRows, other.numCols);
@@ -335,6 +338,19 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
           v += this[i][ri] * other[ri][j];
         }
         ret[i][j] = v;
+      }
+    }
+    return ret;
+  }
+
+  Int2D matmulDiag(ArrayView<int> other) {
+    if (numCols != other.length) throw new Exception('Invalid size!');
+
+    Int2D ret = new Int2D.sized(numRows, other.length);
+
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < other.length; j++) {
+        ret[i][j] = this[i][j] * other[j];
       }
     }
     return ret;

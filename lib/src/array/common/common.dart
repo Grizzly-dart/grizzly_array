@@ -18,17 +18,33 @@ abstract class ArrayMixin<E> implements Array<E> {
       if (set.contains(this[i])) removeAt(i);
     }
   }
+
+  set assign(IterView<E> other) {
+    if(length == other.length) {
+      for (int i = 0; i < length; i++) this[i] = other[i];
+      return;
+    }
+    
+    if(length > other.length) {
+      removeRange(other.length);
+      for (int i = 0; i < length; i++) this[i] = other[i];
+      return;
+    }
+    
+    for (int i = 0; i < length; i++) this[i] = other[i];
+    addAll(other.slice(length));
+  }
 }
 
 abstract class ArrayFixMixin<E> implements ArrayFix<E> {
   /// Sets all elements in the array to given value [v]
-  void set(E v) {
+  set set(E v) {
     for (int i = 0; i < length; i++) {
       this[i] = v;
     }
   }
 
-  void assign(IterView<E> other) {
+  set assign(IterView<E> other) {
     if (other.length != length)
       throw new ArgumentError.value(other, 'other', 'Size mismatch!');
 

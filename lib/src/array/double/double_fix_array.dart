@@ -173,26 +173,59 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
           /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) =>
       truncDiv(this);
 
+  void rdivMe(
+      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
+    if (other is IterView<double>) {
+      checkLengths(this, other, subject: 'other');
+    } else if (other is double) {
+      // Nothing here
+    } else if (other is num) {
+      other = other.toDouble();
+    } else if (other is Iterable<double>) {
+      checkLengths(this, other, subject: 'other');
+      other = new IterView<double>(other);
+    } else if (other is IterView<num> || other is Iterable<num>) {
+      if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
+      for (int i = 0; i < length; i++) {
+        this[i] = other[i].toDouble() / this[i];
+      }
+      return;
+    } else {
+      throw new UnimplementedError();
+    }
+
+    if (other is double) {
+      for (int i = 0; i < length; i++) {
+        this[i] = other / this[i];
+      }
+    } else if (other is IterView<double>) {
+      for (int i = 0; i < length; i++) {
+        this[i] = other[i] / this[i];
+      }
+    }
+  }
+
   @override
-  Double1DFix get logSelf {
+  Double1DFix get logMe {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]);
     return this;
   }
 
   @override
-  Double1DFix get log10Self {
+  Double1DFix get log10Me {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.ln10;
     return this;
   }
 
   @override
-  Double1D expSelf(num x) {
+  Double1D expMe(num x) {
     for (int i = 0; i < length; i++) this[i] = math.exp(this[i]);
     return this;
   }
 
   @override
-  Double1DFix logNSelf(double n) {
+  Double1DFix logNMe(double n) {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.log(n);
     return this;
   }

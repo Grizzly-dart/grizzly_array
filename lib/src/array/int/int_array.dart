@@ -85,6 +85,8 @@ class Int1D extends Object
   @override
   void insert(int index, int a) => _data.insert(index, a);
 
+  void clear() => _data.clear();
+
   void sort({bool descending: false}) {
     if (!descending)
       _data.sort();

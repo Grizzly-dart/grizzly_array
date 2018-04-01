@@ -1,5 +1,27 @@
 part of grizzly.series.array2d;
 
+abstract class Array2DFixMixin<E> implements Array2DFix<E> {
+  set diagonal(val) {
+    int d = math.min(numRows, numCols);
+    if (val is E) {
+      for (int r = 0; r < d; r++) this[r][r] = val;
+    } else if (val is Iterable<E>) {
+      if (val.length != d)
+        throw lengthMismatch(expected: d, found: val.length, subject: 'val');
+      for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r);
+    } else if (val is IterView<E>) {
+      if (val.length != d)
+        throw lengthMismatch(expected: d, found: val.length, subject: 'val');
+      for (int r = 0; r < d; r++) this[r][r] = val[r];
+    } else if (val is Array2DView<E>) {
+      if (val.numRows < d || val.numCols < d) throw new Exception();
+      for (int r = 0; r < d; r++) this[r][r] = val[r][r];
+    } else {
+      throw new UnsupportedError('Type!');
+    }
+  }
+}
+
 abstract class Array2DViewMixin<E> implements Array2DView<E> {
   Index2D get shape => new Index2D(numRows, numCols);
 

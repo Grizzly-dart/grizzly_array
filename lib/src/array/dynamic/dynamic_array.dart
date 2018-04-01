@@ -68,6 +68,8 @@ class Dynamic1D extends Object
   @override
   void insert(int index, dynamic a) => _data.insert(index, a);
 
+  void clear() => _data.clear();
+
   void sort({bool descending: false}) {}
 
   void keepIf(IterView<bool> mask) {

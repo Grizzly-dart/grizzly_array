@@ -172,6 +172,39 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       }
     }
   }
+
+  void rdivMe(
+      /* num | IterView<num> | Iterable<num> */ other) {
+    if (other is IterView<int>) {
+      checkLengths(this, other, subject: 'other');
+    } else if (other is int) {
+      // Nothing here
+    } else if (other is num) {
+      other = other.toInt();
+    } else if (other is Iterable<int>) {
+      checkLengths(this, other, subject: 'other');
+      other = new IterView<int>(other);
+    } else if (other is IterView<num> || other is Iterable<num>) {
+      if (other is Iterable<num>) other = new IterView<num>(other);
+      checkLengths(this, other, subject: 'other');
+      for (int i = 0; i < length; i++) {
+        this[i] = other[i].toInt() ~/ this[i];
+      }
+      return;
+    } else {
+      throw new UnimplementedError();
+    }
+
+    if (other is int) {
+      for (int i = 0; i < length; i++) {
+        this[i] = other ~/ this[i];
+      }
+    } else if (other is IterView<int>) {
+      for (int i = 0; i < length; i++) {
+        this[i] = other[i] ~/ this[i];
+      }
+    }
+  }
 }
 
 class Int1DFix extends Object

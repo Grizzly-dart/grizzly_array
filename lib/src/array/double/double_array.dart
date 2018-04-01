@@ -90,6 +90,8 @@ class Double1D extends Object
     return super.sqrt();
   }
 
+  void clear() => _data.clear();
+
   Double1D floorToDouble({bool self: false}) {
     if (self) {
       for (int i = 0; i < length; i++) {

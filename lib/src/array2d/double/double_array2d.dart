@@ -1,7 +1,11 @@
 part of grizzly.series.array2d;
 
 class Double2D extends Object
-    with Array2DViewMixin<double>, Double2DViewMixin, Double2DFixMixin
+    with
+        Array2DViewMixin<double>,
+        Array2DFixMixin<double>,
+        Double2DViewMixin,
+        Double2DFixMixin
     implements Numeric2D<double>, Double2DFix {
   final List<Double1D> _data;
 
@@ -117,8 +121,7 @@ class Double2D extends Object
   Double2D.fromNum(data) : _data = <Double1D>[] {
     // TODO handle IterView<IterView<num>>
     // TODO handle IterView<IterView<String>>
-    // TODO handle Iterable<num>
-    if (data is Iterable) {
+    if (data is Iterable<Iterable<num>>) {
       if (data.length != 0) {
         final int len = data.first.length;
         for (dynamic item in data) {
@@ -127,14 +130,29 @@ class Double2D extends Object
           }
         }
 
-        for (dynamic item in data) {
+        for (Iterable<num> item in data) {
           _data.add(new Double1D.nums(item));
+        }
+      }
+    } else if (data is Iterable<IterView<num>>) {
+      if (data.length != 0) {
+        final int len = data.first.length;
+        for (dynamic item in data) {
+          if (item.length != len) {
+            throw new Exception('All rows must have same number of columns!');
+          }
+        }
+
+        for (IterView<num> item in data) {
+          _data.add(new Double1D.copyNums(item));
         }
       }
     } else if (data is Array2DView<num>) {
       for (ArrayView<num> item in data.rows) {
         _data.add(new Double1D.copyNums(item));
       }
+    } else {
+      throw new UnsupportedError('Type');
     }
   }
 

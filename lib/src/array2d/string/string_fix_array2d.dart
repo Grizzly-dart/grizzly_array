@@ -1,7 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2DFix extends Object
-    with String2DMixin, Array2DViewMixin<String>
+    with Array2DViewMixin<String>, Array2DFixMixin<String>, String2DMixin
     implements Array2DFix<String>, String2DView {
   final List<String1DFix> _data;
 
