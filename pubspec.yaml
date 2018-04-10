@@ -13,7 +13,7 @@ dependencies:
   grizzly_scales: ^0.0.3-dev
   grizzly_series: ^0.2.1
   collection: ^1.14.7
-  text_table: ^2.5.3
+  text_table: ^2.5.4
 
 dev_dependencies:
   test: ^0.12.0
