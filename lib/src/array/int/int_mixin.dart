@@ -1,13 +1,16 @@
 part of grizzly.series.array.int;
 
 abstract class Int1DViewMixin implements Numeric1DView<int> {
-  Int1DView makeView(Iterable<int> newData) => new Int1DView(newData);
+  Int1DView makeView(Iterable<int> newData, [String name]) =>
+      new Int1DView(newData, name);
 
-  Int1DFix makeFix(Iterable<int> newData) => new Int1DFix(newData);
+  Int1DFix makeFix(Iterable<int> newData, [String name]) =>
+      new Int1DFix(newData, name);
 
-  Int1D makeArray(Iterable<int> newData) => new Int1D(newData);
+  Int1D makeArray(Iterable<int> newData, [String name]) =>
+      new Int1D(newData, name);
 
-  Int1D clone() => new Int1D.copy(this);
+  Int1D clone({String name}) => new Int1D(this, name);
 
   Int1D operator -() {
     final ret = new Int1D.sized(length);
@@ -223,32 +226,32 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret;
   }
 
-  int dot(IterView<num> other) {
+  int dot(Iterable<num> other) {
     checkLengths(this, other, subject: 'other');
 
     num ret = 0;
     for (int i = 0; i < length; i++) {
-      ret += this[i] * other[i];
+      ret += this[i] * other.elementAt(i);
     }
     return ret.toInt();
   }
 
-  Double1D get toDouble => new Double1D.copyNums(this);
+  Double1D get toDouble => new Double1D.fromNums(this);
 
-  Int1D get toInt => new Int1D.copy(this);
+  Int1D get toInt => new Int1D(this);
 
   Int2D repeat({int repeat: 1, bool transpose: false}) {
     if (!transpose) {
-      return new Int2D.repeatCol(this, repeat + 1);
+      return new Int2D.aCol(this, repeat: repeat + 1);
     } else {
-      return new Int2D.repeatRow(this, repeat + 1);
+      return new Int2D.aRow(this, repeat: repeat + 1);
     }
   }
 
   Int2D diagonal({Index2D shape, num def: 0}) =>
-      new Int2D.diagonal(this, shape: shape, def: def?.toInt());
+      new Int2D.diagonal(this, shape: shape, fill: def?.toInt());
 
-  Int2D to2D() => new Int2D.from([this]);
+  Int2D to2D() => new Int2D([this]);
 
   Int2D get transpose {
     final ret = new Int2D.sized(length, 1);
@@ -259,16 +262,13 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   @override
-  Int1D pickByIndices(IterView<int> indices) {
+  Int1D pickByIndices(Iterable<int> indices) {
     final ret = new Int1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
-      ret[i] = this[indices[i]];
+      ret[i] = this[indices.elementAt(i)];
     }
     return ret;
   }
-
-  @override
-  bool contains(int value) => asIterable.contains(value);
 
   Int1D abs() {
     final ret = new Int1D.sized(length);
@@ -276,21 +276,19 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret;
   }
 
-  Int1D selectIf(IterView<bool> mask) {
+  Int1D selectIf(Iterable<bool> mask) {
     if (mask.length != length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.asIterable.where((v) => v).length;
+    int retLength = mask.where((v) => v).length;
     final ret = new List<int>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = this[i];
+      if (mask.elementAt(i)) ret[idx++] = this[i];
     }
     return new Int1D.own(ret);
   }
 
   bool operator ==(other) {
-    if (other is IterView<num>) other = other.asIterable;
-
     if (other is Iterable<num>) {
       if (other.length != length) return false;
       for (int i = 0; i < length; i++) {

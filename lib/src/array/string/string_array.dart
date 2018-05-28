@@ -1,5 +1,6 @@
 library grizzly.series.array.string;
 
+import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
@@ -14,31 +15,39 @@ class String1D extends Object
         ArrayViewMixin<String>,
         ArrayFixMixin<String>,
         ArrayMixin<String>,
+        IterableMixin<String>,
         String1DViewMixin,
         String1DFixMixin
     implements StringArray, String1DFix {
   List<String> _data;
 
-  String1D([Iterable<String> data = const []])
+  String _name;
+
+  String get name => _name;
+
+  set name(String value) => _name = value;
+
+  String1D(Iterable<String> data, [this._name])
       : _data = new List<String>.from(data);
 
-  String1D.copy(IterView<String> other)
-      : _data = new List<String>.from(other.asIterable);
+  String1D.own(this._data, [this._name]);
 
-  String1D.own(this._data);
+  String1D.sized(int length, {String fill, String name})
+      : _data = new List<String>.filled(length, fill, growable: true),
+        _name = name;
 
-  String1D.sized(int length, {String data})
-      : _data = new List<String>.filled(length, data, growable: true);
+  factory String1D.shapedLike(Iterable d, {String fill, String name}) =>
+      new String1D.sized(d.length, fill: fill, name: name);
 
-  factory String1D.shapedLike(IterView d, {String data}) =>
-      new String1D.sized(d.length, data: data);
+  String1D.single(String data, {String name})
+      : _data = <String>[data],
+        _name = name;
 
-  String1D.single(String data) : _data = <String>[data];
+  String1D.gen(int length, String maker(int index), {String name})
+      : _data = new List<String>.generate(length, maker),
+        _name = name;
 
-  String1D.gen(int length, String maker(int index))
-      : _data = new List<String>.generate(length, maker);
-
-  Iterable<String> get asIterable => _data;
+  Iterator<String> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -58,7 +67,7 @@ class String1D extends Object
   @override
   void add(String a) => _data.add(a);
 
-  void addAll(IterView<String> a) => _data.addAll(a.asIterable);
+  void addAll(Iterable<String> a) => _data.addAll(a);
 
   void clear() => _data.clear();
 
@@ -72,11 +81,11 @@ class String1D extends Object
       _data.sort((String a, String b) => b.compareTo(a));
   }
 
-  void keepIf(IterView<bool> mask) {
+  void keepIf(Iterable<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
-      if (!mask[i]) _data.removeAt(i);
+      if (!mask.elementAt(i)) _data.removeAt(i);
     }
   }
 
@@ -86,9 +95,7 @@ class String1D extends Object
     final poss = pos.unique()..sort(descending: true);
     if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
 
-    for (int pos in poss.asIterable) {
-      _data.removeAt(pos);
-    }
+    for (int pos in poss) _data.removeAt(pos);
   }
 
   void removeRange(int start, [int end]) {

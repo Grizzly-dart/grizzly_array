@@ -1,15 +1,18 @@
 part of grizzly.series.array.string;
 
 abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
-  String1DView makeView(Iterable<String> newData) => new String1DView(newData);
+  String1DView makeView(Iterable<String> newData, [String name]) =>
+      new String1DView(newData, name);
 
-  String1DFix makeFix(Iterable<String> newData) => new String1DFix(newData);
+  String1DFix makeFix(Iterable<String> newData, [String name]) =>
+      new String1DFix(newData, name);
 
-  String1D makeArray(Iterable<String> newData) => new String1D(newData);
+  String1D makeArray(Iterable<String> newData, [String name]) =>
+      new String1D(newData, name);
 
   Index1D get shape => new Index1D(length);
 
-  String1D clone() => new String1D.copy(this);
+  String1D clone({String name}) => new String1D(this, name);
 
   String get min {
     String ret;
@@ -59,14 +62,13 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     return ret;
   }
 
-  String2D to2D() => new String2D.from([this]);
+  String2D to2D() => new String2D([this]);
 
   String2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new String2D.repeatCol(this, repeat + 1);
-    } else {
-      return new String2D.repeatRow(this, repeat + 1);
-    }
+    if (!transpose)
+      return new String2D.aCol(this, repeat: repeat + 1);
+    else
+      return new String2D.aRow(this, repeat: repeat + 1);
   }
 
   String2D diagonal() => new String2D.diagonal(this);
@@ -151,8 +153,6 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     return ret;
   }
 
-  String join([String separator = ""]) => asIterable.join(separator);
-
   Array<int> get lengths {
     final ret = new Int1D.sized(length);
     for (int i = 0; i < length; i++) {
@@ -195,8 +195,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
       {int radix, int defaultValue, int onError(String source)}) {
     final ret = new Int1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = int.parse(this[i],
-          radix: radix, onError: onError ?? (_) => defaultValue);
+      ret[i] = int.tryParse(this[i], radix: radix) ?? defaultValue;
     }
     return ret;
   }
@@ -205,34 +204,31 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
       {double onError(String source), double defaultValue}) {
     final ret = new Double1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = double.parse(this[i], onError ?? (_) => defaultValue);
+      ret[i] = double.tryParse(this[i]) ?? defaultValue;
     }
     return ret;
   }
 
   @override
-  String1D pickByIndices(IterView<int> indices) {
+  String1D pickByIndices(Iterable<int> indices) {
     final ret = new String1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
-      ret[i] = this[indices[i]];
+      ret[i] = this[indices.elementAt(i)];
     }
     return ret;
   }
-
-  @override
-  bool contains(String value) => asIterable.contains(value);
 
   @override
   int compareValue(String a, String b) => a.compareTo(b);
 
-  String1D selectIf(IterView<bool> mask) {
+  String1D selectIf(Iterable<bool> mask) {
     if (mask.length != length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.asIterable.where((v) => v).length;
+    int retLength = mask.where((v) => v).length;
     final ret = new List<String>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = this[i];
+      if (mask.elementAt(i)) ret[idx++] = this[i];
     }
     return new String1D.own(ret);
   }

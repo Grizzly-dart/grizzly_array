@@ -20,7 +20,7 @@ export 'dynamic/dynamic_array.dart';
 Double1D array(
     /* Iterable<num> | ArrayView<num> | double | int | Index1D */ data) {
   if (data is Iterable<num>) {
-    return new Double1D.nums(data);
+    return new Double1D.fromNums(data);
   } else if (data is Numeric1DView<num>) {
     return data.toDouble;
   } else if (data is double) {
@@ -38,12 +38,8 @@ Double1D array(
 Int1D ints(/* Iterable<num> | num | Index1D */ data) {
   if (data is Iterable<int>) {
     return new Int1D(data);
-  } else if (data is IterView<int>) {
-    return new Int1D.copy(data);
   } else if (data is Iterable<num>) {
-    return new Int1D.nums(data);
-  } else if (data is IterView<num>) {
-    return new Int1D.nums(data);
+    return new Int1D.fromNums(data);
   } else if (data is int) {
     return new Int1D.single(data);
   } else if (data is double) {
@@ -58,7 +54,7 @@ Int1D ints(/* Iterable<num> | num | Index1D */ data) {
 /// Creates a 1-dimensional array of double from given [data]
 Double1D doubles(/* Iterable<num> | double | int | Index1D */ data) {
   if (data is Iterable<num>) {
-    return new Double1D.nums(data);
+    return new Double1D.fromNums(data);
   } else if (data is double) {
     return new Double1D.single(data);
   } else if (data is num) {

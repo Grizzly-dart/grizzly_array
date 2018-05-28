@@ -1,30 +1,49 @@
 part of grizzly.series.array.bool;
 
 class Bool1DFix extends Object
-    with ArrayViewMixin<bool>, ArrayFixMixin<bool>, Bool1DViewMixin
+    with
+        ArrayViewMixin<bool>,
+        ArrayFixMixin<bool>,
+        Bool1DViewMixin,
+        IterableMixin<bool>
     implements ArrayFix<bool>, Bool1DView {
   final List<bool> _data;
 
-  Bool1DFix(Iterable<bool> data)
-      : _data = new List<bool>.from(data, growable: false);
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
 
-  Bool1DFix.copy(IterView<bool> other)
-      : _data = new List<bool>.from(other.asIterable, growable: false);
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
+  }
 
-  Bool1DFix.own(this._data);
+  Bool1DFix(Iterable<bool> data, [dynamic /* String | NameMaker */ name])
+      : _data = new List<bool>.from(data, growable: false),
+        _name = name;
 
-  Bool1DFix.sized(int length, {bool data: false})
-      : _data = new List<bool>.filled(length, data);
+  Bool1DFix.own(this._data, [dynamic /* String | NameMaker */ name])
+      : _name = name;
 
-  factory Bool1DFix.shapedLike(IterView d, {bool data: false}) =>
-      new Bool1DFix.sized(d.length, data: data);
+  Bool1DFix.sized(int length,
+      {bool fill: false, dynamic /* String | NameMaker */ name})
+      : _data = new List<bool>.filled(length, fill),
+        _name = name;
 
-  Bool1DFix.single([bool data = false]) : _data = <bool>[data];
+  factory Bool1DFix.shapedLike(Iterable d,
+          {bool data: false, dynamic /* String | NameMaker */ name}) =>
+      new Bool1DFix.sized(d.length, fill: data, name: name);
 
-  Bool1DFix.gen(int length, bool maker(int index))
-      : _data = new List<bool>.generate(length, maker, growable: false);
+  Bool1DFix.single(bool data, {dynamic /* String | NameMaker */ name})
+      : _data = <bool>[data],
+        _name = name;
 
-  Iterable<bool> get asIterable => _data;
+  Bool1DFix.gen(int length, bool maker(int index),
+      {dynamic /* String | NameMaker */ name})
+      : _data = new List<bool>.generate(length, maker, growable: false),
+        _name = name;
+
+  Iterator<bool> get iterator => _data.iterator;
 
   int get length => _data.length;
 

@@ -59,19 +59,17 @@ void main() {
     });
 
     test('sort', () {
-      expect((ints([1, 5, 2, 4, 3])..sort()).asIterable, [1, 2, 3, 4, 5]);
-      expect((ints([1, 5, 2, 4, 3])..sort(descending: true)).asIterable,
-          [5, 4, 3, 2, 1]);
+      expect((ints([1, 5, 2, 4, 3])..sort()), [1, 2, 3, 4, 5]);
+      expect((ints([1, 5, 2, 4, 3])..sort(descending: true)), [5, 4, 3, 2, 1]);
     });
 
     test('unique', () {
-      expect(ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).unique().asIterable,
-          [1, 5, 6, 2, 3]);
+      expect(
+          ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).unique(), [1, 5, 6, 2, 3]);
     });
 
     test('uniqueIndices', () {
-      expect(
-          ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).uniqueIndices().asIterable,
+      expect(ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).uniqueIndices(),
           [0, 2, 3, 5, 6]);
     });
 

@@ -20,8 +20,6 @@ abstract class String2DMixin implements Array2DView<String> {
   @override
   Array<String> makeArray(Iterable<String> newData) => new String1D(newData);
 
-  Iterable<Iterable<String>> get iterable => _data.map((a) => a.asIterable);
-
   int get numCols {
     if (numRows == 0) return 0;
     return _data.first.length;
@@ -157,5 +155,5 @@ abstract class String2DMixin implements Array2DView<String> {
   String2D reshaped(Index2D newShape, {String def}) =>
       clone()..reshape(newShape, def: def);
 
-  String2D clone() => new String2D.copy(this);
+  String2D clone() => new String2D(this);
 }

@@ -9,13 +9,13 @@ abstract class RowMixin<E> implements Axis2D<E> {
 
   ArrayFix<E> operator [](int row) => inner[row];
 
-  operator []=(int index, IterView<E> row) => inner[index] = row;
+  operator []=(int index, Iterable<E> row) => inner[index] = row;
 
-  void add(IterView<E> row) => inner.add(row);
+  void add(Iterable<E> row) => inner.add(row);
 
   void addScalar(E v) => inner.addScalar(v);
 
-  void insert(int index, IterView<E> row) => inner.insert(index, row);
+  void insert(int index, Iterable<E> row) => inner.insert(index, row);
 
   Iterable<ArrayFix<E>> get iterable => inner.rows;
 }
@@ -29,7 +29,7 @@ abstract class RowFixMixin<E> implements Axis2DFix<E> {
 
   ArrayFix<E> operator [](int row) => inner[row];
 
-  operator []=(int index, IterView<E> row) => inner[index] = row;
+  operator []=(int index, Iterable<E> row) => inner[index] = row;
 
   Iterable<ArrayFix<E>> get iterable => inner.rows;
 }

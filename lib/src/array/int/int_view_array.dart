@@ -7,44 +7,69 @@ void checkLengths(expected, found, {String subject}) {
 }
 
 class Int1DView extends Object
-    with ArrayViewMixin<int>, Int1DViewMixin
+    with ArrayViewMixin<int>, IterableMixin<int>, Int1DViewMixin
     implements Numeric1DView<int> {
-  final List<int> _data;
+  final Iterable<int> _data;
 
-  Int1DView(Iterable<int> data)
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
+
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
+  }
+
+  Int1DView(Iterable<int> data, [/* String | NameMaker */ this._name])
       : _data = new List<int>.from(data, growable: false);
-
-  Int1DView.copy(IterView<int> other)
-      : _data = new List<int>.from(other.asIterable, growable: false);
 
   /// Creates [Int1DView] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1DView] because it involves no
   /// copying.
-  Int1DView.own(this._data);
+  Int1DView.own(this._data, [/* String | NameMaker */ this._name]);
 
-  Int1DView.sized(int length, {int data: 0})
-      : _data = new List<int>.filled(length, data);
+  Int1DView.sized(int length,
+      {int fill: 0, dynamic /* String | NameMaker */ name})
+      : _data = new ConstantIterable<int>(fill, length),
+        _name = name;
 
-  factory Int1DView.shapedLike(IterView d, {int data: 0}) =>
-      new Int1DView.sized(d.length, data: data);
+  factory Int1DView.shapedLike(Iterable d,
+          {int fill: 0, dynamic /* String | NameMaker */ name}) =>
+      new Int1DView.sized(d.length, fill: fill, name: name);
 
-  Int1DView.single(int data)
-      : _data = new List<int>.from(<int>[data], growable: false);
+  Int1DView.single(int data, {dynamic /* String | NameMaker */ name})
+      : _data = new List<int>.from(<int>[data], growable: false),
+        _name = name;
 
-  Int1DView.gen(int length, int maker(int index))
-      : _data = new List<int>.generate(length, maker, growable: false);
+  Int1DView.gen(int length, int maker(int index),
+      {dynamic /* String | NameMaker */ name})
+      : _data = new List<int>.generate(length, maker, growable: false),
+        _name = name;
+
+  factory Int1DView.fromNums(Iterable<num> iterable,
+      [/* String | NameMaker */ name]) {
+    final list = new List<int>(iterable.length);
+    for (int i = 0; i < list.length; i++)
+      list[i] = iterable.elementAt(i)?.toInt();
+    return new Int1DView.own(list, name);
+  }
+
+  factory Int1DView.range(int start, int stop,
+          {int step: 1, dynamic /* String | NameMaker */ name}) =>
+      new Int1DView.own(Ranger.between(start, stop, step), name);
 
   Stats<int> _stats;
 
   Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
 
-  Iterable<int> get asIterable => _data;
+  Iterator<int> get iterator => _data.iterator;
 
   int get length => _data.length;
 
-  int operator [](int i) => _data[i];
+  int operator [](int i) => _data.elementAt(i);
 
-  Int1D slice(int start, [int end]) => new Int1D(_data.sublist(start, end));
+  Int1D slice(int start, [int end]) =>
+      new Int1D(_data.toList(growable: false).sublist(start, end));
 
   Int1DView get view => this;
 

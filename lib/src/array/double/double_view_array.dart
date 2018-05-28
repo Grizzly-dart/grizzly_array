@@ -1,49 +1,56 @@
 part of grizzly.series.array.double;
 
 class Double1DView extends Object
-    with ArrayViewMixin<double>, Double1DViewMixin
+    with ArrayViewMixin<double>, IterableMixin<double>, Double1DViewMixin
     implements Numeric1DView<double> {
   final List<double> _data;
 
-  Double1DView(Iterable<double> iterable)
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
+
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
+  }
+
+  Double1DView(Iterable<double> iterable, [/* String | NameMaker */ this._name])
       : _data = new List<double>.from(iterable);
 
-  Double1DView.copy(IterView<double> other)
-      : _data = new List<double>.from(other.asIterable, growable: false);
+  Double1DView.own(this._data, [/* String | NameMaker */ this._name]);
 
-  Double1DView.own(this._data);
+  Double1DView.sized(int length,
+      {double fill: 0.0, dynamic /* String | NameMaker */ name})
+      : _data = new List<double>.filled(length, fill),
+        _name = name;
 
-  Double1DView.sized(int length, {double data: 0.0})
-      : _data = new List<double>.filled(length, data);
+  factory Double1DView.shapedLike(Iterable d,
+          {double fill: 0.0, dynamic /* String | NameMaker */ name}) =>
+      new Double1DView.sized(d.length, fill: fill, name: name);
 
-  factory Double1DView.shapedLike(IterView d, {double data: 0.0}) =>
-      new Double1DView.sized(d.length, data: data);
+  Double1DView.single(double data, {dynamic /* String | NameMaker */ name})
+      : _data = new List<double>.from([data], growable: false),
+        _name = name;
 
-  Double1DView.single(double data)
-      : _data = new List<double>.from([data], growable: false);
+  Double1DView.gen(int length, double maker(int index),
+      {dynamic /* String | NameMaker */ name})
+      : _data = new List<double>.generate(length, maker, growable: false),
+        _name = name;
 
-  Double1DView.gen(int length, double maker(int index))
-      : _data = new List<double>.generate(length, maker, growable: false);
-
-  factory Double1DView.nums(Iterable<num> iterable) {
+  factory Double1DView.fromNums(Iterable<num> iterable,
+      {dynamic /* String | NameMaker */ name}) {
     final list = new List<double>(iterable.length);
     for (int i = 0; i < list.length; i++) {
       list[i] = iterable.elementAt(i)?.toDouble();
     }
-    return new Double1DView.own(list);
-  }
-
-  factory Double1DView.copyNums(IterView<num> iterable) {
-    final list = new List<double>(iterable.length);
-    for (int i = 0; i < list.length; i++) list[i] = iterable[i]?.toDouble();
-    return new Double1DView.own(list);
+    return new Double1DView.own(list, name);
   }
 
   Stats<double> _stats;
 
   Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
-  Iterable<double> get asIterable => _data;
+  Iterator<double> get iterator => _data.iterator;
 
   int get length => _data.length;
 

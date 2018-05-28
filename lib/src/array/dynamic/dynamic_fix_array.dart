@@ -4,38 +4,60 @@ class Dynamic1DFix extends Object
     with
         ArrayViewMixin<dynamic>,
         ArrayFixMixin<dynamic>,
+        IterableMixin<dynamic>,
         Dynamic1DViewMixin,
         Dynamic1DFixMixin
     implements Dynamic1DView, DynamicArrayFix {
   List<dynamic> _data;
 
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
+
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
+  }
+
   Comparator comparator;
 
-  Dynamic1DFix(Iterable<dynamic> data, {this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.from(data, growable: false);
+  Dynamic1DFix(Iterable<dynamic> data,
+      {this.comparator: _dummyComparator,
+      dynamic /* String | NameMaker */ name})
+      : _data = new List<dynamic>.from(data, growable: false),
+        _name = name;
 
-  Dynamic1DFix.copy(IterView<dynamic> other,
-      {this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.from(other.asIterable);
-
-  Dynamic1DFix.own(this._data, {this.comparator});
+  Dynamic1DFix.own(this._data,
+      {this.comparator, dynamic /* String | NameMaker */ name})
+      : _name = name;
 
   Dynamic1DFix.sized(int length,
-      {dynamic data, this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.filled(length, data);
+      {dynamic fill,
+      this.comparator: _dummyComparator,
+      dynamic /* String | NameMaker */ name})
+      : _data = new List<dynamic>.filled(length, fill),
+        _name = name;
 
-  factory Dynamic1DFix.shapedLike(IterView d,
-          {dynamic data, Comparator comparator: _dummyComparator}) =>
-      new Dynamic1DFix.sized(d.length, data: data, comparator: comparator);
+  factory Dynamic1DFix.shapedLike(Iterable d,
+          {dynamic fill,
+          Comparator comparator: _dummyComparator,
+          dynamic /* String | NameMaker */ name}) =>
+      new Dynamic1DFix.sized(d.length,
+          fill: fill, comparator: comparator, name: name);
 
-  Dynamic1DFix.single(dynamic data, {this.comparator: _dummyComparator})
-      : _data = <dynamic>[data];
+  Dynamic1DFix.single(dynamic data,
+      {this.comparator: _dummyComparator,
+      dynamic /* String | NameMaker */ name})
+      : _data = <dynamic>[data],
+        _name = name;
 
   Dynamic1DFix.gen(int length, dynamic maker(int index),
-      {this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.generate(length, maker, growable: false);
+      {this.comparator: _dummyComparator,
+      dynamic /* String | NameMaker */ name})
+      : _data = new List<dynamic>.generate(length, maker, growable: false),
+        _name = name;
 
-  Iterable<dynamic> get asIterable => _data;
+  Iterator<dynamic> get iterator => _data.iterator;
 
   int get length => _data.length;
 

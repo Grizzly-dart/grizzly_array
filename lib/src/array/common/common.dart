@@ -3,7 +3,6 @@ library grizzly.series.array.common;
 import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_series/grizzly_series.dart';
-import 'package:grizzly_scales/grizzly_scales.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import '../array.dart';
 import '../sample.dart';
@@ -12,27 +11,27 @@ import 'package:text_table/text_table.dart';
 part 'stats.dart';
 
 abstract class ArrayMixin<E> implements Array<E> {
-  void removeMany(IterView<E> values) {
-    final set = new Set<E>.from(values.asIterable);
+  void removeMany(Iterable<E> values) {
+    final set = new Set<E>.from(values);
     for (int i = length - 1; i >= 0; i--) {
       if (set.contains(this[i])) removeAt(i);
     }
   }
 
-  set assign(IterView<E> other) {
-    if(length == other.length) {
-      for (int i = 0; i < length; i++) this[i] = other[i];
+  set assign(Iterable<E> other) {
+    if (length == other.length) {
+      for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
       return;
     }
-    
-    if(length > other.length) {
+
+    if (length > other.length) {
       removeRange(other.length);
-      for (int i = 0; i < length; i++) this[i] = other[i];
+      for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
       return;
     }
-    
-    for (int i = 0; i < length; i++) this[i] = other[i];
-    addAll(other.slice(length));
+
+    for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
+    addAll(other.skip(length));
   }
 }
 
@@ -44,11 +43,11 @@ abstract class ArrayFixMixin<E> implements ArrayFix<E> {
     }
   }
 
-  set assign(IterView<E> other) {
+  set assign(Iterable<E> other) {
     if (other.length != length)
       throw new ArgumentError.value(other, 'other', 'Size mismatch!');
 
-    for (int i = 0; i < length; i++) this[i] = other[i];
+    for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
   }
 }
 
@@ -60,17 +59,11 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   Iterable<IntPair<E>> enumerate() =>
       Ranger.indices(length).map((i) => intPair<E>(i, this[i]));
 
-  List<E> toList() => asIterable.toList();
-
-  E get first => asIterable.first;
-
-  E get last => asIterable.last;
-
   Iterable<int> get i => Ranger.indices(length);
 
   int count(E v) {
     int ret = 0;
-    for (E item in asIterable) {
+    for (E item in this) {
       if (v != item) ret++;
     }
     return ret;
@@ -78,7 +71,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
 
   Array<E> unique() {
     final ret = new LinkedHashSet<E>();
-    for (E v in asIterable) {
+    for (E v in this) {
       if (!ret.contains(v)) ret.add(v);
     }
     return makeArray(ret);
@@ -100,7 +93,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   /// If the length of the array is shorter than [count], all elements are
   /// returned
   Array<E> head([int count = 10]) {
-    if (length <= count) return makeArray(asIterable);
+    if (length <= count) return makeArray(this);
     return slice(0, count);
   }
 
@@ -109,7 +102,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   /// If the length of the array is shorter than [count], all elements are
   /// returned
   Array<E> tail([int count = 10]) {
-    if (length <= count) return makeArray(asIterable);
+    if (length <= count) return makeArray(this);
     return slice(length - count);
   }
 
@@ -120,8 +113,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   Array<E> sample([int count = 10]) => makeArray(sampler<E>(this, count));
 
   @override
-  StringArray toStringArray() =>
-      new String1D(asIterable.map((e) => e.toString()));
+  StringArray toStringArray() => new String1D(this.map((e) => e.toString()));
 
   @override
   IntSeries<E> valueCounts(
@@ -149,10 +141,12 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] != other;
       }
-    } else if (other is IterView<E> || other is Iterable<E>) {
-      // TODO check length
+    } else if (other is Iterable<E>) {
+      if (other.length != length)
+        throw new LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
-        ret[i] = this[i] != other[i];
+        ret[i] = this[i] != other.elementAt(i);
       }
     } else {
       throw new UnsupportedError('Type not supported!');
@@ -167,10 +161,12 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] == other;
       }
-    } else if (other is ArrayView<E> || other is Iterable<E>) {
-      // TODO check length
+    } else if (other is Iterable<E>) {
+      if (other.length != length)
+        throw new LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
-        ret[i] = this[i] == other[i];
+        ret[i] = this[i] == other.elementAt(i);
       }
     } else {
       throw new UnsupportedError('Type not supported!');
@@ -185,10 +181,12 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) >= 0;
       }
-    } else if (other is ArrayView<E> || other is Iterable<E>) {
-      // TODO check length
+    } else if (other is Iterable<E>) {
+      if (other.length != length)
+        throw new LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
-        ret[i] = compareValue(this[i], other[i]) >= 0;
+        ret[i] = compareValue(this[i], other.elementAt(i)) >= 0;
       }
     } else {
       throw new UnsupportedError('Type not supported!');
@@ -203,10 +201,12 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) > 0;
       }
-    } else if (other is ArrayView<E> || other is Iterable<E>) {
-      // TODO check length
+    } else if (other is Iterable<E>) {
+      if (other.length != length)
+        throw new LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
-        ret[i] = compareValue(this[i], other[i]) > 0;
+        ret[i] = compareValue(this[i], other.elementAt(i)) > 0;
       }
     } else {
       throw new UnsupportedError('Type not supported!');
@@ -221,10 +221,12 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) < 0;
       }
-    } else if (other is ArrayView<E> || other is Iterable<E>) {
-      // TODO check length
+    } else if (other is Iterable<E>) {
+      if (other.length != length)
+        throw new LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
-        ret[i] = compareValue(this[i], other[i]) < 0;
+        ret[i] = compareValue(this[i], other.elementAt(i)) < 0;
       }
     } else {
       throw new UnsupportedError('Type not supported!');
@@ -239,10 +241,12 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) <= 0;
       }
-    } else if (other is ArrayView<E> || other is Iterable<E>) {
-      // TODO check length
+    } else if (other is Iterable<E>) {
+      if (other.length != length)
+        throw new LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
-        ret[i] = compareValue(this[i], other[i]) <= 0;
+        ret[i] = compareValue(this[i], other.elementAt(i)) <= 0;
       }
     } else {
       throw new UnsupportedError('Type not supported!');
@@ -250,9 +254,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
     return ret;
   }
 
-  bool operator ==(/* IterView<E> | Iterable<E> */ other) {
-    if (other is IterView<E>) other = other.asIterable;
-
+  bool operator ==(other) {
     if (other is Iterable<E>) {
       if (other.length != length) return false;
       for (int i = 0; i < length; i++) {
@@ -265,7 +267,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
 
   String toString() {
     final tab = table(Ranger.indices(length).map((i) => i.toString()).toList());
-    tab.row(toStringArray().asIterable.toList());
+    tab.row(toStringArray().toList());
     return tab.toString();
   }
 }

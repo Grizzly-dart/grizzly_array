@@ -229,7 +229,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
     return ret;
   }
 
-  Int1D dot(IterView<num> other) {
+  Int1D dot(Iterable<num> other) {
     if (numCols != other.length)
       throw new ArgumentError.value(other, 'other', 'Invalid shape!');
 
@@ -261,9 +261,9 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
     return ret;
   }
 
-  Int2D toInt() => new Int2D.from(_data);
+  Int2D toInt() => new Int2D(_data);
 
-  Double2D toDouble() => new Double2D.fromNum(_data);
+  Double2D toDouble() => new Double2D.fromNums(_data);
 
   double get variance {
     if (numRows == 0) return 0.0;
@@ -324,7 +324,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   Int2D reshaped(Index2D newShape, {int def: 0}) =>
       clone()..reshape(newShape, def: def);
 
-  Int2D clone() => new Int2D.copy(this);
+  Int2D clone() => new Int2D(this);
 
   Int2D matmul(Array2DView<int> other) {
     if (numCols != other.numRows) throw new Exception('Invalid size!');

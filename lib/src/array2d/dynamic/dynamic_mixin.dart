@@ -20,8 +20,6 @@ abstract class Dynamic2DMixin implements DynamicArray2DView {
   @override
   Array<dynamic> makeArray(Iterable<dynamic> newData) => new Dynamic1D(newData);
 
-  Iterable<Iterable<dynamic>> get iterable => _data.map((a) => a.asIterable);
-
   int get numCols {
     if (numRows == 0) return 0;
     return _data.first.length;
@@ -144,5 +142,5 @@ abstract class Dynamic2DMixin implements DynamicArray2DView {
   Dynamic2D reshaped(Index2D newShape, {dynamic def}) =>
       clone()..reshape(newShape, def: def);
 
-  Dynamic2D clone() => new Dynamic2D.copy(this);
+  Dynamic2D clone() => new Dynamic2D(this);
 }

@@ -1,124 +1,100 @@
 part of grizzly.series.array2d;
 
 class Bool2DFix extends Object
-    with Array2DViewMixin<bool>, Array2DFixMixin<bool>, Bool2DViewMixin
+    with
+        Array2DViewMixin<bool>,
+        Array2DFixMixin<bool>,
+        IterableMixin<Iterable<bool>>,
+        Bool2DViewMixin
     implements Array2DFix<bool>, Bool2DView {
   final List<Bool1DFix> _data;
 
-  Bool2DFix(Iterable<Iterable<bool>> data)
-      : _data = new List<Bool1DFix>(data.length) {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (Iterable<bool> item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
+  final String1DFix names;
 
-      for (int i = 0; i < data.length; i++) {
-        Iterable<bool> item = data.elementAt(i);
-        _data[i] = new Bool1DFix(item);
-      }
+  Bool2DFix(Iterable<Iterable<bool>> rows, [Iterable<String> names])
+      : _data = new List<Bool1DFix>(rows.length),
+        names = names != null
+            ? new String1DFix(names, "Names")
+            : new String1DFix.sized(rows.isNotEmpty ? rows.first.length : 0,
+                name: 'Names') {
+    if (rows.isEmpty) {
+      Exceptions.labelLen(0, this.names.length);
+      return;
+    }
+    Exceptions.labelLen(rows.first.length, this.names.length);
+    Exceptions.rowsLen(rows);
+    for (int i = 0; i < rows.length; i++) {
+      _data[i] = new Bool1DFix(rows.elementAt(i));
     }
   }
+
+  Bool2DFix.own(this._data, [Iterable<String> names])
+      : names = names != null
+            ? new String1DFix(names, "Names")
+            : new String1DFix.sized(_data.isNotEmpty ? _data.first.length : 0,
+                name: 'Names') {
+    Exceptions.labelLen(numCols, this.names.length);
+    Exceptions.rowsLen(rows);
+  }
+
+  factory Bool2DFix.sized(int rows, int cols,
+      {bool fill: false, Iterable<String> names}) {
+    final data = new List<Bool1DFix>(rows);
+    for (int i = 0; i < rows; i++) {
+      data[i] = new Bool1DFix.sized(cols, fill: fill);
+    }
+    return new Bool2DFix.own(data, names);
+  }
+
+  factory Bool2DFix.shaped(Index2D shape,
+          {bool fill: false, Iterable<String> names}) =>
+      new Bool2DFix.sized(shape.row, shape.col, fill: fill, names: names);
+
+  factory Bool2DFix.shapedLike(Array2DView like,
+          {bool fill: false, Iterable<String> names}) =>
+      new Bool2DFix.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
-  factory Bool2DFix.columns(Iterable<Iterable<bool>> columns) {
-    if (columns.length == 0) return new Bool2DFix.sized(0, 0);
+  factory Bool2DFix.columns(Iterable<Iterable<bool>> columns,
+      [Iterable<String> names]) {
+    if (columns.length == 0) return new Bool2DFix.sized(0, 0, names: names);
 
-    int numRows = columns.first.length;
-    for (int i = 0; i < columns.length; i++) {
-      int curLen = columns.elementAt(i).length;
-      if (columns.elementAt(i).length != numRows)
-        throw lengthMismatch(
-            expected: numRows, found: curLen, subject: 'columns');
-    }
+    Exceptions.columnsLen(columns);
 
-    final ret = new Bool2DFix.sized(numRows, columns.length);
-    for (int c = 0; c < ret.numCols; c++) {
-      final Iterator<bool> col = columns.elementAt(c).iterator;
-      col.moveNext();
-      for (int r = 0; r < ret.numRows; r++) {
-        ret[r][c] = col.current;
-        col.moveNext();
+    final int numRows = columns.first.length;
+    final int numCols = columns.length;
+
+    final data = new List<Bool1DFix>(numRows);
+    for (int i = 0; i < numRows; i++) {
+      final row = new List<bool>(numCols);
+      for (int j = 0; j < numCols; j++) {
+        row[j] = columns.elementAt(j).elementAt(i);
       }
+      data[i] = new Bool1DFix.own(row);
     }
-    return ret;
+    return new Bool2DFix.own(data, names);
   }
 
-  Bool2DFix.from(Iterable<IterView<bool>> data)
-      : _data = new List<Bool1DFix>(data.length) {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (IterView item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
-
-      for (int i = 0; i < data.length; i++) {
-        IterView<bool> item = data.elementAt(i);
-        _data[i] = new Bool1DFix.copy(item);
-      }
-    }
-  }
-
-  Bool2DFix.copy(Array2DView<bool> data)
-      : _data = new List<Bool1DFix>(data.numRows) {
-    for (int i = 0; i < data.numRows; i++) {
-      _data[i] = new Bool1DFix.copy(data[i]);
-    }
-  }
-
-  Bool2DFix.own(this._data) {
-    // TODO check that all rows are of same length
-  }
-
-  Bool2DFix.sized(int rows, int cols, {bool data: false})
-      : _data = new List<Bool1DFix>.generate(
-            rows, (_) => new Bool1DFix.sized(cols, data: data),
-            growable: false);
-
-  Bool2DFix.shaped(Index2D shape, {bool data: false})
-      : _data = new List<Bool1DFix>.generate(
-            shape.row, (_) => new Bool1DFix.sized(shape.col, data: data),
-            growable: false);
-
-  factory Bool2DFix.shapedLike(Array2DView like, {bool data: false}) =>
-      new Bool2DFix.sized(like.numRows, like.numCols, data: data);
-
-  factory Bool2DFix.diagonal(IterView<bool> diagonal) {
-    final ret = new Bool2DFix.sized(diagonal.length, diagonal.length);
+  factory Bool2DFix.diagonal(Iterable<bool> diagonal,
+      {Iterable<String> names, bool fill: false}) {
+    final ret = new List<Bool1DFix>(diagonal.length);
     for (int i = 0; i < diagonal.length; i++) {
-      ret[i][i] = diagonal[i];
+      final row = new List<bool>.filled(diagonal.length, fill);
+      row[i] = diagonal.elementAt(i);
+      ret[i] = new Bool1DFix.own(row);
     }
-    return ret;
+    return new Bool2DFix.own(ret, names);
   }
 
-  Bool2DFix.repeatRow(IterView<bool> row, [int numRows = 1])
-      : _data = new List<Bool1DFix>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1DFix.copy(row);
-    }
-  }
+  factory Bool2DFix.aRow(Iterable<bool> row,
+          {int repeat = 1, Iterable<String> names}) =>
+      new Bool2DFix.own(
+          new List<Bool1DView>.filled(repeat, new Bool1DView(row)), names);
 
-  Bool2DFix.repeatCol(IterView<bool> column, [int numCols = 1])
-      : _data = new List<Bool1DFix>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1DFix.sized(numCols, data: column[i]);
-    }
-  }
-
-  Bool2DFix.aRow(IterView<bool> row) : _data = new List<Bool1DFix>(1) {
-    _data[0] = new Bool1DFix.copy(row);
-  }
-
-  Bool2DFix.aCol(IterView<bool> column)
-      : _data = new List<Bool1DFix>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Bool1DFix.single(column[i]);
-    }
-  }
+  factory Bool2DFix.aCol(Iterable<bool> column,
+          {int repeat = 1, Iterable<String> names}) =>
+      new Bool2DFix.columns(
+          new ConstantIterable<Iterable<bool>>(column, repeat), names);
 
   factory Bool2DFix.genRows(int numRows, Iterable<bool> rowMaker(int index)) {
     final rows = <Bool1DFix>[];
@@ -205,6 +181,8 @@ class Bool2DFix extends Object
     return ret;
   }
 
+  Iterator<Bool1DView> get iterator => _data.iterator;
+
   covariant Bool2DColFix _col;
 
   Bool2DColFix get col => _col ??= new Bool2DColFix(this);
@@ -215,13 +193,12 @@ class Bool2DFix extends Object
 
   Bool1DFix operator [](int i) => _data[i].fixed;
 
-  operator []=(final int i, IterView<bool> val) {
-    if (i >= numRows) {
+  operator []=(final int i, Iterable<bool> val) {
+    if (i >= numRows)
       throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
-    }
 
     if (numRows == 0) {
-      final arr = new Bool1D.copy(val);
+      final arr = new Bool1D(val);
       _data.add(arr);
       return;
     }
@@ -230,7 +207,7 @@ class Bool2DFix extends Object
       throw new Exception('Invalid size!');
     }
 
-    final arr = new Bool1D.copy(val);
+    final arr = new Bool1D(val);
 
     _data[i] = arr;
   }

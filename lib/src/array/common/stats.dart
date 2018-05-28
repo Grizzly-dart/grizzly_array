@@ -1,20 +1,18 @@
 part of grizzly.series.array.common;
 
 class StatsImpl<T extends num> implements Stats<T> {
-  IterView<T> _values;
+  final Iterable<T> values;
 
-  StatsImpl(this._values);
+  StatsImpl(this.values);
 
-  IterView<T> get values => _values;
+  int get length => values.length;
 
-  int get length => _values.length;
-
-  T operator [](int index) => _values[index];
+  T operator [](int index) => values.elementAt(index);
 
   T get min {
     T ret;
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       if (d == null) continue;
       if (ret == null || d < ret) ret = d;
     }
@@ -24,7 +22,7 @@ class StatsImpl<T extends num> implements Stats<T> {
   T get max {
     T ret;
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       if (d == null) continue;
       if (ret == null || d > ret) ret = d;
     }
@@ -35,7 +33,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     T min;
     T max;
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       if (d == null) continue;
       if (max == null || d > max) max = d;
       if (min == null || d < min) min = d;
@@ -47,7 +45,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     T min;
     T max;
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       if (d == null) continue;
       if (max == null || d > max) max = d;
       if (min == null || d < min) min = d;
@@ -63,7 +61,7 @@ class StatsImpl<T extends num> implements Stats<T> {
 
   T get median {
     if (length == 0) return null;
-    final list = _values.toList()..sort();
+    final list = values.toList()..sort();
     return list[length ~/ 2];
   }
 
@@ -76,7 +74,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     double sum = 0.0;
     num denom = 0.0;
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       final num w = weights.elementAt(i);
       if (d == null) continue;
       if (w == null) continue;
@@ -91,7 +89,7 @@ class StatsImpl<T extends num> implements Stats<T> {
 
     num sum = 0;
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       if (d == null) continue;
       sum += d;
     }
@@ -104,7 +102,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     final double mean = this.mean;
     double ret = 0.0;
     for (int i = 0; i < length; i++) {
-      final double val = _values[i] - mean;
+      final double val = values.elementAt(i) - mean;
       ret += val * val;
     }
     return ret / length;
@@ -115,7 +113,7 @@ class StatsImpl<T extends num> implements Stats<T> {
   int count(T v) {
     int ret = 0;
     for (int i = 0; i < length; i++) {
-      if (_values[i] == v) ret++;
+      if (values.elementAt(i) == v) ret++;
     }
     return ret;
   }
@@ -123,7 +121,7 @@ class StatsImpl<T extends num> implements Stats<T> {
   int get countNonNull {
     int ret = 0;
     for (int i = 0; i < length; i++) {
-      if (_values[i] != null) ret++;
+      if (values.elementAt(i) != null) ret++;
     }
     return ret;
   }
@@ -136,7 +134,7 @@ class StatsImpl<T extends num> implements Stats<T> {
       ret = 0.0 as T;
     }
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       if (d == null) continue;
       ret += d;
     }
@@ -151,7 +149,7 @@ class StatsImpl<T extends num> implements Stats<T> {
       ret = 1.0 as T;
     }
     for (int i = 0; i < length; i++) {
-      final T d = _values[i];
+      final T d = values.elementAt(i);
       if (d == null) continue;
       ret *= d;
     }
@@ -165,7 +163,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     final double meanY = y.mean;
     double sum = 0.0;
     for (int i = 0; i < length; i++) {
-      sum += (_values[i] - meanX) * (y[i] - meanY);
+      sum += (values.elementAt(i) - meanX) * (y[i] - meanY);
     }
     return sum / length;
   }
@@ -176,7 +174,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     final Double1D meanY = y.col.mean;
     Double1D sum = new Double1D.sized(y.numCols);
     for (int i = 0; i < length; i++) {
-      sum += (y.col[i] - meanY) * (_values[i] - meanX);
+      sum += (y.col[i] - meanY) * (values.elementAt(i) - meanX);
     }
     return sum / length;
   }

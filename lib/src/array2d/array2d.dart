@@ -1,8 +1,7 @@
 library grizzly.series.array2d;
 
-import 'dart:math' as math;
 import 'dart:collection';
-import 'package:grizzly_scales/grizzly_scales.dart';
+import 'dart:math' as math;
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:text_table/text_table.dart';
 
@@ -64,9 +63,9 @@ Double2D array2(
     }
   } else if (data is Iterable<Iterable<num>>) {
     if (!transpose) {
-      return new Double2D.fromNum(data);
+      return new Double2D.fromNums(data);
     } else {
-      return new Double2D.fromNum(data).transpose;
+      return new Double2D.fromNums(data).transpose;
     }
   } else if (data is Iterable<double>) {
     if (!transpose) {

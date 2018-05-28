@@ -15,7 +15,7 @@ class Bool2DCol extends Object
   Bool1DFix operator [](int col) =>
       new Bool1DFix(new ColList<bool>(inner, col));
 
-  operator []=(int index, IterView<bool> col) {
+  operator []=(int index, Iterable<bool> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
@@ -23,15 +23,15 @@ class Bool2DCol extends Object
       throw new ArgumentError.value(col, 'col', 'Size mismatch!');
     }
     for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col[i];
+      inner[i][index] = col.elementAt(i);
     }
   }
 
-  void add(IterView<bool> col) {
+  void add(Iterable<bool> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].add(col[i]);
+      inner._data[i].add(col.elementAt(i));
     }
   }
 
@@ -42,11 +42,11 @@ class Bool2DCol extends Object
     }
   }
 
-  void insert(int index, IterView<bool> col) {
+  void insert(int index, Iterable<bool> col) {
     if (col.length != inner.numRows)
       throw new ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
-      inner._data[i].insert(index, col[i]);
+      inner._data[i].insert(index, col.elementAt(i));
     }
   }
 }
@@ -65,7 +65,7 @@ class Bool2DColFix extends Object
   Bool1DFix operator [](int col) =>
       new Bool1DFix(new ColList<bool>(inner, col));
 
-  operator []=(int index, IterView<bool> col) {
+  operator []=(int index, Iterable<bool> col) {
     if (index >= inner.numCols) {
       throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
@@ -73,7 +73,7 @@ class Bool2DColFix extends Object
       throw new ArgumentError.value(col, 'col', 'Size mismatch!');
     }
     for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col[i];
+      inner[i][index] = col.elementAt(i);
     }
   }
 }

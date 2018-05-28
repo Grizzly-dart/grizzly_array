@@ -34,33 +34,47 @@ abstract class String1DFixMixin implements ArrayFix<String>, StringArrayFix {
 
 class String1DFix extends Object
     with
-        String1DViewMixin,
         ArrayViewMixin<String>,
         ArrayFixMixin<String>,
+        IterableMixin<String>,
+        String1DViewMixin,
         String1DFixMixin
     implements ArrayFix<String>, String1DView, StringArrayFix {
   List<String> _data;
 
-  String1DFix(Iterable<String> data)
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
+
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
+  }
+
+  String1DFix(Iterable<String> data, [/* String | NameMaker */ this._name])
       : _data = new List<String>.from(data, growable: false);
 
-  String1DFix.copy(IterView<String> other)
-      : _data = new List<String>.from(other.asIterable);
+  String1DFix.own(this._data, [/* String | NameMaker */ this._name]);
 
-  String1DFix.own(this._data);
+  String1DFix.sized(int length,
+      {String fill, dynamic /* String | NameMaker */ name})
+      : _data = new List<String>.filled(length, fill),
+        _name = name;
 
-  String1DFix.sized(int length, {String data})
-      : _data = new List<String>.filled(length, data);
+  factory String1DFix.shapedLike(Iterable d,
+          {String fill, dynamic /* String | NameMaker */ name}) =>
+      new String1DFix.sized(d.length, fill: fill, name: name);
 
-  factory String1DFix.shapedLike(IterView d, {String data}) =>
-      new String1DFix.sized(d.length, data: data);
+  String1DFix.single(String data, {dynamic /* String | NameMaker */ name})
+      : _data = <String>[data],
+        _name = name;
 
-  String1DFix.single(String data) : _data = <String>[data];
+  String1DFix.gen(int length, String maker(int index),
+      {dynamic /* String | NameMaker */ name})
+      : _data = new List<String>.generate(length, maker, growable: false),
+        _name = name;
 
-  String1DFix.gen(int length, String maker(int index))
-      : _data = new List<String>.generate(length, maker, growable: false);
-
-  Iterable<String> get asIterable => _data;
+  Iterator<String> get iterator => _data.iterator;
 
   int get length => _data.length;
 

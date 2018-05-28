@@ -1,15 +1,18 @@
 part of grizzly.series.array.bool;
 
 abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
-  Bool1DView makeView(Iterable<bool> newData) => new Bool1DView(newData);
+  Bool1DView makeView(Iterable<bool> newData, [String name]) =>
+      new Bool1DView(newData, name);
 
-  Bool1DFix makeFix(Iterable<bool> newData) => new Bool1DFix(newData);
+  Bool1DFix makeFix(Iterable<bool> newData, [String name]) =>
+      new Bool1DFix(newData, name);
 
-  Bool1D makeArray(Iterable<bool> newData) => new Bool1D(newData);
+  Bool1D makeArray(Iterable<bool> newData, [String name]) =>
+      new Bool1D(newData, name);
 
   Index1D get shape => new Index1D(length);
 
-  Bool1D clone() => new Bool1D.copy(this);
+  Bool1D clone({String name}) => new Bool1D(this, name);
 
   bool get min {
     bool min;
@@ -77,7 +80,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
     return sum / length;
   }
 
-  Bool2D to2D() => new Bool2D.from([this]);
+  Bool2D to2D() => new Bool2D([this]);
 
   Bool2D get transpose {
     final ret = new Bool2D.sized(length, 1);
@@ -89,9 +92,9 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
 
   Bool2D repeat({int repeat: 1, bool transpose: false}) {
     if (!transpose) {
-      return new Bool2D.repeatCol(this, repeat + 1);
+      return new Bool2D.aCol(this, repeat: repeat + 1);
     } else {
-      return new Bool2D.repeatRow(this, repeat + 1);
+      return new Bool2D.aRow(this, repeat: repeat + 1);
     }
   }
 
@@ -140,16 +143,13 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   }
 
   @override
-  Bool1D pickByIndices(IterView<int> indices) {
+  Bool1D pickByIndices(Iterable<int> indices) {
     final ret = new Bool1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
-      ret[i] = this[indices[i]];
+      ret[i] = this[indices.elementAt(i)];
     }
     return ret;
   }
-
-  @override
-  bool contains(bool value) => asIterable.contains(value);
 
   @override
   BoolArrayView operator ~() {
@@ -183,14 +183,14 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   @override
   int compareValue(bool a, bool b) => a == b ? 0 : a ? 1 : -1;
 
-  Bool1D selectIf(IterView<bool> mask) {
+  Bool1D selectIf(Iterable<bool> mask) {
     if (mask.length != length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.asIterable.where((v) => v).length;
+    int retLength = mask.where((v) => v).length;
     final ret = new List<bool>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = this[i];
+      if (mask.elementAt(i)) ret[idx++] = this[i];
     }
     return new Bool1D.own(ret);
   }

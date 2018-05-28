@@ -1,123 +1,101 @@
 part of grizzly.series.array2d;
 
 class Dynamic2DView extends Object
-    with Dynamic2DMixin, Array2DViewMixin<dynamic>
+    with
+        Array2DViewMixin<dynamic>,
+        IterableMixin<Iterable<dynamic>>,
+        Dynamic2DMixin
     implements DynamicArray2DView {
   final List<Dynamic1DView> _data;
 
-  Dynamic2DView(Iterable<Iterable<dynamic>> data) : _data = <Dynamic1DView>[] {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (Iterable<dynamic> item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
+  final String1DView names;
 
-      for (Iterable<dynamic> item in data) {
-        _data.add(new Dynamic1D(item));
-      }
+  Dynamic2DView(Iterable<Iterable<dynamic>> rows, [Iterable<String> names])
+      : _data = new List<Dynamic1DView>(rows.length),
+        names = names != null
+            ? new String1DView(names, "Names")
+            : new String1DView.sized(rows.isNotEmpty ? rows.first.length : 0,
+                name: 'Names') {
+    if (rows.isEmpty) {
+      Exceptions.labelLen(0, this.names.length);
+      return;
+    }
+    Exceptions.labelLen(rows.first.length, this.names.length);
+    Exceptions.rowsLen(rows);
+    for (int i = 0; i < rows.length; i++) {
+      _data[i] = new Dynamic1DView(rows.elementAt(i));
     }
   }
 
-  /// Create [Int2D] from column major
-  factory Dynamic2DView.columns(Iterable<Iterable<dynamic>> columns) {
-    if (columns.length == 0) {
-      return new Dynamic2DView.sized(0, 0);
-    }
+  Dynamic2DView.own(this._data, [Iterable<String> names])
+      : names = names != null
+            ? new String1DView(names, "Names")
+            : new String1DView.sized(_data.isNotEmpty ? _data.first.length : 0,
+                name: 'Names') {
+    Exceptions.labelLen(numCols, this.names.length);
+    Exceptions.rowsLen(rows);
+  }
 
-    if (!columns.every((i) => i.length == columns.first.length)) {
-      throw new Exception('Size mismatch!');
+  factory Dynamic2DView.sized(int numRows, int numCols,
+      {dynamic fill, Iterable<String> names}) {
+    final data = new List<Dynamic1DView>(numRows);
+    for (int i = 0; i < numRows; i++) {
+      data[i] = new Dynamic1DView.sized(numCols, fill: fill);
     }
+    return new Dynamic2DView.own(data, names);
+  }
 
-    final ret = new Dynamic2DFix.sized(columns.first.length, columns.length);
-    for (int c = 0; c < ret.numCols; c++) {
-      final Iterator<dynamic> col = columns.elementAt(c).iterator;
-      col.moveNext();
-      for (int r = 0; r < ret.numRows; r++) {
-        ret[r][c] = col.current;
-        col.moveNext();
+  factory Dynamic2DView.shaped(Index2D shape,
+          {dynamic fill, Iterable<String> names}) =>
+      new Dynamic2DView.sized(shape.row, shape.col, fill: fill, names: names);
+
+  factory Dynamic2DView.shapedLike(Array2DView like,
+          {dynamic fill, Iterable<String> names}) =>
+      new Dynamic2DView.sized(like.numRows, like.numCols,
+          fill: fill, names: names);
+
+  /// Create [Dynamic2DView] from column major
+  factory Dynamic2DView.columns(Iterable<Iterable<dynamic>> columns,
+      [Iterable<String> names]) {
+    if (columns.length == 0) return new Dynamic2DView.sized(0, 0, names: names);
+
+    Exceptions.columnsLen(columns);
+
+    final int numRows = columns.first.length;
+    final int numCols = columns.length;
+
+    final data = new List<Dynamic1DView>(numRows);
+    for (int i = 0; i < numRows; i++) {
+      final row = new List<dynamic>(numCols);
+      for (int j = 0; j < numCols; j++) {
+        row[j] = columns.elementAt(j).elementAt(i);
       }
+      data[i] = new Dynamic1DView.own(row);
     }
-    return ret.view;
+    return new Dynamic2DView.own(data, names);
   }
 
-  Dynamic2DView.from(Iterable<IterView<dynamic>> data)
-      : _data = new List<Dynamic1DView>(data.length) {
-    if (data.length != 0) {
-      final int len = data.first.length;
-      for (IterView item in data) {
-        if (item.length != len) {
-          throw new Exception('All rows must have same number of columns!');
-        }
-      }
-
-      for (int i = 0; i < data.length; i++) {
-        IterView<dynamic> item = data.elementAt(i);
-        _data[i] = new Dynamic1DView.copy(item);
-      }
-    }
-  }
-
-  Dynamic2DView.copy(Array2DView<dynamic> data)
-      : _data = new List<Dynamic1DView>(data.numRows) {
-    for (int i = 0; i < data.numRows; i++) {
-      _data[i] = new Dynamic1DView.copy(data[i]);
-    }
-  }
-
-  Dynamic2DView.own(this._data) {
-    // TODO check that all rows are of same length
-  }
-
-  Dynamic2DView.sized(int numRows, int numCols, {String data: ''})
-      : _data = new List<Dynamic1DView>.generate(
-            numRows, (_) => new Dynamic1DView.sized(numCols, data: data),
-            growable: false);
-
-  Dynamic2DView.shaped(Index2D shape, {String data: ''})
-      : _data = new List<Dynamic1DView>.generate(
-            shape.row, (_) => new Dynamic1DView.sized(shape.col, data: data),
-            growable: false);
-
-  factory Dynamic2DView.shapedLike(Array2DView like, {String data: ''}) =>
-      new Dynamic2DView.sized(like.numRows, like.numCols, data: data);
-
-  factory Dynamic2DView.diagonal(Iterable<dynamic> diagonal) {
+  factory Dynamic2DView.diagonal(Iterable<dynamic> diagonal,
+      {Iterable<String> names, dynamic fill}) {
     final ret = new List<Dynamic1DView>(diagonal.length);
     for (int i = 0; i < diagonal.length; i++) {
-      final row = new List<dynamic>.filled(diagonal.length, '');
+      final row = new List<dynamic>.filled(diagonal.length, fill);
       row[i] = diagonal.elementAt(i);
       ret[i] = new Dynamic1DView.own(row);
     }
-    return new Dynamic2DView.own(ret);
+    return new Dynamic2DView.own(ret, names);
   }
 
-  Dynamic2DView.repeatRow(IterView<dynamic> row, [int numRows = 1])
-      : _data = new List<Dynamic1DView>(numRows) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Dynamic1DView.copy(row);
-    }
-  }
+  factory Dynamic2DView.aRow(Iterable<dynamic> row,
+          {int repeat = 1, Iterable<String> names}) =>
+      new Dynamic2DView.own(
+          new List<Dynamic1DView>.filled(repeat, new Dynamic1DView(row)),
+          names);
 
-  Dynamic2DView.repeatCol(IterView<dynamic> column, [int numCols = 1])
-      : _data = new List<Dynamic1DView>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Dynamic1DView.sized(numCols, data: column[i]);
-    }
-  }
-
-  Dynamic2DView.aRow(IterView<dynamic> row)
-      : _data = new List<Dynamic1DView>(1) {
-    _data[0] = new Dynamic1DView.copy(row);
-  }
-
-  Dynamic2DView.aCol(IterView<dynamic> column)
-      : _data = new List<Dynamic1DView>(column.length) {
-    for (int i = 0; i < numRows; i++) {
-      _data[i] = new Dynamic1DView.single(column[i]);
-    }
-  }
+  factory Dynamic2DView.repeatCol(Iterable<dynamic> column,
+          {int repeat = 1, Iterable<String> names}) =>
+      new Dynamic2DView.columns(
+          new ConstantIterable<Iterable<dynamic>>(column, repeat), names);
 
   factory Dynamic2DView.genRows(
       int numRows, Iterable<dynamic> rowMaker(int index)) {
@@ -205,6 +183,8 @@ class Dynamic2DView extends Object
     }
     return ret.view;
   }
+
+  Iterator<Dynamic1DView> get iterator => _data.iterator;
 
   covariant Dynamic2DColView _col;
 

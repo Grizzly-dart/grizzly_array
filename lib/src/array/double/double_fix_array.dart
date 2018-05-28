@@ -38,170 +38,110 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
   }
 
   void addition(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
-    if (other is IterView<double>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is double) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       // Nothing here
-    } else if (other is num) {
-      other = other.toDouble();
-    } else if (other is Iterable<double>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<double>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] += other[i].toDouble();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
 
-    if (other is double) {
+    if (other is num) {
       for (int i = 0; i < length; i++) {
         this[i] += other;
       }
-    } else if (other is IterView<double>) {
+    } else if (other is Iterable<num>) {
       for (int i = 0; i < length; i++) {
-        this[i] += other[i];
+        this[i] += other.elementAt(i);
       }
     }
   }
 
   void subtract(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
-    if (other is IterView<double>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is double) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       // Nothing here
-    } else if (other is num) {
-      other = other.toDouble();
-    } else if (other is Iterable<double>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<double>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] -= other[i].toDouble();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
 
-    if (other is double) {
+    if (other is num) {
       for (int i = 0; i < length; i++) {
         this[i] -= other;
       }
-    } else if (other is IterView<double>) {
+    } else if (other is Iterable<num>) {
       for (int i = 0; i < length; i++) {
-        this[i] -= other[i];
+        this[i] -= other.elementAt(i);
       }
     }
   }
 
   void multiply(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
-    if (other is IterView<double>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is double) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       // Nothing here
-    } else if (other is num) {
-      other = other.toDouble();
-    } else if (other is Iterable<double>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<double>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] *= other[i].toDouble();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
 
-    if (other is double) {
+    if (other is num) {
       for (int i = 0; i < length; i++) {
         this[i] *= other;
       }
-    } else if (other is IterView<double>) {
+    } else if (other is Iterable<num>) {
       for (int i = 0; i < length; i++) {
-        this[i] *= other[i];
+        this[i] *= other.elementAt(i);
       }
     }
   }
 
   void divide(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
-    if (other is IterView<double>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is double) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       // Nothing here
-    } else if (other is num) {
-      other = other.toDouble();
-    } else if (other is Iterable<double>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<double>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] /= other[i].toDouble();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
 
-    if (other is double) {
+    if (other is num) {
       for (int i = 0; i < length; i++) {
         this[i] /= other;
       }
-    } else if (other is IterView<double>) {
+    } else if (other is Iterable<num>) {
       for (int i = 0; i < length; i++) {
-        this[i] /= other[i];
+        this[i] /= other.elementAt(i);
       }
     }
   }
 
   void truncDiv(
-          /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) =>
+          /* num | Iterable<num> */ other) =>
       truncDiv(this);
 
   void rdivMe(
-      /* num | IterView<num> | Numeric2DView | Iterable<num> */ other) {
-    if (other is IterView<double>) {
+      /* num | Iterable<num> */ other) {
+    if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-    } else if (other is double) {
-      // Nothing here
     } else if (other is num) {
-      other = other.toDouble();
-    } else if (other is Iterable<double>) {
-      checkLengths(this, other, subject: 'other');
-      other = new IterView<double>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] = other[i].toDouble() / this[i];
-      }
-      return;
+      // Do nothing
     } else {
       throw new UnimplementedError();
     }
 
-    if (other is double) {
+    if (other is num) {
       for (int i = 0; i < length; i++) {
         this[i] = other / this[i];
       }
-    } else if (other is IterView<double>) {
+    } else if (other is Iterable<num>) {
       for (int i = 0; i < length; i++) {
-        this[i] = other[i] / this[i];
+        this[i] = other.elementAt(i) / this[i];
       }
     }
   }
@@ -234,53 +174,59 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
 class Double1DFix extends Object
     with
         ArrayViewMixin<double>,
+        ArrayFixMixin<double>,
+        IterableMixin<double>,
         Double1DViewMixin,
-        DoubleFixMixin,
-        ArrayFixMixin<double>
+        DoubleFixMixin
     implements Numeric1DFix<double>, Double1DView {
   final List<double> _data;
 
-  Double1DFix(Iterable<double> data)
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
+
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
+  }
+
+  Double1DFix(Iterable<double> data, [/* String | NameMaker */ this._name])
       : _data = new List<double>.from(data, growable: false);
 
-  Double1DFix.copy(IterView<double> other)
-      : _data = new List<double>.from(other.asIterable, growable: false);
+  Double1DFix.own(this._data, [/* String | NameMaker */ this._name]);
 
-  Double1DFix.own(this._data);
+  Double1DFix.sized(int length,
+      {double fill: 0.0, dynamic /* String | NameMaker */ name})
+      : _data = new List<double>.filled(length, fill),
+        _name = name;
 
-  Double1DFix.sized(int length, {double data: 0.0})
-      : _data = new List<double>.filled(length, data);
+  factory Double1DFix.shapedLike(Iterable d,
+          {double fill: 0.0, dynamic /* String | NameMaker */ name}) =>
+      new Double1DFix.sized(d.length, fill: fill, name: name);
 
-  factory Double1DFix.shapedLike(IterView d, {double data: 0.0}) =>
-      new Double1DFix.sized(d.length, data: data);
+  Double1DFix.single(double data, {dynamic /* String | NameMaker */ name})
+      : _data = new List<double>.from(<double>[data], growable: false),
+        _name = name;
 
-  Double1DFix.single(double data)
-      : _data = new List<double>.from(<double>[data], growable: false);
+  Double1DFix.gen(int length, double maker(int index),
+      {dynamic /* String | NameMaker */ name})
+      : _data = new List<double>.generate(length, maker, growable: false),
+        _name = name;
 
-  Double1DFix.gen(int length, double maker(int index))
-      : _data = new List<double>.generate(length, maker, growable: false);
-
-  factory Double1DFix.nums(iterable) {
-    if (iterable is Numeric1DView) {
-      final list = new Double1DFix.sized(iterable.length);
-      for (int i = 0; i < iterable.length; i++)
-        list[i] = iterable[i].toDouble();
-      return list;
-    } else if (iterable is Iterable<double>) {
-      final list = new Double1DFix.sized(iterable.length);
-      for (int i = 0; i < iterable.length; i++) {
-        list[i] = iterable.elementAt(i).toDouble();
-      }
-      return list;
+  factory Double1DFix.fromNums(Iterable<num> iterable,
+      {dynamic /* String | NameMaker */ name}) {
+    final list = new Double1DFix.sized(iterable.length, name: name);
+    for (int i = 0; i < iterable.length; i++) {
+      list[i] = iterable.elementAt(i).toDouble();
     }
-    throw new UnsupportedError('Unknown type!');
+    return list;
   }
 
   Stats<double> _stats;
 
   Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
-  Iterable<double> get asIterable => _data;
+  Iterator<double> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -312,7 +258,7 @@ class Double1DFix extends Object
       }
       return this;
     }
-    return new Double1DFix(this.asIterable).floorToDouble();
+    return new Double1DFix(this).floorToDouble();
   }
 
   Double1DFix ceilToDouble({bool self: false}) {
@@ -322,7 +268,7 @@ class Double1DFix extends Object
       }
       return this;
     }
-    return new Double1DFix(this.asIterable).ceilToDouble();
+    return new Double1DFix(this).ceilToDouble();
   }
 
   void sort({bool descending: false}) {
