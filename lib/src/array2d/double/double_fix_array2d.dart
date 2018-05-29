@@ -377,14 +377,29 @@ class Double2DFix extends Object
   }
 
   factory Double2DFix.aRow(Iterable<double> row,
-          {int repeat = 1, Iterable<String> names}) =>
-      new Double2DFix.own(
-          new List<Double1DView>.filled(repeat, new Double1DView(row)), names);
+      {int repeat = 1, Iterable<String> names}) {
+    final data = new List<Double1DFix>.filled(repeat, null, growable: true);
+    if (row is Iterable<double>) {
+      for (int i = 0; i < repeat; i++) data[i] = new Double1DFix(row);
+    } else {
+      final temp = new Double1DFix.fromNums(row);
+      data[0] = temp;
+      for (int i = 1; i < repeat; i++) data[i] = new Double1DFix(temp);
+    }
+    return new Double2DFix.own(data, names);
+  }
 
   factory Double2DFix.aCol(Iterable<double> column,
-          {int repeat = 1, Iterable<String> names}) =>
-      new Double2DFix.columns(
+      {int repeat = 1, Iterable<String> names}) {
+    if (column is Iterable<double>) {
+      return new Double2DFix.columns(
           new ConstantIterable<Iterable<double>>(column, repeat), names);
+    }
+    return new Double2DFix.columns(
+        new ConstantIterable<Iterable<double>>(
+            new Double1DView.fromNums(column), repeat),
+        names);
+  }
 
   factory Double2DFix.genRows(
       int numRows, Iterable<double> rowMaker(int index)) {

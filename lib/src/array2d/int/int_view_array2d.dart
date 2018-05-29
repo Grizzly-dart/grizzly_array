@@ -91,14 +91,29 @@ class Int2DView extends Object
   }
 
   factory Int2DView.aRow(Iterable<int> row,
-          {int repeat = 1, Iterable<String> names}) =>
-      new Int2DView.own(
-          new List<Int1DView>.filled(repeat, new Int1DView(row)), names);
+      {int repeat = 1, Iterable<String> names}) {
+    final data = new List<Int1DView>.filled(repeat, null, growable: true);
+    if (row is Iterable<int>) {
+      for (int i = 0; i < repeat; i++) data[i] = new Int1DView(row);
+    } else {
+      final temp = new Int1DView.fromNums(row);
+      data[0] = temp;
+      for (int i = 1; i < repeat; i++) data[i] = new Int1DView(temp);
+    }
+    return new Int2DView.own(data, names);
+  }
 
-  factory Int2DView.repeatCol(Iterable<int> column,
-          {int repeat = 1, Iterable<String> names}) =>
-      new Int2DView.columns(
+  factory Int2DView.aCol(Iterable<int> column,
+      {int repeat = 1, Iterable<String> names}) {
+    if (column is Iterable<int>) {
+      return new Int2DView.columns(
           new ConstantIterable<Iterable<int>>(column, repeat), names);
+    }
+    return new Int2DView.columns(
+        new ConstantIterable<Iterable<int>>(
+            new Int1DView.fromNums(column), repeat),
+        names);
+  }
 
   factory Int2DView.genRows(int numRows, Iterable<int> rowMaker(int index),
       {Iterable<String> names}) {

@@ -95,14 +95,29 @@ class Double2DView extends Object
   }
 
   factory Double2DView.aRow(Iterable<double> row,
-          {int repeat = 1, Iterable<String> names}) =>
-      new Double2DView.own(
-          new List<Double1DView>.filled(repeat, new Double1DView(row)), names);
+      {int repeat = 1, Iterable<String> names}) {
+    final data = new List<Double1DView>.filled(repeat, null, growable: true);
+    if (row is Iterable<double>) {
+      for (int i = 0; i < repeat; i++) data[i] = new Double1DView(row);
+    } else {
+      final temp = new Double1DView.fromNums(row);
+      data[0] = temp;
+      for (int i = 1; i < repeat; i++) data[i] = new Double1DView(temp);
+    }
+    return new Double2DView.own(data, names);
+  }
 
-  factory Double2DView.repeatCol(Iterable<double> column,
-          {int repeat = 1, Iterable<String> names}) =>
-      new Double2DView.columns(
+  factory Double2DView.aCol(Iterable<double> column,
+      {int repeat = 1, Iterable<String> names}) {
+    if (column is Iterable<double>) {
+      return new Double2DView.columns(
           new ConstantIterable<Iterable<double>>(column, repeat), names);
+    }
+    return new Double2DView.columns(
+        new ConstantIterable<Iterable<double>>(
+            new Double1DView.fromNums(column), repeat),
+        names);
+  }
 
   factory Double2DView.genRows(
       int numRows, Iterable<double> rowMaker(int index)) {
