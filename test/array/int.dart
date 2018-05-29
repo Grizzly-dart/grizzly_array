@@ -48,7 +48,7 @@ void main() {
       }
       {
         final x = doubles([0.1, 0.2, 0.3, 0.4]);
-        final y = -x.toDouble + (x.exp + 1).log;
+        final y = -x.toDouble() + (x.exp + 1).log;
         expect(y, [
           0.644396660073571,
           0.5981388693815917,

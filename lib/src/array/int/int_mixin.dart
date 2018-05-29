@@ -20,22 +20,22 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
 
   Int1D operator +(
           /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) =>
-      toInt..addition(other);
+      toInt()..addition(other);
 
   Int1D operator -(/* num | IterView<num> | Iterable<num> */ other) =>
-      toInt..subtract(other);
+      toInt()..subtract(other);
 
   Int1D operator *(/* num | IterView<num> | Iterable<num> */ other) =>
-      toInt..multiply(other);
+      toInt()..multiply(other);
 
   Double1D operator /(/* num | IterView<num> | Iterable<num> */ other) =>
-      toDouble..divide(other);
+      toDouble()..divide(other);
 
   Int1D operator ~/(/* num | IterView<num> | Iterable<num> */ other) =>
-      toInt..truncDiv(other);
+      toInt()..truncDiv(other);
 
   Double1D rdiv(/* num | IterView<num> | Iterable<num> */ other) =>
-      toDouble..rdivMe(other);
+      toDouble()..rdivMe(other);
 
   @override
   int compareValue(int a, int b) => a.compareTo(b);
@@ -236,9 +236,9 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret.toInt();
   }
 
-  Double1D get toDouble => new Double1D.fromNums(this);
+  Double1D toDouble() => new Double1D.fromNums(this);
 
-  Int1D get toInt => new Int1D(this);
+  Int1D toInt() => new Int1D(this);
 
   Int2D repeat({int repeat: 1, bool transpose: false}) {
     if (!transpose) {

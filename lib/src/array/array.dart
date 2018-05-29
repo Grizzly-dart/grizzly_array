@@ -22,7 +22,7 @@ Double1D array(
   if (data is Iterable<num>) {
     return new Double1D.fromNums(data);
   } else if (data is Numeric1DView<num>) {
-    return data.toDouble;
+    return data.toDouble();
   } else if (data is double) {
     return new Double1D.single(data);
   } else if (data is num) {
