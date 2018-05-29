@@ -261,26 +261,15 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  Double2D to2D() => new Double2D([this]);
-
-  @override
-  Double2D get transpose {
-    final ret = new Double2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = this[i];
+  Double2D to2D({int repeat: 1, bool t: false}) {
+    if (!t) {
+      return new Double2D.aCol(this, repeat: repeat);
+    } else {
+      return new Double2D.aRow(this, repeat: repeat);
     }
-    return ret;
   }
 
   Double1D toDouble() => new Double1D(this);
-
-  Double2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new Double2D.aCol(this, repeat: repeat + 1);
-    } else {
-      return new Double2D.aRow(this, repeat: repeat + 1);
-    }
-  }
 
   Double2D diagonal({Index2D shape, num def: 0}) =>
       new Double2D.diagonal(this, shape: shape, fill: def?.toDouble());

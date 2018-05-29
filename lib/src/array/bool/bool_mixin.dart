@@ -80,21 +80,11 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
     return sum / length;
   }
 
-  Bool2D to2D() => new Bool2D([this]);
-
-  Bool2D get transpose {
-    final ret = new Bool2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = this[i];
-    }
-    return ret;
-  }
-
-  Bool2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new Bool2D.aCol(this, repeat: repeat + 1);
+  Bool2D to2D({int repeat: 1, bool t: false}) {
+    if (!t) {
+      return new Bool2D.aCol(this, repeat: repeat);
     } else {
-      return new Bool2D.aRow(this, repeat: repeat + 1);
+      return new Bool2D.aRow(this, repeat: repeat);
     }
   }
 

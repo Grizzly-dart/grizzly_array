@@ -63,25 +63,15 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
     return ret;
   }
 
-  Dynamic2D to2D() => new Dynamic2D([this]);
-
-  Dynamic2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new Dynamic2D.aCol(this, repeat: repeat + 1);
+  Dynamic2D to2D({int repeat: 1, bool t: false}) {
+    if (!t) {
+      return new Dynamic2D.aCol(this, repeat: repeat);
     } else {
-      return new Dynamic2D.aRow(this, repeat: repeat + 1);
+      return new Dynamic2D.aRow(this, repeat: repeat);
     }
   }
 
   Dynamic2D diagonal() => new Dynamic2D.diagonal(this);
-
-  Dynamic2D get transpose {
-    final ret = new Dynamic2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = this[i];
-    }
-    return ret;
-  }
 
   @override
   Dynamic1D pickByIndices(Iterable<int> indices) {

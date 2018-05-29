@@ -18,16 +18,15 @@ void main() {
 
     test('to2D', () {
       Int1D s1 = new Int1D([1, 5]);
-      Int2D s2 = s1.to2D();
-      expect(s2, [
-        [1, 5]
-      ]);
-      expect(s1.transpose, [
+      expect(s1.to2D(), [
         [1],
         [5],
       ]);
-      expect(s1.to2D().shape, idx2D(1, 2));
-      expect(s1.transpose.shape, idx2D(2, 1));
+      expect(s1.to2D(t: true), [
+        [1, 5]
+      ]);
+      expect(s1.to2D().shape, idx2D(2, 1));
+      expect(s1.to2D(t: true).shape, idx2D(1, 2));
     });
 
     test('covariance', () {

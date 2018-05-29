@@ -240,25 +240,15 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
 
   Int1D toInt() => new Int1D(this);
 
-  Int2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new Int2D.aCol(this, repeat: repeat + 1);
-    } else {
-      return new Int2D.aRow(this, repeat: repeat + 1);
-    }
-  }
-
   Int2D diagonal({Index2D shape, num def: 0}) =>
       new Int2D.diagonal(this, shape: shape, fill: def?.toInt());
 
-  Int2D to2D() => new Int2D([this]);
-
-  Int2D get transpose {
-    final ret = new Int2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = this[i];
+  Int2D to2D({int repeat: 1, bool t: false}) {
+    if (!t) {
+      return new Int2D.aCol(this, repeat: repeat);
+    } else {
+      return new Int2D.aRow(this, repeat: repeat);
     }
-    return ret;
   }
 
   @override

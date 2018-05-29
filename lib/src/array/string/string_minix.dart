@@ -62,24 +62,14 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
     return ret;
   }
 
-  String2D to2D() => new String2D([this]);
-
-  String2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose)
-      return new String2D.aCol(this, repeat: repeat + 1);
+  String2D to2D({int repeat: 1, bool t: false}) {
+    if (!t)
+      return new String2D.aCol(this, repeat: repeat);
     else
-      return new String2D.aRow(this, repeat: repeat + 1);
+      return new String2D.aRow(this, repeat: repeat);
   }
 
   String2D diagonal() => new String2D.diagonal(this);
-
-  String2D get transpose {
-    final ret = new String2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = this[i];
-    }
-    return ret;
-  }
 
   Array<bool> get isAlphaNum {
     final ret = new Bool1D.sized(length);
