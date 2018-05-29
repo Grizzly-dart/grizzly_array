@@ -55,7 +55,7 @@ class String2D extends Object
 
   factory String2D.shapedLike(Array2DView like,
           {String fill, Iterable<String> names}) =>
-      new String2DFix.sized(like.numRows, like.numCols,
+      new String2D.sized(like.numRows, like.numCols,
           fill: fill, names: names);
 
   /// Create [Int2D] from column major
@@ -92,7 +92,7 @@ class String2D extends Object
 
   factory String2D.aRow(Iterable<String> row,
           {int repeat = 1, Iterable<String> names}) =>
-      new String2D.own(
+      new String2D(
           new List<String1DView>.filled(repeat, new String1DView(row),
               growable: true),
           names);

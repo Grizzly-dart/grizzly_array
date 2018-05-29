@@ -55,7 +55,7 @@ class Bool2D extends Object
 
   factory Bool2D.shapedLike(Array2DView like,
           {bool fill: false, Iterable<String> names}) =>
-      new Bool2DFix.sized(like.numRows, like.numCols, fill: fill, names: names);
+      new Bool2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Bool2D.columns(Iterable<Iterable<bool>> columns,
@@ -91,7 +91,7 @@ class Bool2D extends Object
 
   factory Bool2D.aRow(Iterable<bool> row,
           {int repeat = 1, Iterable<String> names}) =>
-      new Bool2D.own(
+      new Bool2D(
           new List<Bool1DView>.filled(repeat, new Bool1DView(row),
               growable: true),
           names);

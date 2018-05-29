@@ -89,7 +89,7 @@ class String2DFix extends Object
 
   factory String2DFix.aRow(Iterable<String> row,
           {int repeat = 1, Iterable<String> names}) =>
-      new String2DFix.own(
+      new String2DFix(
           new List<String1DView>.filled(repeat, new String1DView(row)), names);
 
   factory String2DFix.aCol(Iterable<String> column,

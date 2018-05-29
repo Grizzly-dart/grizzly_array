@@ -64,7 +64,7 @@ class Double2D extends Object
 
   factory Double2D.shapedLike(Array2DView like,
           {double fill: 0.0, Iterable<String> names}) =>
-      new Double2DFix.sized(like.numRows, like.numCols,
+      new Double2D.sized(like.numRows, like.numCols,
           fill: fill, names: names);
 
   /// Create [Int2D] from column major

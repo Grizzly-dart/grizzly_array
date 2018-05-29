@@ -88,7 +88,7 @@ class Bool2DFix extends Object
 
   factory Bool2DFix.aRow(Iterable<bool> row,
           {int repeat = 1, Iterable<String> names}) =>
-      new Bool2DFix.own(
+      new Bool2DFix(
           new List<Bool1DView>.filled(repeat, new Bool1DView(row)), names);
 
   factory Bool2DFix.aCol(Iterable<bool> column,

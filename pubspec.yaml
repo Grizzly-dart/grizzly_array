@@ -1,6 +1,6 @@
 name: grizzly_array
-description: A starting point for Dart libraries or applications.
-version: 0.4.2
+description: Named 1D and 2D arrays for scientific computing and data analysis.
+version: 0.4.3
 homepage: https://github.com/Grizzly-dart/grizzly_array
 author: Ravi Teja Gudapati <tejainece@gmail.com>
 documentation:

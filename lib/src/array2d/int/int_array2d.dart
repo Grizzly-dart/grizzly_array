@@ -63,7 +63,7 @@ class Int2D extends Object
 
   factory Int2D.shapedLike(Array2DView like,
           {int fill: 0, Iterable<String> names}) =>
-      new Int2DFix.sized(like.numRows, like.numCols, fill: fill, names: names);
+      new Int2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Int2D.columns(Iterable<Iterable<int>> columns,

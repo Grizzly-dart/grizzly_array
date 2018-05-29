@@ -89,7 +89,7 @@ class Dynamic2DFix extends Object
 
   factory Dynamic2DFix.aRow(Iterable<dynamic> row,
           {int repeat = 1, Iterable<String> names}) =>
-      new Dynamic2DFix.own(
+      new Dynamic2DFix(
           new List<Dynamic1DView>.filled(repeat, new Dynamic1DView(row)),
           names);
 
