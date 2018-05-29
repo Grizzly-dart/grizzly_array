@@ -344,7 +344,7 @@ class Int2DFix extends Object
   }
 
   factory Int2DFix.aRow(Iterable<int> row,
-          {int repeat = 1, Iterable<String> names}) {
+      {int repeat = 1, Iterable<String> names}) {
     final data = new List<Int1DFix>.filled(repeat, null, growable: true);
     if (row is Iterable<int>) {
       for (int i = 0; i < repeat; i++) data[i] = new Int1DFix(row);
@@ -357,7 +357,7 @@ class Int2DFix extends Object
   }
 
   factory Int2DFix.aCol(Iterable<int> column,
-          {int repeat = 1, Iterable<String> names}) {
+      {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<int>) {
       return new Int2DFix.columns(
           new ConstantIterable<Iterable<int>>(column, repeat), names);

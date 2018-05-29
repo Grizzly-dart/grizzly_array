@@ -55,8 +55,7 @@ class Dynamic2D extends Object
 
   factory Dynamic2D.shapedLike(Array2DView like,
           {dynamic fill, Iterable<String> names}) =>
-      new Dynamic2D.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      new Dynamic2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Dynamic2D.columns(Iterable<Iterable<dynamic>> columns,
@@ -70,7 +69,7 @@ class Dynamic2D extends Object
 
     final data = new List<Dynamic1D>()..length = numRows;
     for (int i = 0; i < numRows; i++) {
-      final row = new List<dynamic>(numCols);
+      final row = new List<dynamic>()..length = numCols;
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }
@@ -83,7 +82,8 @@ class Dynamic2D extends Object
       {Iterable<String> names, dynamic fill}) {
     final ret = new List<Dynamic1D>()..length = diagonal.length;
     for (int i = 0; i < diagonal.length; i++) {
-      final row = new List<dynamic>.filled(diagonal.length, fill);
+      final row =
+          new List<dynamic>.filled(diagonal.length, fill, growable: true);
       row[i] = diagonal.elementAt(i);
       ret[i] = new Dynamic1D.own(row);
     }

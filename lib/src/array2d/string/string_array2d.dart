@@ -55,8 +55,7 @@ class String2D extends Object
 
   factory String2D.shapedLike(Array2DView like,
           {String fill, Iterable<String> names}) =>
-      new String2D.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      new String2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory String2D.columns(Iterable<Iterable<String>> columns,
@@ -70,7 +69,7 @@ class String2D extends Object
 
     final data = new List<String1D>()..length = numRows;
     for (int i = 0; i < numRows; i++) {
-      final row = new List<String>(numCols);
+      final row = new List<String>()..length = numCols;
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }
@@ -83,7 +82,8 @@ class String2D extends Object
       {Iterable<String> names, String fill}) {
     final ret = new List<String1D>()..length = diagonal.length;
     for (int i = 0; i < diagonal.length; i++) {
-      final row = new List<String>.filled(diagonal.length, fill);
+      final row =
+          new List<String>.filled(diagonal.length, fill, growable: true);
       row[i] = diagonal.elementAt(i);
       ret[i] = new String1D.own(row);
     }

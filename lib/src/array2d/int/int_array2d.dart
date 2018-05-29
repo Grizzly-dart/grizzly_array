@@ -77,7 +77,7 @@ class Int2D extends Object
 
     final data = new List<Int1D>()..length = numRows;
     for (int i = 0; i < numRows; i++) {
-      final row = new List<int>(numCols);
+      final row = new List<int>()..length = numCols;
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }

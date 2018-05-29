@@ -69,7 +69,7 @@ class Bool2D extends Object
 
     final data = new List<Bool1D>()..length = numRows;
     for (int i = 0; i < numRows; i++) {
-      final row = new List<bool>(numCols);
+      final row = new List<bool>()..length = numCols;
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }
@@ -82,7 +82,7 @@ class Bool2D extends Object
       {Iterable<String> names, bool fill: false}) {
     final ret = new List<Bool1D>()..length = diagonal.length;
     for (int i = 0; i < diagonal.length; i++) {
-      final row = new List<bool>.filled(diagonal.length, fill);
+      final row = new List<bool>.filled(diagonal.length, fill, growable: true);
       row[i] = diagonal.elementAt(i);
       ret[i] = new Bool1D.own(row);
     }
