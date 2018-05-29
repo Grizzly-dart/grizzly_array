@@ -369,4 +369,11 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     sb.write(']');
     return sb.toString();
   }
+
+  @override
+  Double1D sin() {
+    final ret = toDouble();
+    for(int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
+    return ret;
+  }
 }

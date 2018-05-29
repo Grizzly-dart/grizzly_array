@@ -298,7 +298,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
 
   Int2D toInt() => new Int2D.fromNums(this);
 
-  Double2D toDouble() => new Double2D(_data);
+  Double2D toDouble() => new Double2D(this);
 
   double get variance {
     if (numRows == 0) return 0.0;
@@ -431,5 +431,13 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     }
     sb.writeln(']');
     return sb.toString();
+  }
+
+  Double2D sin() {
+    final ret = toDouble();
+    for(int i = 0; i < numRows; i++) {
+      for(int j = 0; j < numCols; j++) ret[i][j] = math.sin(ret[i][j]);
+    }
+    return ret;
   }
 }

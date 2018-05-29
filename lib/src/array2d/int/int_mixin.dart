@@ -366,4 +366,12 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
     }
     return false;
   }
+
+  Double2D sin() {
+    final ret = toDouble();
+    for(int i = 0; i < numRows; i++) {
+      for(int j = 0; j < numCols; j++) ret[i][j] = math.sin(ret[i][j]);
+    }
+    return ret;
+  }
 }

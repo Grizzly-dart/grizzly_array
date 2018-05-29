@@ -288,4 +288,11 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     }
     return false;
   }
+
+  @override
+  Double1D sin() {
+    final ret = toDouble();
+    for(int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
+    return ret;
+  }
 }

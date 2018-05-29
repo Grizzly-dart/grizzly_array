@@ -1,6 +1,6 @@
 name: grizzly_array
 description: Named 1D and 2D arrays for scientific computing and data analysis.
-version: 0.4.5
+version: 0.4.6
 homepage: https://github.com/Grizzly-dart/grizzly_array
 author: Ravi Teja Gudapati <tejainece@gmail.com>
 documentation:
@@ -9,7 +9,7 @@ environment:
   sdk: '>=1.20.1 <2.0.0'
 
 dependencies:
-  grizzly_primitives: ^0.4.1
+  grizzly_primitives: ^0.4.5
   grizzly_series: ^0.4.1
   collection: ^1.14.7
   text_table: ^2.5.4
