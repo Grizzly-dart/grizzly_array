@@ -56,7 +56,11 @@ class Int1DView extends Object
 
   factory Int1DView.range(int start, int stop,
           {int step: 1, dynamic /* String | NameMaker */ name}) =>
-      new Int1DView.own(Ranger.between(start, stop, step), name);
+      new Int1DView.own(Ranger.range(start, stop, step), name);
+
+  factory Int1DView.until(int stop,
+          {int step: 1, dynamic /* String | NameMaker */ name}) =>
+      new Int1DView.own(Ranger.until(stop, step), name);
 
   Stats<int> _stats;
 

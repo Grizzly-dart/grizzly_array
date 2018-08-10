@@ -222,7 +222,11 @@ class Int1DFix extends Object
   factory Int1DFix.range(int start, int stop,
           {int step: 1, dynamic /* String | NameMaker */ name}) =>
       new Int1DFix.own(
-          Ranger.between(start, stop, step).toList(growable: false), name);
+          Ranger.range(start, stop, step).toList(growable: false), name);
+
+  factory Int1DFix.until(int stop,
+          {int step: 1, dynamic /* String | NameMaker */ name}) =>
+      new Int1DFix.own(Ranger.until(stop, step).toList(growable: false), name);
 
   Stats<int> _stats;
 

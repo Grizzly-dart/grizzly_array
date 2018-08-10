@@ -58,7 +58,10 @@ class Int1D extends Object
 
   factory Int1D.range(int start, int stop, {int step: 1, String name}) =>
       new Int1D.own(
-          Ranger.between(start, stop, step).toList(growable: false), name);
+          Ranger.range(start, stop, step).toList(growable: false), name);
+
+  factory Int1D.until(int start, int stop, {int step: 1, String name}) =>
+      new Int1D.own(Ranger.until(stop, step).toList(growable: false), name);
 
   Stats<int> _stats;
 
