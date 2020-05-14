@@ -1,18 +1,19 @@
 part of grizzly.series.array.dynamic;
 
 abstract class Dynamic1DViewMixin implements DynamicArrayView {
-  Dynamic1DView makeView(Iterable<dynamic> newData) =>
-      new Dynamic1DView(newData, comparator: comparator);
+  Dynamic1DView makeView(Iterable<dynamic> newData, [String name]) =>
+      new Dynamic1DView(newData, comparator: comparator, name: name);
 
-  Dynamic1DFix makeFix(Iterable<dynamic> newData) =>
-      new Dynamic1DFix(newData, comparator: comparator);
+  Dynamic1DFix makeFix(Iterable<dynamic> newData, [String name]) =>
+      new Dynamic1DFix(newData, comparator: comparator, name: name);
 
-  Dynamic1D makeArray(Iterable<dynamic> newData) =>
-      new Dynamic1D(newData, comparator: comparator);
+  Dynamic1D makeArray(Iterable<dynamic> newData, [String name]) =>
+      new Dynamic1D(newData, comparator: comparator, name: name);
 
   Index1D get shape => new Index1D(length);
 
-  Dynamic1D clone() => new Dynamic1D.copy(this, comparator: comparator);
+  Dynamic1D clone({String name}) =>
+      new Dynamic1D(this, comparator: comparator, name: name);
 
   dynamic get min {
     dynamic ret;
@@ -62,37 +63,24 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
     return ret;
   }
 
-  Dynamic2D to2D() => new Dynamic2D.from([this]);
-
-  Dynamic2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new Dynamic2D.repeatCol(this, repeat + 1);
+  Dynamic2D to2D({int repeat: 1, bool t: false}) {
+    if (!t) {
+      return new Dynamic2D.aCol(this, repeat: repeat);
     } else {
-      return new Dynamic2D.repeatRow(this, repeat + 1);
+      return new Dynamic2D.aRow(this, repeat: repeat);
     }
   }
 
   Dynamic2D diagonal() => new Dynamic2D.diagonal(this);
 
-  Dynamic2D get transpose {
-    final ret = new Dynamic2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = this[i];
-    }
-    return ret;
-  }
-
   @override
-  Dynamic1D pickByIndices(IterView<int> indices) {
+  Dynamic1D pickByIndices(Iterable<int> indices) {
     final ret = new Dynamic1D.sized(indices.length, comparator: comparator);
     for (int i = 0; i < indices.length; i++) {
-      ret[i] = this[indices[i]];
+      ret[i] = this[indices.elementAt(i)];
     }
     return ret;
   }
-
-  @override
-  bool contains(dynamic value) => asIterable.contains(value);
 
   @override
   int compareValue(dynamic a, dynamic b) => comparator(a, b);
@@ -165,14 +153,14 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
     return ret;
   }
 
-  Dynamic1D selectIf(IterView<bool> mask) {
+  Dynamic1D selectIf(Iterable<bool> mask) {
     if (mask.length != length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.asIterable.where((v) => v).length;
+    int retLength = mask.where((v) => v).length;
     final ret = new List<dynamic>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = this[i];
+      if (mask.elementAt(i)) ret[idx++] = this[i];
     }
     return new Dynamic1D.own(ret);
   }

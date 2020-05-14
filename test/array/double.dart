@@ -10,17 +10,16 @@ void main() {
     });
 
     test('to2D', () {
-      Int1D s1 = new Int1D([1, 5]);
-      Int2D s2 = s1.to2D();
-      expect(s2, [
-        [1, 5]
+      Double1D s1 = new Double1D.fromNums([1, 5]);
+      expect(s1.to2D(), [
+        [1.0],
+        [5.0],
       ]);
-      expect(s1.transpose, [
-        [1],
-        [5],
+      expect(s1.to2D(t: true), [
+        [1.0, 5.0]
       ]);
-      expect(s1.to2D().shape, idx2D(1, 2));
-      expect(s1.transpose.shape, idx2D(2, 1));
+      expect(s1.to2D().shape, idx2D(2, 1));
+      expect(s1.to2D(t: true).shape, idx2D(1, 2));
     });
 
     test('covariance', () {
@@ -41,7 +40,7 @@ void main() {
       }
       {
         final x = doubles([0.1, 0.2, 0.3, 0.4]);
-        final y = -x.toDouble + (x.exp + 1).log;
+        final y = -x.toDouble() + (x.exp + 1).log;
         expect(y, [
           0.644396660073571,
           0.5981388693815917,
@@ -52,25 +51,25 @@ void main() {
     });
 
     test('sort', () {
-      expect((ints([1, 5, 2, 4, 3])..sort()).asIterable, [1, 2, 3, 4, 5]);
-      expect((ints([1, 5, 2, 4, 3])..sort(descending: true)).asIterable,
-          [5, 4, 3, 2, 1]);
+      expect((ints([1, 5, 2, 4, 3])..sort()), [1, 2, 3, 4, 5]);
+      expect((ints([1, 5, 2, 4, 3])..sort(descending: true)), [5, 4, 3, 2, 1]);
     });
 
     test('unique', () {
-      expect(ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).unique().asIterable,
-          [1, 5, 6, 2, 3]);
+      expect(
+          ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).unique(), [1, 5, 6, 2, 3]);
     });
 
     test('uniqueIndices', () {
-      expect(
-          ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).uniqueIndices().asIterable,
+      expect(ints([1, 1, 5, 6, 5, 2, 3, 3, 3, 3, 2, 1]).uniqueIndices(),
           [0, 2, 3, 5, 6]);
     });
 
     test('mask', () {
-      print(ints([1, 5, 2, 4, 3])
-        ..keepIf(bools([false, true, false, true, false])));
+      expect(
+          ints([1, 5, 2, 4, 3])
+            ..keepIf(bools([false, true, false, true, false])),
+          [5, 4]);
     });
 
     test('equality', () {

@@ -1,13 +1,16 @@
 part of grizzly.series.array.double;
 
 abstract class Double1DViewMixin implements Numeric1DView<double> {
-  Double1DView makeView(Iterable<double> newData) => new Double1DView(newData);
+  Double1DView makeView(Iterable<double> newData, [String name]) =>
+      new Double1DView(newData, name);
 
-  Double1DFix makeFix(Iterable<double> newData) => new Double1DFix(newData);
+  Double1DFix makeFix(Iterable<double> newData, [String name]) =>
+      new Double1DFix(newData, name);
 
-  Double1D makeArray(Iterable<double> newData) => new Double1D(newData);
+  Double1D makeArray(Iterable<double> newData, [String name]) =>
+      new Double1D(newData, name);
 
-  Double1D clone() => new Double1D.copy(this);
+  Double1D clone({String name}) => new Double1D(this, name);
 
   Double1D operator -() {
     final ret = new Double1D.sized(length);
@@ -16,22 +19,22 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   }
 
   Double1D operator +(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toDouble..addition(other);
+      toDouble()..addition(other);
 
   Double1D operator -(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toDouble..subtract(other);
+      toDouble()..subtract(other);
 
   Double1D operator *(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toDouble..multiply(other);
+      toDouble()..multiply(other);
 
   Double1D operator /(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toDouble..divide(other);
+      toDouble()..divide(other);
 
   Int1D operator ~/(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toInt..truncDiv(other);
+      toInt()..truncDiv(other);
 
   Double1D rdiv(/* num | Numeric1DView | Numeric2DView */ other) =>
-      toDouble..rdivMe(other);
+      toDouble()..rdivMe(other);
 
   @override
   int compareValue(double a, double b) => a.compareTo(b);
@@ -104,7 +107,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     final double vLow = v - absTol;
     final double vHigh = v + absTol;
     int ret = 0;
-    for (double item in asIterable) {
+    for (double item in this) {
       if (item > vLow && item < vHigh) ret++;
     }
     return ret;
@@ -258,29 +261,18 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  Double2D to2D() => new Double2D.from([this]);
-
-  @override
-  Double2D get transpose {
-    final ret = new Double2D.sized(length, 1);
-    for (int i = 0; i < length; i++) {
-      ret[i][0] = this[i];
-    }
-    return ret;
-  }
-
-  Double1D get toDouble => new Double1D.copy(this);
-
-  Double2D repeat({int repeat: 1, bool transpose: false}) {
-    if (!transpose) {
-      return new Double2D.repeatCol(this, repeat + 1);
+  Double2D to2D({int repeat: 1, bool t: false}) {
+    if (!t) {
+      return new Double2D.aCol(this, repeat: repeat);
     } else {
-      return new Double2D.repeatRow(this, repeat + 1);
+      return new Double2D.aRow(this, repeat: repeat);
     }
   }
+
+  Double1D toDouble() => new Double1D(this);
 
   Double2D diagonal({Index2D shape, num def: 0}) =>
-      new Double2D.diagonal(this, shape: shape, def: def?.toDouble());
+      new Double2D.diagonal(this, shape: shape, fill: def?.toDouble());
 
   bool isClose(Iterable<num> v, {double absTol: 1e-8}) {
     if (length != v.length) return false;
@@ -297,17 +289,17 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return true;
   }
 
-  double dot(IterView<num> other) {
+  double dot(Iterable<num> other) {
     if (length != other.length) throw new Exception('Lengths must match!');
 
     double ret = 0.0;
     for (int i = 0; i < length; i++) {
-      ret += this[i] * other[i];
+      ret += this[i] * other.elementAt(i);
     }
     return ret;
   }
 
-  Int1D get toInt {
+  Int1D toInt() {
     final ret = new Int1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].toInt();
@@ -316,20 +308,22 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   }
 
   @override
-  Double1D pickByIndices(IterView<int> indices) {
+  Double1D pickByIndices(Iterable<int> indices) {
     final ret = new Double1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
-      ret[i] = this[indices[i]];
+      ret[i] = this[indices.elementAt(i)];
     }
     return ret;
   }
 
   @override
-  bool contains(double value, {double absTol: 1e-8}) {
-    double vLow = value - absTol;
-    double vHigh = value + absTol;
-    for (double el in asIterable) {
-      if (el > vLow && el < vHigh) return true;
+  bool contains(final Object value, {double absTol: 1e-8}) {
+    if (value is num) {
+      double vLow = value - absTol;
+      double vHigh = value + absTol;
+      for (double el in this) {
+        if (el > vLow && el < vHigh) return true;
+      }
     }
     return false;
   }
@@ -341,21 +335,19 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  Double1D selectIf(IterView<bool> mask) {
+  Double1D selectIf(Iterable<bool> mask) {
     if (mask.length != length) throw new Exception('Length mismatch!');
 
-    int retLength = mask.asIterable.where((v) => v).length;
+    int retLength = mask.where((v) => v).length;
     final ret = new List<double>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
-      if (mask[i]) ret[idx++] = this[i];
+      if (mask.elementAt(i)) ret[idx++] = this[i];
     }
     return new Double1D.own(ret);
   }
 
   bool operator ==(/* IterView<num> | Iterable<num> */ other) {
-    if (other is IterView<num>) other = other.asIterable;
-
     if (other is Iterable<num>) {
       if (other.length != length) return false;
       for (int i = 0; i < length; i++) {
@@ -376,5 +368,12 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     }
     sb.write(']');
     return sb.toString();
+  }
+
+  @override
+  Double1D sin() {
+    final ret = toDouble();
+    for(int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
+    return ret;
   }
 }

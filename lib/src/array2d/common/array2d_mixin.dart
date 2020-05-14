@@ -9,10 +9,6 @@ abstract class Array2DFixMixin<E> implements Array2DFix<E> {
       if (val.length != d)
         throw lengthMismatch(expected: d, found: val.length, subject: 'val');
       for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r);
-    } else if (val is IterView<E>) {
-      if (val.length != d)
-        throw lengthMismatch(expected: d, found: val.length, subject: 'val');
-      for (int r = 0; r < d; r++) this[r][r] = val[r];
     } else if (val is Array2DView<E>) {
       if (val.numRows < d || val.numCols < d) throw new Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r];
@@ -31,7 +27,7 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
   Array<E> unique() {
     final ret = new LinkedHashSet<E>();
     for (ArrayView<E> r in rows) {
-      for (E element in r.asIterable) {
+      for (E element in r) {
         if (!ret.contains(element)) ret.add(element);
       }
     }

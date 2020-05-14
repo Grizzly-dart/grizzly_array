@@ -1,6 +1,7 @@
 library grizzly.series.array.double;
 
 import 'dart:math' as math;
+import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
@@ -15,41 +16,43 @@ class Double1D extends Object
         ArrayViewMixin<double>,
         ArrayFixMixin<double>,
         ArrayMixin<double>,
+        IterableMixin<double>,
         Double1DViewMixin,
         DoubleFixMixin
     implements Numeric1D<double>, Double1DFix {
   List<double> _data;
 
-  Double1D([Iterable<double> data = const []])
+  String _name;
+
+  String get name => _name;
+
+  set name(String value) => _name = value;
+
+  Double1D(Iterable<double> data, [this._name])
       : _data = new List<double>.from(data);
 
-  Double1D.copy(IterView<double> other)
-      : _data = new List<double>.from(other.asIterable);
+  Double1D.own(this._data, {String name}) : _name = name;
 
-  Double1D.own(this._data);
+  Double1D.sized(int length, {double fill: 0.0, String name})
+      : _data = new List<double>.filled(length, fill, growable: true),
+        _name = name;
 
-  Double1D.sized(int length, {double data: 0.0})
-      : _data = new List<double>.filled(length, data, growable: true);
+  factory Double1D.shapedLike(Iterable d, {double fill: 0.0, String name}) =>
+      new Double1D.sized(d.length, fill: fill, name: name);
 
-  factory Double1D.shapedLike(IterView d, {double data: 0.0}) =>
-      new Double1D.sized(d.length, data: data);
+  Double1D.single(double data, {String name})
+      : _data = new List<double>.from(<double>[data]),
+        _name = name;
 
-  Double1D.single(double data) : _data = new List<double>.from(<double>[data]);
+  Double1D.gen(int length, double maker(int index), {String name})
+      : _data = new List<double>.generate(length, maker),
+        _name = name;
 
-  Double1D.gen(int length, double maker(int index))
-      : _data = new List<double>.generate(length, maker);
-
-  factory Double1D.nums(Iterable<num> iterable) {
-    final list = new Double1D.sized(iterable.length);
+  factory Double1D.fromNums(Iterable<num> iterable, {String name}) {
+    final list = new Double1D.sized(iterable.length, name: name);
     for (int i = 0; i < iterable.length; i++) {
       list[i] = iterable.elementAt(i)?.toDouble();
     }
-    return list;
-  }
-
-  factory Double1D.copyNums(IterView<num> iterable) {
-    final list = new Double1D.sized(iterable.length);
-    for (int i = 0; i < iterable.length; i++) list[i] = iterable[i]?.toDouble();
     return list;
   }
 
@@ -57,7 +60,7 @@ class Double1D extends Object
 
   Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
 
-  Iterable<double> get asIterable => _data;
+  Iterator<double> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -77,7 +80,7 @@ class Double1D extends Object
   @override
   void add(double a) => _data.add(a);
 
-  void addAll(IterView<double> a) => _data.addAll(a.asIterable);
+  void addAll(Iterable<double> a) => _data.addAll(a);
 
   @override
   void insert(int index, double a) => _data.insert(index, a);
@@ -119,11 +122,11 @@ class Double1D extends Object
       _data.sort((double a, double b) => b.compareTo(a));
   }
 
-  void keepIf(IterView<bool> mask) {
+  void keepIf(Iterable<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
-      if (!mask[i]) _data.removeAt(i);
+      if (!mask.elementAt(i)) _data.removeAt(i);
     }
   }
 
@@ -133,9 +136,7 @@ class Double1D extends Object
     final poss = pos.unique()..sort(descending: true);
     if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
 
-    for (int pos in poss.asIterable) {
-      _data.removeAt(pos);
-    }
+    for (int pos in poss) _data.removeAt(pos);
   }
 
   void removeRange(int start, [int end]) {

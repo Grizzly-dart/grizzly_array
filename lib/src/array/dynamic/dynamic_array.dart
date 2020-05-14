@@ -1,5 +1,6 @@
 library grizzly.series.array.dynamic;
 
+import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
@@ -14,36 +15,51 @@ class Dynamic1D extends Object
         ArrayViewMixin<dynamic>,
         ArrayFixMixin<dynamic>,
         ArrayMixin<dynamic>,
+        IterableMixin<dynamic>,
         Dynamic1DViewMixin,
         Dynamic1DFixMixin
     implements DynamicArray, Dynamic1DFix {
   List<dynamic> _data;
 
+  String _name;
+
+  String get name => _name;
+
+  set name(String value) => _name = value;
+
   Comparator comparator;
 
-  Dynamic1D(Iterable<dynamic> data, {this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.from(data);
+  Dynamic1D(Iterable<dynamic> data,
+      {this.comparator: _dummyComparator, String name})
+      : _data = new List<dynamic>.from(data),
+        _name = name;
 
-  Dynamic1D.copy(IterView<dynamic> other, {this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.from(other.asIterable);
+  Dynamic1D.own(this._data, {this.comparator: _dummyComparator, String name})
+      : _name = name;
 
-  Dynamic1D.own(this._data, {this.comparator: _dummyComparator});
+  Dynamic1D.sized(int length,
+      {dynamic fill, this.comparator: _dummyComparator, String name})
+      : _data = new List<dynamic>.filled(length, fill, growable: true),
+        _name = name;
 
-  Dynamic1D.sized(int length, {dynamic data, this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.filled(length, data, growable: true);
+  factory Dynamic1D.shapedLike(Iterable d,
+          {dynamic fill,
+          Comparator comparator: _dummyComparator,
+          String name}) =>
+      new Dynamic1D.sized(d.length,
+          fill: fill, comparator: comparator, name: name);
 
-  factory Dynamic1D.shapedLike(IterView d,
-          {dynamic data, Comparator comparator: _dummyComparator}) =>
-      new Dynamic1D.sized(d.length, data: data, comparator: comparator);
-
-  Dynamic1D.single(dynamic data, {this.comparator: _dummyComparator})
-      : _data = <dynamic>[data];
+  Dynamic1D.single(dynamic data,
+      {this.comparator: _dummyComparator, String name})
+      : _data = <dynamic>[data],
+        _name = name;
 
   Dynamic1D.gen(int length, dynamic maker(int index),
-      {this.comparator: _dummyComparator})
-      : _data = new List<dynamic>.generate(length, maker);
+      {this.comparator: _dummyComparator, String name})
+      : _data = new List<dynamic>.generate(length, maker),
+        _name = name;
 
-  Iterable<dynamic> get asIterable => _data;
+  Iterator<dynamic> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -63,7 +79,7 @@ class Dynamic1D extends Object
   @override
   void add(dynamic a) => _data.add(a);
 
-  void addAll(IterView<dynamic> a) => _data.addAll(a.asIterable);
+  void addAll(Iterable<dynamic> a) => _data.addAll(a);
 
   @override
   void insert(int index, dynamic a) => _data.insert(index, a);
@@ -72,11 +88,11 @@ class Dynamic1D extends Object
 
   void sort({bool descending: false}) {}
 
-  void keepIf(IterView<bool> mask) {
+  void keepIf(Iterable<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
-      if (!mask[i]) _data.removeAt(i);
+      if (!mask.elementAt(i)) _data.removeAt(i);
     }
   }
 
@@ -86,9 +102,7 @@ class Dynamic1D extends Object
     final poss = pos.unique()..sort(descending: true);
     if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
 
-    for (int pos in poss.asIterable) {
-      _data.removeAt(pos);
-    }
+    for (int pos in poss) _data.removeAt(pos);
   }
 
   void removeRange(int start, [int end]) {

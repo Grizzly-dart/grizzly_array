@@ -249,7 +249,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     return ret;
   }
 
-  Double1D dot(IterView<num> other) {
+  Double1D dot(Iterable<num> other) {
     if (numCols != other.length)
       throw new ArgumentError.value(other, 'other', 'Invalid shape!');
 
@@ -296,9 +296,9 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     return ret;
   }
 
-  Int2D toInt() => new Int2D.fromNum(this);
+  Int2D toInt() => new Int2D.fromNums(this);
 
-  Double2D toDouble() => new Double2D.from(_data);
+  Double2D toDouble() => new Double2D(this);
 
   double get variance {
     if (numRows == 0) return 0.0;
@@ -334,7 +334,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
   bool isClose(Numeric2D v, {double absTol: 1e-8}) {
     if (v.shape != shape) return false;
     for (int i = 0; i < numRows; i++) {
-      if (!_data[i].isClose(v[i].asIterable, absTol: absTol)) return false;
+      if (!_data[i].isClose(v[i], absTol: absTol)) return false;
     }
     return true;
   }
@@ -378,7 +378,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     return new Double2D(data);
   }
 
-  Double2D clone() => new Double2D.copy(this);
+  Double2D clone() => new Double2D(this);
 
   Double2D matmul(Array2DView<num> other) {
     if (numCols != other.numRows) throw new Exception('Invalid size!');
@@ -431,5 +431,13 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     }
     sb.writeln(']');
     return sb.toString();
+  }
+
+  Double2D sin() {
+    final ret = toDouble();
+    for(int i = 0; i < numRows; i++) {
+      for(int j = 0; j < numCols; j++) ret[i][j] = math.sin(ret[i][j]);
+    }
+    return ret;
   }
 }

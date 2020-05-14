@@ -38,23 +38,11 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
   }
 
   void addition(
-      /* num | IterView<num> | Iterable<num> */ other) {
-    if (other is IterView<int>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       other = other.toInt();
-    } else if (other is Iterable<int>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<int>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] += other[i].toInt();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
@@ -63,31 +51,23 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       for (int i = 0; i < length; i++) {
         this[i] += other;
       }
-    } else if (other is IterView<int>) {
+    } else if (other is Iterable<int>) {
       for (int i = 0; i < length; i++) {
-        this[i] += other[i];
+        this[i] += other.elementAt(i);
+      }
+    } else if (other is Iterable<num>) {
+      for (int i = 0; i < length; i++) {
+        this[i] += other.elementAt(i).toInt();
       }
     }
   }
 
   void subtract(
-      /* num | IterView<num> | Iterable<num> */ other) {
-    if (other is IterView<int>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       other = other.toInt();
-    } else if (other is Iterable<int>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<int>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] -= other[i].toInt();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
@@ -96,31 +76,23 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       for (int i = 0; i < length; i++) {
         this[i] -= other;
       }
-    } else if (other is IterView<int>) {
+    } else if (other is Iterable<int>) {
       for (int i = 0; i < length; i++) {
-        this[i] -= other[i];
+        this[i] -= other.elementAt(i);
+      }
+    } else if (other is Iterable<num>) {
+      for (int i = 0; i < length; i++) {
+        this[i] -= other.elementAt(i).toInt();
       }
     }
   }
 
   void multiply(
-      /* num | IterView<num> | Iterable<num> */ other) {
-    if (other is IterView<int>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       other = other.toInt();
-    } else if (other is Iterable<int>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<int>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] *= other[i].toInt();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
@@ -129,35 +101,27 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       for (int i = 0; i < length; i++) {
         this[i] *= other;
       }
-    } else if (other is IterView<int>) {
+    } else if (other is Iterable<int>) {
       for (int i = 0; i < length; i++) {
-        this[i] *= other[i];
+        this[i] *= other.elementAt(i);
+      }
+    } else if (other is Iterable<num>) {
+      for (int i = 0; i < length; i++) {
+        this[i] *= other.elementAt(i).toInt();
       }
     }
   }
 
   void divide(
-          /* num | IterView<num> | Iterable<num> */ other) =>
+          /* num | Iterable<num> */ other) =>
       truncDiv(this);
 
   void truncDiv(
-      /* num | IterView<num> | Iterable<num> */ other) {
-    if (other is IterView<int>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       other = other.toInt();
     } else if (other is Iterable<int>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<int>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] ~/= other[i].toInt();
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
@@ -166,31 +130,23 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       for (int i = 0; i < length; i++) {
         this[i] ~/= other;
       }
-    } else if (other is IterView<int>) {
+    } else if (other is Iterable<int>) {
       for (int i = 0; i < length; i++) {
-        this[i] ~/= other[i];
+        this[i] ~/= other.elementAt(i);
+      }
+    } else if (other is Iterable<num>) {
+      for (int i = 0; i < length; i++) {
+        this[i] ~/= other.elementAt(i).toInt();
       }
     }
   }
 
   void rdivMe(
-      /* num | IterView<num> | Iterable<num> */ other) {
-    if (other is IterView<int>) {
-      checkLengths(this, other, subject: 'other');
-    } else if (other is int) {
-      // Nothing here
-    } else if (other is num) {
+      /* num | Iterable<num> */ other) {
+    if (other is num) {
       other = other.toInt();
-    } else if (other is Iterable<int>) {
+    } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
-      other = new IterView<int>(other);
-    } else if (other is IterView<num> || other is Iterable<num>) {
-      if (other is Iterable<num>) other = new IterView<num>(other);
-      checkLengths(this, other, subject: 'other');
-      for (int i = 0; i < length; i++) {
-        this[i] = other[i].toInt() ~/ this[i];
-      }
-      return;
     } else {
       throw new UnimplementedError();
     }
@@ -199,47 +155,84 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
       for (int i = 0; i < length; i++) {
         this[i] = other ~/ this[i];
       }
-    } else if (other is IterView<int>) {
+    } else if (other is Iterable<int>) {
       for (int i = 0; i < length; i++) {
-        this[i] = other[i] ~/ this[i];
+        this[i] = other.elementAt(i) ~/ this[i];
+      }
+    } else if (other is Iterable<num>) {
+      for (int i = 0; i < length; i++) {
+        this[i] = other.elementAt(i).toInt() ~/ this[i];
       }
     }
   }
 }
 
 class Int1DFix extends Object
-    with ArrayViewMixin<int>, ArrayFixMixin<int>, Int1DViewMixin, IntFixMixin
+    with
+        ArrayViewMixin<int>,
+        ArrayFixMixin<int>,
+        IterableMixin<int>,
+        Int1DViewMixin,
+        IntFixMixin
     implements Numeric1DFix<int>, Int1DView {
   final List<int> _data;
 
-  Int1DFix(Iterable<int> data)
-      : _data = new List<int>.from(data, growable: false);
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
 
-  Int1DFix.copy(IterView<int> other)
-      : _data = new List<int>.from(other.asIterable, growable: false);
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
+  }
+
+  Int1DFix(Iterable<int> data, [/* String | NameMaker */ this._name])
+      : _data = new List<int>.from(data, growable: false);
 
   /// Creates [Int1DFix] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1DFix] because it involves no
   /// copying.
-  Int1DFix.own(this._data);
+  Int1DFix.own(this._data, [/* String | NameMaker */ this._name]);
 
-  Int1DFix.sized(int length, {int data: 0})
-      : _data = new List<int>.filled(length, data);
+  Int1DFix.sized(int length,
+      {int fill: 0, dynamic /* String | NameMaker */ name})
+      : _data = new List<int>.filled(length, fill),
+        _name = name;
 
-  factory Int1DFix.shapedLike(IterView d, {int data: 0}) =>
-      new Int1DFix.sized(d.length, data: data);
+  factory Int1DFix.shapedLike(Iterable d,
+          {int fill: 0, dynamic /* String | NameMaker */ name}) =>
+      new Int1DFix.sized(d.length, fill: fill, name: name);
 
-  Int1DFix.single(int data)
-      : _data = new List<int>.from(<int>[data], growable: false);
+  Int1DFix.single(int data, {dynamic /* String | NameMaker */ name})
+      : _data = new List<int>.from(<int>[data], growable: false),
+        _name = name;
 
-  Int1DFix.gen(int length, int maker(int index))
-      : _data = new List<int>.generate(length, maker, growable: false);
+  Int1DFix.gen(int length, int maker(int index),
+      {dynamic /* String | NameMaker */ name})
+      : _data = new List<int>.generate(length, maker, growable: false),
+        _name = name;
+
+  factory Int1DFix.fromNums(Iterable<num> iterable, [String name]) {
+    final list = new Int1DFix.sized(iterable.length, name: name);
+    for (int i = 0; i < iterable.length; i++)
+      list[i] = iterable.elementAt(i).toInt();
+    return list;
+  }
+
+  factory Int1DFix.range(int start, int stop,
+          {int step: 1, dynamic /* String | NameMaker */ name}) =>
+      new Int1DFix.own(
+          Ranger.range(start, stop, step).toList(growable: false), name);
+
+  factory Int1DFix.until(int stop,
+          {int step: 1, dynamic /* String | NameMaker */ name}) =>
+      new Int1DFix.own(Ranger.until(stop, step).toList(growable: false), name);
 
   Stats<int> _stats;
 
   Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
 
-  Iterable<int> get asIterable => _data;
+  Iterator<int> get iterator => _data.iterator;
 
   int get length => _data.length;
 

@@ -1,31 +1,43 @@
 part of grizzly.series.array.string;
 
 class String1DView extends Object
-    with String1DViewMixin, ArrayViewMixin<String>
+    with ArrayViewMixin<String>, IterableMixin<String>, String1DViewMixin
     implements ArrayView<String>, StringArrayView {
   List<String> _data;
 
-  String1DView(Iterable<String> data) : _data = new List<String>.from(data);
+  /// Could be `String` or `NameMaker`
+  final dynamic _name;
 
-  String1DView.copy(IterView<String> other)
-      : _data = new List<String>.from(other.asIterable);
-
-  String1DView.own(this._data);
-
-  String1DView.sized(int length, {String data})
-      : _data = new List<String>.filled(length, data);
-
-  factory String1DView.shapedLike(IterView d, {String data}) =>
-      new String1DView.sized(d.length, data: data);
-
-  String1DView.single(String data) : _data = new List<String>(1) {
-    _data[0] = data;
+  String get name {
+    if (_name == null) return null;
+    if (_name is String) return _name;
+    return _name();
   }
 
-  String1DView.gen(int length, String maker(int index))
-      : _data = new List<String>.generate(length, maker, growable: false);
+  String1DView(Iterable<String> data, [/* String | NameMaker */ this._name])
+      : _data = new List<String>.from(data);
 
-  Iterable<String> get asIterable => _data;
+  String1DView.own(this._data, [/* String | NameMaker */ this._name]);
+
+  String1DView.sized(int length,
+      {String fill, dynamic /* String | NameMaker */ name})
+      : _data = new List<String>.filled(length, fill),
+        _name = name;
+
+  factory String1DView.shapedLike(Iterable d,
+          {String fill, dynamic /* String | NameMaker */ name}) =>
+      new String1DView.sized(d.length, fill: fill, name: name);
+
+  String1DView.single(String data, {dynamic /* String | NameMaker */ name})
+      : _data = new List<String>.from(<String>[data], growable: false),
+        _name = name;
+
+  String1DView.gen(int length, String maker(int index),
+      {dynamic /* String | NameMaker */ name})
+      : _data = new List<String>.generate(length, maker, growable: false),
+        _name = name;
+
+  Iterator<String> get iterator => _data.iterator;
 
   int get length => _data.length;
 

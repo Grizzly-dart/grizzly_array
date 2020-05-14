@@ -190,5 +190,5 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
   Bool2D reshaped(Index2D newShape, {bool def: false}) =>
       clone()..reshape(newShape, def: def);
 
-  Bool2D clone() => new Bool2D.copy(this);
+  Bool2D clone() => new Bool2D(this);
 }

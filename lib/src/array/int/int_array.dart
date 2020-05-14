@@ -1,5 +1,6 @@
 library grizzly.series.array.int;
 
+import 'dart:collection';
 import 'dart:math' as math;
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
@@ -15,53 +16,58 @@ class Int1D extends Object
         ArrayViewMixin<int>,
         ArrayFixMixin<int>,
         ArrayMixin<int>,
+        IterableMixin<int>,
         Int1DViewMixin,
         IntFixMixin
     implements Numeric1D<int>, Int1DFix {
   final List<int> _data;
 
-  Int1D([Iterable<int> data = const <int>[]])
-      : _data = new List<int>.from(data);
+  String _name;
 
-  Int1D.copy(IterView<int> other)
-      : _data = new List<int>.from(other.asIterable);
+  String get name => _name;
+
+  set name(String value) => _name = value;
+
+  Int1D(Iterable<int> data, [this._name]) : _data = new List<int>.from(data);
 
   /// Creates [Int1D] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1D] because it involves no
   /// copying.
-  Int1D.own(this._data);
+  Int1D.own(this._data, [this._name]);
 
-  Int1D.sized(int length, {int data: 0})
-      : _data = new List<int>.filled(length, data, growable: true);
+  Int1D.sized(int length, {int fill: 0, String name})
+      : _data = new List<int>.filled(length, fill, growable: true),
+        _name = name;
 
-  Int1D.shapedLike(IterView d, {int data: 0})
-      : _data = new List<int>.filled(d.length, data);
+  factory Int1D.shapedLike(Iterable d, {int fill: 0, String name}) =>
+      new Int1D.sized(d.length, fill: fill, name: name);
 
-  Int1D.single(int data) : _data = <int>[data];
+  Int1D.single(int data, {String name})
+      : _data = <int>[data],
+        _name = name;
 
-  Int1D.gen(int length, int maker(int index))
+  Int1D.gen(int length, int maker(int index), [this._name])
       : _data = new List<int>.generate(length, maker);
 
-  factory Int1D.nums(iterable) {
-    if (iterable is IterView<num>) {
-      final list = new Int1D.sized(iterable.length);
-      for (int i = 0; i < iterable.length; i++) list[i] = iterable[i].toInt();
-      return list;
-    } else if (iterable is Iterable<num>) {
-      final list = new Int1D.sized(iterable.length);
-      for (int i = 0; i < iterable.length; i++) {
-        list[i] = iterable.elementAt(i).toInt();
-      }
-      return list;
-    }
-    throw new UnsupportedError('Unknown type!');
+  factory Int1D.fromNums(Iterable<num> iterable, [String name]) {
+    final list = new Int1D.sized(iterable.length, name: name);
+    for (int i = 0; i < iterable.length; i++)
+      list[i] = iterable.elementAt(i).toInt();
+    return list;
   }
+
+  factory Int1D.range(int start, int stop, {int step: 1, String name}) =>
+      new Int1D.own(
+          Ranger.range(start, stop, step).toList(growable: false), name);
+
+  factory Int1D.until(int start, int stop, {int step: 1, String name}) =>
+      new Int1D.own(Ranger.until(stop, step).toList(growable: false), name);
 
   Stats<int> _stats;
 
   Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
 
-  Iterable<int> get asIterable => _data;
+  Iterator<int> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -80,7 +86,7 @@ class Int1D extends Object
   @override
   void add(int a) => _data.add(a);
 
-  void addAll(IterView<int> a) => _data.addAll(a.asIterable);
+  void addAll(Iterable<int> a) => _data.addAll(a);
 
   @override
   void insert(int index, int a) => _data.insert(index, a);
@@ -94,11 +100,11 @@ class Int1D extends Object
       _data.sort((int a, int b) => b.compareTo(a));
   }
 
-  void keepIf(IterView<bool> mask) {
+  void keepIf(Iterable<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
-      if (!mask[i]) _data.removeAt(i);
+      if (!mask.elementAt(i)) _data.removeAt(i);
     }
   }
 
@@ -108,9 +114,7 @@ class Int1D extends Object
     final poss = pos.unique()..sort(descending: true);
     if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
 
-    for (int pos in poss.asIterable) {
-      _data.removeAt(pos);
-    }
+    for (int pos in poss) _data.removeAt(pos);
   }
 
   void removeRange(int start, [int end]) {

@@ -1,5 +1,6 @@
 library grizzly.series.array.bool;
 
+import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../common/common.dart';
@@ -14,30 +15,39 @@ class Bool1D extends Object
         ArrayViewMixin<bool>,
         ArrayFixMixin<bool>,
         ArrayMixin<bool>,
-        Bool1DViewMixin
+        Bool1DViewMixin,
+        IterableMixin<bool>
     implements Array<bool>, Bool1DFix, BoolArray {
   List<bool> _data;
 
-  Bool1D([Iterable<bool> data = const <bool>[]])
-      : _data = new List<bool>.from(data);
+  String _name;
 
-  Bool1D.copy(IterView<bool> other)
-      : _data = new List<bool>.from(other.asIterable);
+  String get name => _name;
 
-  Bool1D.own(this._data);
+  set name(String value) => _name = value;
 
-  Bool1D.sized(int length, {bool data: false})
-      : _data = new List<bool>.filled(length, data, growable: true);
+  Bool1D(Iterable<bool> data, [String name])
+      : _data = new List<bool>.from(data),
+        _name = name;
 
-  factory Bool1D.shapedLike(IterView d, {bool data: false}) =>
-      new Bool1D.sized(d.length, data: data);
+  Bool1D.own(this._data, [String name]) : _name = name;
 
-  Bool1D.single(bool data) : _data = <bool>[data];
+  Bool1D.sized(int length, {bool fill: false, String name})
+      : _data = new List<bool>.filled(length, fill, growable: true),
+        _name = name;
 
-  Bool1D.gen(int length, bool maker(int index))
-      : _data = new List<bool>.generate(length, maker);
+  factory Bool1D.shapedLike(Iterable d, {bool fill: false, String name}) =>
+      new Bool1D.sized(d.length, fill: fill, name: name);
 
-  Iterable<bool> get asIterable => _data;
+  Bool1D.single(bool data, {String name})
+      : _data = <bool>[data],
+        _name = name;
+
+  Bool1D.gen(int length, bool maker(int index), {String name})
+      : _data = new List<bool>.generate(length, maker),
+        _name = name;
+
+  Iterator<bool> get iterator => _data.iterator;
 
   int get length => _data.length;
 
@@ -56,7 +66,7 @@ class Bool1D extends Object
   @override
   void add(bool a) => _data.add(a);
 
-  void addAll(IterView<bool> a) => _data.addAll(a.asIterable);
+  void addAll(Iterable<bool> a) => _data.addAll(a);
 
   @override
   void insert(int index, bool a) => _data.insert(index, a);
@@ -70,11 +80,11 @@ class Bool1D extends Object
       _data.sort((bool a, bool b) => b ? 1 : 0);
   }
 
-  void keepIf(IterView<bool> mask) {
+  void keepIf(Iterable<bool> mask) {
     if (mask.length != _data.length) throw new Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
-      if (!mask[i]) _data.removeAt(i);
+      if (!mask.elementAt(i)) _data.removeAt(i);
     }
   }
 
@@ -84,7 +94,7 @@ class Bool1D extends Object
     final poss = pos.unique()..sort(descending: true);
     if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
 
-    for (int pos in poss.asIterable) {
+    for (int pos in poss) {
       _data.removeAt(pos);
     }
   }
