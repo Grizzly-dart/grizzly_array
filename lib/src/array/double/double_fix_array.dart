@@ -44,7 +44,7 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is num) {
@@ -65,7 +65,7 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is num) {
@@ -86,7 +86,7 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is num) {
@@ -107,7 +107,7 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is num) {
@@ -132,7 +132,7 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     } else if (other is num) {
       // Do nothing
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is num) {
@@ -191,31 +191,31 @@ class Double1DFix extends Object
   }
 
   Double1DFix(Iterable<double> data, [/* String | NameMaker */ this._name])
-      : _data = new List<double>.from(data, growable: false);
+      : _data = List<double>.from(data, growable: false);
 
   Double1DFix.own(this._data, [/* String | NameMaker */ this._name]);
 
   Double1DFix.sized(int length,
       {double fill: 0.0, dynamic /* String | NameMaker */ name})
-      : _data = new List<double>.filled(length, fill),
+      : _data = List<double>.filled(length, fill),
         _name = name;
 
   factory Double1DFix.shapedLike(Iterable d,
           {double fill: 0.0, dynamic /* String | NameMaker */ name}) =>
-      new Double1DFix.sized(d.length, fill: fill, name: name);
+      Double1DFix.sized(d.length, fill: fill, name: name);
 
   Double1DFix.single(double data, {dynamic /* String | NameMaker */ name})
-      : _data = new List<double>.from(<double>[data], growable: false),
+      : _data = List<double>.from(<double>[data], growable: false),
         _name = name;
 
   Double1DFix.gen(int length, double maker(int index),
       {dynamic /* String | NameMaker */ name})
-      : _data = new List<double>.generate(length, maker, growable: false),
+      : _data = List<double>.generate(length, maker, growable: false),
         _name = name;
 
   factory Double1DFix.fromNums(Iterable<num> iterable,
       {dynamic /* String | NameMaker */ name}) {
-    final list = new Double1DFix.sized(iterable.length, name: name);
+    final list = Double1DFix.sized(iterable.length, name: name);
     for (int i = 0; i < iterable.length; i++) {
       list[i] = iterable.elementAt(i).toDouble();
     }
@@ -224,7 +224,7 @@ class Double1DFix extends Object
 
   Stats<double> _stats;
 
-  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
+  Stats<double> get stats => _stats ??= StatsImpl<double>(this);
 
   Iterator<double> get iterator => _data.iterator;
 
@@ -234,14 +234,14 @@ class Double1DFix extends Object
 
   operator []=(int i, double val) {
     if (i >= _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
   Double1D slice(int start, [int end]) =>
-      new Double1D(_data.sublist(start, end));
+      Double1D(_data.sublist(start, end));
 
   Double1DFix sqrt({bool self: false}) {
     if (self) {
@@ -258,7 +258,7 @@ class Double1DFix extends Object
       }
       return this;
     }
-    return new Double1DFix(this).floorToDouble();
+    return Double1DFix(this).floorToDouble();
   }
 
   Double1DFix ceilToDouble({bool self: false}) {
@@ -268,7 +268,7 @@ class Double1DFix extends Object
       }
       return this;
     }
-    return new Double1DFix(this).ceilToDouble();
+    return Double1DFix(this).ceilToDouble();
   }
 
   void sort({bool descending: false}) {
@@ -279,7 +279,7 @@ class Double1DFix extends Object
   }
 
   Double1DView _view;
-  Double1DView get view => _view ??= new Double1DView.own(_data);
+  Double1DView get view => _view ??= Double1DView.own(_data);
 
   @override
   Double1DFix get fixed => this;

@@ -19,7 +19,7 @@ class Bool1DFix extends Object
   }
 
   Bool1DFix(Iterable<bool> data, [dynamic /* String | NameMaker */ name])
-      : _data = new List<bool>.from(data, growable: false),
+      : _data = List<bool>.from(data, growable: false),
         _name = name;
 
   Bool1DFix.own(this._data, [dynamic /* String | NameMaker */ name])
@@ -27,12 +27,12 @@ class Bool1DFix extends Object
 
   Bool1DFix.sized(int length,
       {bool fill: false, dynamic /* String | NameMaker */ name})
-      : _data = new List<bool>.filled(length, fill),
+      : _data = List<bool>.filled(length, fill),
         _name = name;
 
   factory Bool1DFix.shapedLike(Iterable d,
           {bool data: false, dynamic /* String | NameMaker */ name}) =>
-      new Bool1DFix.sized(d.length, fill: data, name: name);
+      Bool1DFix.sized(d.length, fill: data, name: name);
 
   Bool1DFix.single(bool data, {dynamic /* String | NameMaker */ name})
       : _data = <bool>[data],
@@ -40,7 +40,7 @@ class Bool1DFix extends Object
 
   Bool1DFix.gen(int length, bool maker(int index),
       {dynamic /* String | NameMaker */ name})
-      : _data = new List<bool>.generate(length, maker, growable: false),
+      : _data = List<bool>.generate(length, maker, growable: false),
         _name = name;
 
   Iterator<bool> get iterator => _data.iterator;
@@ -51,13 +51,13 @@ class Bool1DFix extends Object
 
   operator []=(int i, bool val) {
     if (i > _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
-  Bool1D slice(int start, [int end]) => new Bool1D(_data.sublist(start, end));
+  Bool1D slice(int start, [int end]) => Bool1D(_data.sublist(start, end));
 
   void sort({bool descending: false}) {
     if (!descending)
@@ -67,7 +67,7 @@ class Bool1DFix extends Object
   }
 
   Bool1DView _view;
-  Bool1DView get view => _view ??= new Bool1DView.own(_data);
+  Bool1DView get view => _view ??= Bool1DView.own(_data);
 
   Bool1DFix get fixed => this;
 }

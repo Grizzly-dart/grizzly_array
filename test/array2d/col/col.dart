@@ -6,7 +6,7 @@ void main() {
     setUp(() {});
 
     test('col', () {
-      final s1 = new Int2D.aCol([1, 2, 3, 4]);
+      final s1 = Int2D.aCol([1, 2, 3, 4]);
       expect(s1.shape, idx2D(4, 1));
 
       expect(s1.col[0], [1, 2, 3, 4]);

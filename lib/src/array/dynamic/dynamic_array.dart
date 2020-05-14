@@ -31,7 +31,7 @@ class Dynamic1D extends Object
 
   Dynamic1D(Iterable<dynamic> data,
       {this.comparator: _dummyComparator, String name})
-      : _data = new List<dynamic>.from(data),
+      : _data = List<dynamic>.from(data),
         _name = name;
 
   Dynamic1D.own(this._data, {this.comparator: _dummyComparator, String name})
@@ -39,14 +39,14 @@ class Dynamic1D extends Object
 
   Dynamic1D.sized(int length,
       {dynamic fill, this.comparator: _dummyComparator, String name})
-      : _data = new List<dynamic>.filled(length, fill, growable: true),
+      : _data = List<dynamic>.filled(length, fill, growable: true),
         _name = name;
 
   factory Dynamic1D.shapedLike(Iterable d,
           {dynamic fill,
           Comparator comparator: _dummyComparator,
           String name}) =>
-      new Dynamic1D.sized(d.length,
+      Dynamic1D.sized(d.length,
           fill: fill, comparator: comparator, name: name);
 
   Dynamic1D.single(dynamic data,
@@ -56,7 +56,7 @@ class Dynamic1D extends Object
 
   Dynamic1D.gen(int length, dynamic maker(int index),
       {this.comparator: _dummyComparator, String name})
-      : _data = new List<dynamic>.generate(length, maker),
+      : _data = List<dynamic>.generate(length, maker),
         _name = name;
 
   Iterator<dynamic> get iterator => _data.iterator;
@@ -67,14 +67,14 @@ class Dynamic1D extends Object
 
   operator []=(int i, dynamic val) {
     if (i >= _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
   Dynamic1D slice(int start, [int end]) =>
-      new Dynamic1D(_data.sublist(start, end), comparator: comparator);
+      Dynamic1D(_data.sublist(start, end), comparator: comparator);
 
   @override
   void add(dynamic a) => _data.add(a);
@@ -89,7 +89,7 @@ class Dynamic1D extends Object
   void sort({bool descending: false}) {}
 
   void keepIf(Iterable<bool> mask) {
-    if (mask.length != _data.length) throw new Exception('Length mismatch!');
+    if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
       if (!mask.elementAt(i)) _data.removeAt(i);
@@ -100,7 +100,7 @@ class Dynamic1D extends Object
 
   void removeAtMany(ArrayView<int> pos) {
     final poss = pos.unique()..sort(descending: true);
-    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+    if (poss.first >= _data.length) throw RangeError.index(poss.last, this);
 
     for (int pos in poss) _data.removeAt(pos);
   }
@@ -121,9 +121,9 @@ class Dynamic1D extends Object
 
   Dynamic1DView _view;
   Dynamic1DView get view =>
-      _view ??= new Dynamic1DView.own(_data, comparator: comparator);
+      _view ??= Dynamic1DView.own(_data, comparator: comparator);
 
   Dynamic1DFix _fixed;
   Dynamic1DFix get fixed =>
-      _fixed ??= new Dynamic1DFix.own(_data, comparator: comparator);
+      _fixed ??= Dynamic1DFix.own(_data, comparator: comparator);
 }

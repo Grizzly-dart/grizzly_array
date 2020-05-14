@@ -2,8 +2,8 @@ part of grizzly.series.array2d;
 
 abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
   Double1D get mean {
-    if (length == 0) return new Double1D.sized(0);
-    final ret = new Double1D.sized(length);
+    if (length == 0) return Double1D.sized(0);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].mean;
     }
@@ -11,8 +11,8 @@ abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
   }
 
   Int1D get sum {
-    if (length == 0) return new Int1D.sized(0);
-    final ret = new Int1D.sized(length);
+    if (length == 0) return Int1D.sized(0);
+    final ret = Int1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].sum;
     }
@@ -21,7 +21,7 @@ abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
 
   /// Minimum along y-axis
   Bool1D get min {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].min;
     }
@@ -30,7 +30,7 @@ abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
 
   /// Maximum along y-axis
   Bool1D get max {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].max;
     }
@@ -39,18 +39,18 @@ abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
 
   @override
   ArrayView<int> get argMax {
-    Int1D ret = new Int1D.sized(length);
+    Int1D ret = Int1D.sized(length);
     for (int r = 0; r < length; r++) ret[r] = this[r].argMax;
     return ret;
   }
 
   @override
   ArrayView<int> get argMin {
-    Int1D ret = new Int1D.sized(length);
+    Int1D ret = Int1D.sized(length);
     for (int r = 0; r < length; r++) ret[r] = this[r].argMin;
     return ret;
   }
 
   @override
-  BoolArray makeArray(Iterable<bool> newData) => new Bool1D(newData);
+  BoolArray makeArray(Iterable<bool> newData) => Bool1D(newData);
 }

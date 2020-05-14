@@ -16,8 +16,8 @@ class Dynamic2D extends Object
   Dynamic2D(Iterable<Iterable<dynamic>> rows, [Iterable<String> names])
       : _data = <Dynamic1D>[],
         _names = names != null
-            ? new String1D(names, "Names")
-            : new String1D.sized(rows.isNotEmpty ? rows.first.length : 0,
+            ? String1D(names, "Names")
+            : String1D.sized(rows.isNotEmpty ? rows.first.length : 0,
                 name: 'Names') {
     if (rows.isEmpty) {
       Exceptions.labelLen(0, this.names.length);
@@ -27,14 +27,14 @@ class Dynamic2D extends Object
     Exceptions.rowsLen(rows);
     _data.length = rows.length;
     for (int i = 0; i < rows.length; i++) {
-      _data[i] = new Dynamic1D(rows.elementAt(i));
+      _data[i] = Dynamic1D(rows.elementAt(i));
     }
   }
 
   Dynamic2D.own(this._data, [Iterable<String> names])
       : _names = names != null
-            ? new String1D(names, "Names")
-            : new String1D.sized(_data.isNotEmpty ? _data.first.length : 0,
+            ? String1D(names, "Names")
+            : String1D.sized(_data.isNotEmpty ? _data.first.length : 0,
                 name: 'Names') {
     Exceptions.labelLen(numCols, this.names.length);
     Exceptions.rowsLen(rows);
@@ -42,65 +42,65 @@ class Dynamic2D extends Object
 
   factory Dynamic2D.sized(int rows, int cols,
       {dynamic fill, Iterable<String> names}) {
-    final data = new List<Dynamic1D>()..length = rows;
+    final data = List<Dynamic1D>()..length = rows;
     for (int i = 0; i < rows; i++) {
-      data[i] = new Dynamic1D.sized(cols, fill: fill);
+      data[i] = Dynamic1D.sized(cols, fill: fill);
     }
-    return new Dynamic2D.own(data, names);
+    return Dynamic2D.own(data, names);
   }
 
   factory Dynamic2D.shaped(Index2D shape,
           {dynamic fill, Iterable<String> names}) =>
-      new Dynamic2D.sized(shape.row, shape.col, fill: fill, names: names);
+      Dynamic2D.sized(shape.row, shape.col, fill: fill, names: names);
 
   factory Dynamic2D.shapedLike(Array2DView like,
           {dynamic fill, Iterable<String> names}) =>
-      new Dynamic2D.sized(like.numRows, like.numCols, fill: fill, names: names);
+      Dynamic2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Dynamic2D.columns(Iterable<Iterable<dynamic>> columns,
       [Iterable<String> names]) {
-    if (columns.length == 0) return new Dynamic2D.sized(0, 0, names: names);
+    if (columns.length == 0) return Dynamic2D.sized(0, 0, names: names);
 
     Exceptions.columnsLen(columns);
 
     final int numRows = columns.first.length;
     final int numCols = columns.length;
 
-    final data = new List<Dynamic1D>()..length = numRows;
+    final data = List<Dynamic1D>()..length = numRows;
     for (int i = 0; i < numRows; i++) {
-      final row = new List<dynamic>()..length = numCols;
+      final row = List<dynamic>()..length = numCols;
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }
-      data[i] = new Dynamic1D.own(row);
+      data[i] = Dynamic1D.own(row);
     }
-    return new Dynamic2D.own(data, names);
+    return Dynamic2D.own(data, names);
   }
 
   factory Dynamic2D.diagonal(Iterable<dynamic> diagonal,
       {Iterable<String> names, dynamic fill}) {
-    final ret = new List<Dynamic1D>()..length = diagonal.length;
+    final ret = List<Dynamic1D>()..length = diagonal.length;
     for (int i = 0; i < diagonal.length; i++) {
       final row =
-          new List<dynamic>.filled(diagonal.length, fill, growable: true);
+          List<dynamic>.filled(diagonal.length, fill, growable: true);
       row[i] = diagonal.elementAt(i);
-      ret[i] = new Dynamic1D.own(row);
+      ret[i] = Dynamic1D.own(row);
     }
-    return new Dynamic2D.own(ret, names);
+    return Dynamic2D.own(ret, names);
   }
 
   factory Dynamic2D.aRow(Iterable<dynamic> row,
           {int repeat = 1, Iterable<String> names}) =>
-      new Dynamic2D(
-          new List<Dynamic1DView>.filled(repeat, new Dynamic1DView(row),
+      Dynamic2D(
+          List<Dynamic1DView>.filled(repeat, Dynamic1DView(row),
               growable: true),
           names);
 
   factory Dynamic2D.aCol(Iterable<dynamic> column,
           {int repeat = 1, Iterable<String> names}) =>
-      new Dynamic2D.columns(
-          new ConstantIterable<Iterable<dynamic>>(column, repeat), names);
+      Dynamic2D.columns(
+          ConstantIterable<Iterable<dynamic>>(column, repeat), names);
 
   factory Dynamic2D.genRows(
       int numRows, Iterable<dynamic> rowMaker(int index)) {
@@ -110,10 +110,10 @@ class Dynamic2D extends Object
       final v = rowMaker(i);
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Dynamic1D(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Dynamic1D(v));
     }
-    return new Dynamic2D.own(rows);
+    return Dynamic2D.own(rows);
   }
 
   factory Dynamic2D.genCols(
@@ -124,14 +124,14 @@ class Dynamic2D extends Object
       final v = colMaker(i);
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Dynamic2D.columns(cols);
+    return Dynamic2D.columns(cols);
   }
 
   factory Dynamic2D.gen(Index2D shape, String maker(int row, int col)) {
-    final ret = new Dynamic2D.shaped(shape);
+    final ret = Dynamic2D.shaped(shape);
     for (int r = 0; r < ret.numRows; r++) {
       for (int c = 0; c < ret.numCols; c++) {
         ret[r][c] = maker(r, c);
@@ -148,10 +148,10 @@ class Dynamic2D extends Object
       final v = rowMaker(iterable.elementAt(i));
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Dynamic1D(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Dynamic1D(v));
     }
-    return new Dynamic2D.own(rows);
+    return Dynamic2D.own(rows);
   }
 
   static Dynamic2D buildCols<T>(
@@ -162,22 +162,22 @@ class Dynamic2D extends Object
       final v = colMaker(iterable.elementAt(i));
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Dynamic2D.columns(cols);
+    return Dynamic2D.columns(cols);
   }
 
   static Dynamic2D build<T>(Iterable<Iterable<T>> data, String maker(T v)) {
     if (data.length == 0) {
-      return new Dynamic2D.sized(0, 0);
+      return Dynamic2D.sized(0, 0);
     }
 
     if (!data.every((i) => i.length == data.first.length)) {
-      throw new Exception('Size mismatch!');
+      throw Exception('Size mismatch!');
     }
 
-    final ret = new Dynamic2D.sized(data.length, data.first.length);
+    final ret = Dynamic2D.sized(data.length, data.first.length);
     for (int r = 0; r < ret.numRows; r++) {
       final Iterator<T> row = data.elementAt(r).iterator;
       row.moveNext();
@@ -193,28 +193,28 @@ class Dynamic2D extends Object
 
   covariant Dynamic2DCol _col;
 
-  Dynamic2DCol get col => _col ??= new Dynamic2DCol(this);
+  Dynamic2DCol get col => _col ??= Dynamic2DCol(this);
 
   covariant Dynamic2DRow _row;
 
-  Dynamic2DRow get row => _row ??= new Dynamic2DRow(this);
+  Dynamic2DRow get row => _row ??= Dynamic2DRow(this);
 
   Dynamic1DFix operator [](int i) => _data[i].fixed;
 
   operator []=(final int i, final Iterable<dynamic> val) {
     if (i > numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i');
+      throw RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
-      final arr = new Dynamic1D(val);
+      final arr = Dynamic1D(val);
       _data.add(arr);
       return;
     }
 
-    if (val.length != numCols) throw new Exception('Invalid size!');
+    if (val.length != numCols) throw Exception('Invalid size!');
 
-    final arr = new Dynamic1D(val);
+    final arr = Dynamic1D(val);
 
     if (i == numRows) {
       _data.add(arr);
@@ -236,7 +236,7 @@ class Dynamic2D extends Object
   @override
   void assign(Array2DView<dynamic> other) {
     if (other.shape != shape)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++) {
@@ -249,29 +249,29 @@ class Dynamic2D extends Object
   void add(Iterable<dynamic> row) => this[numRows] = row;
 
   @override
-  void addScalar(dynamic v) => _data.add(new Dynamic1D.sized(numCols, fill: v));
+  void addScalar(dynamic v) => _data.add(Dynamic1D.sized(numCols, fill: v));
 
   @override
   void insert(int index, Iterable<dynamic> row) {
-    if (index > numRows) throw new RangeError.range(index, 0, numRows);
+    if (index > numRows) throw RangeError.range(index, 0, numRows);
     if (row.length != numCols)
-      throw new ArgumentError.value(row, 'row', 'Size mismatch!');
-    _data.insert(index, new Dynamic1D(row));
+      throw ArgumentError.value(row, 'row', 'Size mismatch!');
+    _data.insert(index, Dynamic1D(row));
   }
 
   Dynamic2DView _view;
 
-  Dynamic2DView get view => _view ??= new Dynamic2DView.own(_data);
+  Dynamic2DView get view => _view ??= Dynamic2DView.own(_data);
 
   Dynamic2DFix _fixed;
 
-  Dynamic2DFix get fixed => _fixed ??= new Dynamic2DFix.own(_data);
+  Dynamic2DFix get fixed => _fixed ??= Dynamic2DFix.own(_data);
 
   @override
   Iterable<ArrayFix<dynamic>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<dynamic>> get cols => new ColsListFix<dynamic>(this);
+  Iterable<ArrayFix<dynamic>> get cols => ColsListFix<dynamic>(this);
 
   void reshape(Index2D newShape, {dynamic def}) {
     if (shape == newShape) return;
@@ -280,7 +280,7 @@ class Dynamic2D extends Object
       _data.removeRange(newShape.row, shape.row);
     } else {
       for (int i = shape.row; i < newShape.row; i++) {
-        _data.add(new Dynamic1D.sized(newShape.col, fill: def));
+        _data.add(Dynamic1D.sized(newShape.col, fill: def));
       }
     }
 
@@ -290,7 +290,7 @@ class Dynamic2D extends Object
       }
     } else {
       for (Dynamic1D r in _data) {
-        r.addAll(new Dynamic1D.sized(newShape.col - r.length, fill: def));
+        r.addAll(Dynamic1D.sized(newShape.col - r.length, fill: def));
       }
     }
   }

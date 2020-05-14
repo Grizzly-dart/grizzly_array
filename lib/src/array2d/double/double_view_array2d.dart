@@ -11,10 +11,10 @@ class Double2DView extends Object
   final String1DView names;
 
   Double2DView(Iterable<Iterable<double>> rows, [Iterable<String> names])
-      : _data = new List<Double1DView>(rows.length),
+      : _data = List<Double1DView>(rows.length),
         names = names != null
-            ? new String1DView(names, "Names")
-            : new String1DView.sized(rows.isNotEmpty ? rows.first.length : 0,
+            ? String1DView(names, "Names")
+            : String1DView.sized(rows.isNotEmpty ? rows.first.length : 0,
                 name: 'Names') {
     if (rows.isEmpty) {
       Exceptions.labelLen(0, this.names.length);
@@ -23,14 +23,14 @@ class Double2DView extends Object
     Exceptions.labelLen(rows.first.length, this.names.length);
     Exceptions.rowsLen(rows);
     for (int i = 0; i < rows.length; i++) {
-      _data[i] = new Double1DView(rows.elementAt(i));
+      _data[i] = Double1DView(rows.elementAt(i));
     }
   }
 
   Double2DView.own(this._data, [Iterable<String> names])
       : names = names != null
-            ? new String1DView(names, "Names")
-            : new String1DView.sized(_data.isNotEmpty ? _data.first.length : 0,
+            ? String1DView(names, "Names")
+            : String1DView.sized(_data.isNotEmpty ? _data.first.length : 0,
                 name: 'Names') {
     Exceptions.labelLen(numCols, this.names.length);
     Exceptions.rowsLen(rows);
@@ -38,55 +38,55 @@ class Double2DView extends Object
 
   factory Double2DView.fromNums(Iterable<Iterable<num>> rows,
       [Iterable<String> names]) {
-    final data = new List<Double1DView>(rows.length);
+    final data = List<Double1DView>(rows.length);
     for (int i = 0; i < rows.length; i++)
-      data[i] = new Double1DView.fromNums(rows.elementAt(i));
-    return new Double2DView.own(data, names);
+      data[i] = Double1DView.fromNums(rows.elementAt(i));
+    return Double2DView.own(data, names);
   }
 
   factory Double2DView.sized(int numRows, int numCols,
       {double fill: 0.0, Iterable<String> names}) {
-    final data = new List<Double1DView>(numRows);
+    final data = List<Double1DView>(numRows);
     for (int i = 0; i < numRows; i++) {
-      data[i] = new Double1DView.sized(numCols, fill: fill);
+      data[i] = Double1DView.sized(numCols, fill: fill);
     }
-    return new Double2DView.own(data, names);
+    return Double2DView.own(data, names);
   }
 
   factory Double2DView.shaped(Index2D shape,
           {double fill: 0.0, Iterable<String> names}) =>
-      new Double2DView.sized(shape.row, shape.col, fill: fill, names: names);
+      Double2DView.sized(shape.row, shape.col, fill: fill, names: names);
 
   factory Double2DView.shapedLike(Array2DView like,
           {double fill: 0.0, Iterable<String> names}) =>
-      new Double2DView.sized(like.numRows, like.numCols,
+      Double2DView.sized(like.numRows, like.numCols,
           fill: fill, names: names);
 
   /// Create [Double2DView] from column major
   factory Double2DView.columns(Iterable<Iterable<double>> columns,
       [Iterable<String> names]) {
-    if (columns.length == 0) return new Double2DView.sized(0, 0, names: names);
+    if (columns.length == 0) return Double2DView.sized(0, 0, names: names);
 
     Exceptions.columnsLen(columns);
 
     final int numRows = columns.first.length;
     final int numCols = columns.length;
 
-    final data = new List<Double1DView>(numRows);
+    final data = List<Double1DView>(numRows);
     for (int i = 0; i < numRows; i++) {
-      final row = new List<double>(numCols);
+      final row = List<double>(numCols);
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }
-      data[i] = new Double1DView.own(row);
+      data[i] = Double1DView.own(row);
     }
-    return new Double2DView.own(data, names);
+    return Double2DView.own(data, names);
   }
 
   factory Double2DView.diagonal(Iterable<double> diagonal,
       {Index2D shape, Iterable<String> names, double fill: 0.0}) {
-    shape ??= new Index2D(diagonal.length, diagonal.length);
-    final ret = new Double2DFix.shaped(shape, fill: fill, names: names);
+    shape ??= Index2D(diagonal.length, diagonal.length);
+    final ret = Double2DFix.shaped(shape, fill: fill, names: names);
     int length = math.min(math.min(shape.row, shape.col), diagonal.length);
     for (int i = 0; i < length; i++) {
       ret[i][i] = diagonal.elementAt(i);
@@ -96,26 +96,26 @@ class Double2DView extends Object
 
   factory Double2DView.aRow(Iterable<double> row,
       {int repeat = 1, Iterable<String> names}) {
-    final data = new List<Double1DView>.filled(repeat, null, growable: true);
+    final data = List<Double1DView>.filled(repeat, null, growable: true);
     if (row is Iterable<double>) {
-      for (int i = 0; i < repeat; i++) data[i] = new Double1DView(row);
+      for (int i = 0; i < repeat; i++) data[i] = Double1DView(row);
     } else {
-      final temp = new Double1DView.fromNums(row);
+      final temp = Double1DView.fromNums(row);
       data[0] = temp;
-      for (int i = 1; i < repeat; i++) data[i] = new Double1DView(temp);
+      for (int i = 1; i < repeat; i++) data[i] = Double1DView(temp);
     }
-    return new Double2DView.own(data, names);
+    return Double2DView.own(data, names);
   }
 
   factory Double2DView.aCol(Iterable<double> column,
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<double>) {
-      return new Double2DView.columns(
-          new ConstantIterable<Iterable<double>>(column, repeat), names);
+      return Double2DView.columns(
+          ConstantIterable<Iterable<double>>(column, repeat), names);
     }
-    return new Double2DView.columns(
-        new ConstantIterable<Iterable<double>>(
-            new Double1DView.fromNums(column), repeat),
+    return Double2DView.columns(
+        ConstantIterable<Iterable<double>>(
+            Double1DView.fromNums(column), repeat),
         names);
   }
 
@@ -127,10 +127,10 @@ class Double2DView extends Object
       final v = rowMaker(i);
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Double1DView(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Double1DView(v));
     }
-    return new Double2DView.own(rows);
+    return Double2DView.own(rows);
   }
 
   factory Double2DView.genCols(
@@ -141,14 +141,14 @@ class Double2DView extends Object
       final v = colMaker(i);
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Double2DView.columns(cols);
+    return Double2DView.columns(cols);
   }
 
   factory Double2DView.gen(Index2D shape, double maker(int row, int col)) {
-    final ret = new Double2DFix.shaped(shape);
+    final ret = Double2DFix.shaped(shape);
     for (int r = 0; r < ret.numRows; r++) {
       for (int c = 0; c < ret.numCols; c++) {
         ret[r][c] = maker(r, c);
@@ -165,10 +165,10 @@ class Double2DView extends Object
       final v = rowMaker(iterable.elementAt(i));
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Double1DView(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Double1DView(v));
     }
-    return new Double2DView.own(rows);
+    return Double2DView.own(rows);
   }
 
   static Double2DView buildCols<T>(
@@ -179,22 +179,22 @@ class Double2DView extends Object
       final v = colMaker(iterable.elementAt(i));
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Double2DView.columns(cols);
+    return Double2DView.columns(cols);
   }
 
   static Double2DView build<T>(Iterable<Iterable<T>> data, double maker(T v)) {
     if (data.length == 0) {
-      return new Double2DView.sized(0, 0);
+      return Double2DView.sized(0, 0);
     }
 
     if (!data.every((i) => i.length == data.first.length)) {
-      throw new Exception('Size mismatch!');
+      throw Exception('Size mismatch!');
     }
 
-    final ret = new Double2DFix.sized(data.length, data.first.length);
+    final ret = Double2DFix.sized(data.length, data.first.length);
     for (int r = 0; r < ret.numRows; r++) {
       final Iterator<T> row = data.elementAt(r).iterator;
       row.moveNext();
@@ -210,11 +210,11 @@ class Double2DView extends Object
 
   covariant Double2DColView _col;
 
-  Double2DColView get col => _col ??= new Double2DColView(this);
+  Double2DColView get col => _col ??= Double2DColView(this);
 
   covariant Double2DRowView _row;
 
-  Double2DRowView get row => _row ??= new Double2DRowView(this);
+  Double2DRowView get row => _row ??= Double2DRowView(this);
 
   Double2DView get view => this;
 
@@ -222,7 +222,7 @@ class Double2DView extends Object
   Iterable<ArrayView<double>> get rows => _data;
 
   @override
-  Iterable<ArrayView<double>> get cols => new ColsListView<double>(this);
+  Iterable<ArrayView<double>> get cols => ColsListView<double>(this);
 
   Double1D unique() => super.unique();
 }

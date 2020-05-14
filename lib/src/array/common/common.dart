@@ -2,6 +2,7 @@ library grizzly.series.array.common;
 
 import 'dart:math' as math;
 import 'dart:collection';
+import 'package:grizzly_range/grizzly_range.dart';
 import 'package:grizzly_series/grizzly_series.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import '../array.dart';
@@ -12,7 +13,7 @@ part 'stats.dart';
 
 abstract class ArrayMixin<E> implements Array<E> {
   void removeMany(Iterable<E> values) {
-    final set = new Set<E>.from(values);
+    final set = Set<E>.from(values);
     for (int i = length - 1; i >= 0; i--) {
       if (set.contains(this[i])) removeAt(i);
     }
@@ -45,21 +46,21 @@ abstract class ArrayFixMixin<E> implements ArrayFix<E> {
 
   set assign(Iterable<E> other) {
     if (other.length != length)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
     for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
   }
 }
 
 abstract class ArrayViewMixin<E> implements ArrayView<E> {
-  Index1D get shape => new Index1D(length);
+  Index1D get shape => Index1D(length);
 
   IntPair<E> pairAt(int index) => intPair<E>(index, this[index]);
 
   Iterable<IntPair<E>> enumerate() =>
-      Ranger.indices(length).map((i) => intPair<E>(i, this[i]));
+      indices(length).map((i) => intPair<E>(i, this[i]));
 
-  Iterable<int> get i => Ranger.indices(length);
+  Iterable<int> get i => indices(length);
 
   int count(E v) {
     int ret = 0;
@@ -70,7 +71,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   }
 
   Array<E> unique() {
-    final ret = new LinkedHashSet<E>();
+    final ret = LinkedHashSet<E>();
     for (E v in this) {
       if (!ret.contains(v)) ret.add(v);
     }
@@ -78,14 +79,14 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   }
 
   Int1D uniqueIndices() {
-    final ret = new LinkedHashMap<E, int>();
+    final ret = LinkedHashMap<E, int>();
     for (int i = 0; i < length; i++) {
       E v = this[i];
       if (!ret.containsKey(v)) {
         ret[v] = i;
       }
     }
-    return new Int1D(ret.values);
+    return Int1D(ret.values);
   }
 
   /// Returns a new  [Int1D] containing first [count] elements of this array
@@ -113,18 +114,18 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   Array<E> sample([int count = 10]) => makeArray(sampler<E>(this, count));
 
   @override
-  StringArray toStringArray() => new String1D(this.map((e) => e.toString()));
+  StringArray toStringArray() => String1D(this.map((e) => e.toString()));
 
   @override
   IntSeries<E> valueCounts(
       {bool sortByValue: false, bool descending: false, name: ''}) {
-    final groups = new Map<E, int>();
+    final groups = Map<E, int>();
     for (int i = 0; i < length; i++) {
       final E v = this[i];
       if (!groups.containsKey(v)) groups[v] = 0;
       groups[v]++;
     }
-    final ret = new IntSeries<E>.fromMap(groups, name: name);
+    final ret = IntSeries<E>.fromMap(groups, name: name);
     // Sort
     if (sortByValue) {
       ret.sortByLabel(descending: descending);
@@ -136,120 +137,120 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
 
   @override
   BoolArray ne(other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is E) {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] != other;
       }
     } else if (other is Iterable<E>) {
       if (other.length != length)
-        throw new LengthMismatch(
+        throw LengthMismatch(
             expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] != other.elementAt(i);
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   @override
   BoolArray eq(other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is E) {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] == other;
       }
     } else if (other is Iterable<E>) {
       if (other.length != length)
-        throw new LengthMismatch(
+        throw LengthMismatch(
             expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] == other.elementAt(i);
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   @override
   BoolArray operator >=(other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is E) {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) >= 0;
       }
     } else if (other is Iterable<E>) {
       if (other.length != length)
-        throw new LengthMismatch(
+        throw LengthMismatch(
             expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other.elementAt(i)) >= 0;
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   @override
   BoolArray operator >(other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is E) {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) > 0;
       }
     } else if (other is Iterable<E>) {
       if (other.length != length)
-        throw new LengthMismatch(
+        throw LengthMismatch(
             expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other.elementAt(i)) > 0;
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   @override
   BoolArray operator <(other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is E) {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) < 0;
       }
     } else if (other is Iterable<E>) {
       if (other.length != length)
-        throw new LengthMismatch(
+        throw LengthMismatch(
             expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other.elementAt(i)) < 0;
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   @override
   BoolArray operator <=(other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is E) {
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other) <= 0;
       }
     } else if (other is Iterable<E>) {
       if (other.length != length)
-        throw new LengthMismatch(
+        throw LengthMismatch(
             expected: length, found: other.length, subject: 'other');
       for (int i = 0; i < length; i++) {
         ret[i] = compareValue(this[i], other.elementAt(i)) <= 0;
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }

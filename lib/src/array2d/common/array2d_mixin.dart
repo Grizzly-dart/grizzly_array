@@ -10,22 +10,22 @@ abstract class Array2DFixMixin<E> implements Array2DFix<E> {
         throw lengthMismatch(expected: d, found: val.length, subject: 'val');
       for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r);
     } else if (val is Array2DView<E>) {
-      if (val.numRows < d || val.numCols < d) throw new Exception();
+      if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r];
     } else {
-      throw new UnsupportedError('Type!');
+      throw UnsupportedError('Type!');
     }
   }
 }
 
 abstract class Array2DViewMixin<E> implements Array2DView<E> {
-  Index2D get shape => new Index2D(numRows, numCols);
+  Index2D get shape => Index2D(numRows, numCols);
 
   bool get isSquare => numRows == numCols;
 
   @override
   Array<E> unique() {
-    final ret = new LinkedHashSet<E>();
+    final ret = LinkedHashSet<E>();
     for (ArrayView<E> r in rows) {
       for (E element in r) {
         if (!ret.contains(element)) ret.add(element);
@@ -36,17 +36,17 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
 
   Array2D<E> head([int count = 10]) {
     // TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Array2D<E> tail([int count = 10]) {
     //TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Array2D<E> sample([int count = 10]) {
     //TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   bool operator ==(/* E | IterView<E> | Iterable<E> */ other) {
@@ -61,8 +61,7 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
   }
 
   String toString() {
-    final tab =
-        table(Ranger.indices(numCols).map((i) => i.toString()).toList());
+    final tab = table(List<String>.generate(numCols, (i) => i.toString()));
     for (int i = 0; i < numRows; i++) {
       tab.row(row[i].toStringArray().toList());
     }
@@ -81,8 +80,8 @@ abstract class AxisFixMixin<E> implements Axis2DFix<E> {
   void swap(int i, int j) {
     if (i == j) return;
 
-    if (i > length) throw new RangeError.range(i, 0, length - 1);
-    if (j > length) throw new RangeError.range(j, 0, length - 1);
+    if (i > length) throw RangeError.range(i, 0, length - 1);
+    if (j > length) throw RangeError.range(j, 0, length - 1);
 
     for (int r = 0; r < otherDLength; r++) {
       E temp = this[i][r];
@@ -95,7 +94,7 @@ abstract class AxisFixMixin<E> implements Axis2DFix<E> {
 abstract class AxisViewMixin<E> implements Axis2DView<E> {
   @override
   Iterable<Array<E>> unique() {
-    final ret = new List<Array<E>>(length);
+    final ret = List<Array<E>>(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].unique();
     }

@@ -29,27 +29,27 @@ class Double1D extends Object
   set name(String value) => _name = value;
 
   Double1D(Iterable<double> data, [this._name])
-      : _data = new List<double>.from(data);
+      : _data = List<double>.from(data);
 
   Double1D.own(this._data, {String name}) : _name = name;
 
   Double1D.sized(int length, {double fill: 0.0, String name})
-      : _data = new List<double>.filled(length, fill, growable: true),
+      : _data = List<double>.filled(length, fill, growable: true),
         _name = name;
 
   factory Double1D.shapedLike(Iterable d, {double fill: 0.0, String name}) =>
-      new Double1D.sized(d.length, fill: fill, name: name);
+      Double1D.sized(d.length, fill: fill, name: name);
 
   Double1D.single(double data, {String name})
-      : _data = new List<double>.from(<double>[data]),
+      : _data = List<double>.from(<double>[data]),
         _name = name;
 
   Double1D.gen(int length, double maker(int index), {String name})
-      : _data = new List<double>.generate(length, maker),
+      : _data = List<double>.generate(length, maker),
         _name = name;
 
   factory Double1D.fromNums(Iterable<num> iterable, {String name}) {
-    final list = new Double1D.sized(iterable.length, name: name);
+    final list = Double1D.sized(iterable.length, name: name);
     for (int i = 0; i < iterable.length; i++) {
       list[i] = iterable.elementAt(i)?.toDouble();
     }
@@ -58,7 +58,7 @@ class Double1D extends Object
 
   Stats<double> _stats;
 
-  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
+  Stats<double> get stats => _stats ??= StatsImpl<double>(this);
 
   Iterator<double> get iterator => _data.iterator;
 
@@ -68,14 +68,14 @@ class Double1D extends Object
 
   operator []=(int i, double val) {
     if (i >= _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
   Double1D slice(int start, [int end]) =>
-      new Double1D(_data.sublist(start, end));
+      Double1D(_data.sublist(start, end));
 
   @override
   void add(double a) => _data.add(a);
@@ -123,7 +123,7 @@ class Double1D extends Object
   }
 
   void keepIf(Iterable<bool> mask) {
-    if (mask.length != _data.length) throw new Exception('Length mismatch!');
+    if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
       if (!mask.elementAt(i)) _data.removeAt(i);
@@ -134,7 +134,7 @@ class Double1D extends Object
 
   void removeAtMany(ArrayView<int> pos) {
     final poss = pos.unique()..sort(descending: true);
-    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+    if (poss.first >= _data.length) throw RangeError.index(poss.last, this);
 
     for (int pos in poss) _data.removeAt(pos);
   }
@@ -161,10 +161,10 @@ class Double1D extends Object
   }
 
   Double1DView _view;
-  Double1DView get view => _view ??= new Double1DView.own(_data);
+  Double1DView get view => _view ??= Double1DView.own(_data);
 
   Double1DFix _fixed;
-  Double1DFix get fixed => _fixed ??= new Double1DFix.own(_data);
+  Double1DFix get fixed => _fixed ??= Double1DFix.own(_data);
 
   Double1D unique() => super.unique();
 }

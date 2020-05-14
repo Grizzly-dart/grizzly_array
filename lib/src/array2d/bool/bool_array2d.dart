@@ -16,8 +16,8 @@ class Bool2D extends Object
   Bool2D(Iterable<Iterable<bool>> rows, [Iterable<String> names])
       : _data = <Bool1D>[],
         _names = names != null
-            ? new String1D(names, "Names")
-            : new String1D.sized(rows.isNotEmpty ? rows.first.length : 0,
+            ? String1D(names, "Names")
+            : String1D.sized(rows.isNotEmpty ? rows.first.length : 0,
                 name: 'Names') {
     if (rows.isEmpty) {
       Exceptions.labelLen(0, this.names.length);
@@ -27,14 +27,14 @@ class Bool2D extends Object
     Exceptions.rowsLen(rows);
     _data.length = rows.length;
     for (int i = 0; i < rows.length; i++) {
-      _data[i] = new Bool1D(rows.elementAt(i));
+      _data[i] = Bool1D(rows.elementAt(i));
     }
   }
 
   Bool2D.own(this._data, [Iterable<String> names])
       : _names = names != null
-            ? new String1D(names, "Names")
-            : new String1D.sized(_data.isNotEmpty ? _data.first.length : 0,
+            ? String1D(names, "Names")
+            : String1D.sized(_data.isNotEmpty ? _data.first.length : 0,
                 name: 'Names') {
     Exceptions.labelLen(numCols, this.names.length);
     Exceptions.rowsLen(rows);
@@ -42,64 +42,64 @@ class Bool2D extends Object
 
   factory Bool2D.sized(int rows, int cols,
       {bool fill: false, Iterable<String> names}) {
-    final data = new List<Bool1D>()..length = rows;
+    final data = List<Bool1D>()..length = rows;
     for (int i = 0; i < rows; i++) {
-      data[i] = new Bool1D.sized(cols, fill: fill);
+      data[i] = Bool1D.sized(cols, fill: fill);
     }
-    return new Bool2D.own(data, names);
+    return Bool2D.own(data, names);
   }
 
   factory Bool2D.shaped(Index2D shape,
           {bool fill: false, Iterable<String> names}) =>
-      new Bool2D.sized(shape.row, shape.col, fill: fill, names: names);
+      Bool2D.sized(shape.row, shape.col, fill: fill, names: names);
 
   factory Bool2D.shapedLike(Array2DView like,
           {bool fill: false, Iterable<String> names}) =>
-      new Bool2D.sized(like.numRows, like.numCols, fill: fill, names: names);
+      Bool2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Bool2D.columns(Iterable<Iterable<bool>> columns,
       [Iterable<String> names]) {
-    if (columns.length == 0) return new Bool2D.sized(0, 0, names: names);
+    if (columns.length == 0) return Bool2D.sized(0, 0, names: names);
 
     Exceptions.columnsLen(columns);
 
     final int numRows = columns.first.length;
     final int numCols = columns.length;
 
-    final data = new List<Bool1D>()..length = numRows;
+    final data = List<Bool1D>()..length = numRows;
     for (int i = 0; i < numRows; i++) {
-      final row = new List<bool>()..length = numCols;
+      final row = List<bool>()..length = numCols;
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }
-      data[i] = new Bool1D.own(row);
+      data[i] = Bool1D.own(row);
     }
-    return new Bool2D.own(data, names);
+    return Bool2D.own(data, names);
   }
 
   factory Bool2D.diagonal(Iterable<bool> diagonal,
       {Iterable<String> names, bool fill: false}) {
-    final ret = new List<Bool1D>()..length = diagonal.length;
+    final ret = List<Bool1D>()..length = diagonal.length;
     for (int i = 0; i < diagonal.length; i++) {
-      final row = new List<bool>.filled(diagonal.length, fill, growable: true);
+      final row = List<bool>.filled(diagonal.length, fill, growable: true);
       row[i] = diagonal.elementAt(i);
-      ret[i] = new Bool1D.own(row);
+      ret[i] = Bool1D.own(row);
     }
-    return new Bool2D.own(ret, names);
+    return Bool2D.own(ret, names);
   }
 
   factory Bool2D.aRow(Iterable<bool> row,
           {int repeat = 1, Iterable<String> names}) =>
-      new Bool2D(
-          new List<Bool1DView>.filled(repeat, new Bool1DView(row),
+      Bool2D(
+          List<Bool1DView>.filled(repeat, Bool1DView(row),
               growable: true),
           names);
 
   factory Bool2D.aCol(Iterable<bool> column,
           {int repeat = 1, Iterable<String> names}) =>
-      new Bool2D.columns(
-          new ConstantIterable<Iterable<bool>>(column, repeat), names);
+      Bool2D.columns(
+          ConstantIterable<Iterable<bool>>(column, repeat), names);
 
   factory Bool2D.genRows(int numRows, Iterable<bool> rowMaker(int index)) {
     final rows = <Bool1D>[];
@@ -108,10 +108,10 @@ class Bool2D extends Object
       final v = rowMaker(i);
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Bool1D(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Bool1D(v));
     }
-    return new Bool2D.own(rows);
+    return Bool2D.own(rows);
   }
 
   factory Bool2D.genCols(int numCols, Iterable<bool> colMaker(int index)) {
@@ -121,14 +121,14 @@ class Bool2D extends Object
       final v = colMaker(i);
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Bool2D.columns(cols);
+    return Bool2D.columns(cols);
   }
 
   factory Bool2D.gen(Index2D shape, bool maker(int row, int col)) {
-    final ret = new Bool2D.shaped(shape);
+    final ret = Bool2D.shaped(shape);
     for (int r = 0; r < ret.numRows; r++) {
       for (int c = 0; c < ret.numCols; c++) {
         ret[r][c] = maker(r, c);
@@ -145,10 +145,10 @@ class Bool2D extends Object
       final v = rowMaker(iterable.elementAt(i));
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Bool1D(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Bool1D(v));
     }
-    return new Bool2D.own(rows);
+    return Bool2D.own(rows);
   }
 
   static Bool2D buildCols<T>(
@@ -159,22 +159,22 @@ class Bool2D extends Object
       final v = colMaker(iterable.elementAt(i));
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Bool2D.columns(cols);
+    return Bool2D.columns(cols);
   }
 
   static Bool2D build<T>(Iterable<Iterable<T>> data, bool maker(T v)) {
     if (data.length == 0) {
-      return new Bool2D.sized(0, 0);
+      return Bool2D.sized(0, 0);
     }
 
     if (!data.every((i) => i.length == data.first.length)) {
-      throw new Exception('Size mismatch!');
+      throw Exception('Size mismatch!');
     }
 
-    final ret = new Bool2D.sized(data.length, data.first.length);
+    final ret = Bool2D.sized(data.length, data.first.length);
     for (int r = 0; r < ret.numRows; r++) {
       final Iterator<T> row = data.elementAt(r).iterator;
       row.moveNext();
@@ -190,30 +190,30 @@ class Bool2D extends Object
 
   covariant Bool2DCol _col;
 
-  Bool2DCol get col => _col ??= new Bool2DCol(this);
+  Bool2DCol get col => _col ??= Bool2DCol(this);
 
   covariant Bool2DRow _row;
 
-  Bool2DRow get row => _row ??= new Bool2DRow(this);
+  Bool2DRow get row => _row ??= Bool2DRow(this);
 
   Bool1DFix operator [](int i) => _data[i].fixed;
 
   operator []=(final int i, final Iterable<bool> val) {
     if (i > numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, numRows - 1, 'i', 'Out of range!');
     }
 
     if (numRows == 0) {
-      final arr = new Bool1D(val);
+      final arr = Bool1D(val);
       _data.add(arr);
       return;
     }
 
     if (val.length != numCols) {
-      throw new Exception('Invalid size!');
+      throw Exception('Invalid size!');
     }
 
-    final arr = new Bool1D(val);
+    final arr = Bool1D(val);
 
     if (i == numRows) {
       _data.add(arr);
@@ -235,7 +235,7 @@ class Bool2D extends Object
   @override
   void assign(Array2DView<bool> other) {
     if (other.shape != shape)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++) {
@@ -248,29 +248,29 @@ class Bool2D extends Object
   void add(Iterable<bool> row) => this[numRows] = row;
 
   @override
-  void addScalar(bool v) => _data.add(new Bool1D.sized(numCols, fill: v));
+  void addScalar(bool v) => _data.add(Bool1D.sized(numCols, fill: v));
 
   @override
   void insert(int index, Iterable<bool> row) {
-    if (index > numRows) throw new RangeError.range(index, 0, numRows);
+    if (index > numRows) throw RangeError.range(index, 0, numRows);
     if (row.length != numCols)
-      throw new ArgumentError.value(row, 'row', 'Size mismatch!');
-    _data.insert(index, new Bool1D(row));
+      throw ArgumentError.value(row, 'row', 'Size mismatch!');
+    _data.insert(index, Bool1D(row));
   }
 
   Bool2DView _view;
 
-  Bool2DView get view => _view ??= new Bool2DView.own(_data);
+  Bool2DView get view => _view ??= Bool2DView.own(_data);
 
   Bool2DFix _fixed;
 
-  Bool2DFix get fixed => _fixed ??= new Bool2DFix.own(_data);
+  Bool2DFix get fixed => _fixed ??= Bool2DFix.own(_data);
 
   @override
   Iterable<ArrayFix<bool>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<bool>> get cols => new ColsListFix<bool>(this);
+  Iterable<ArrayFix<bool>> get cols => ColsListFix<bool>(this);
 
   void reshape(Index2D newShape, {bool def: false}) {
     if (shape == newShape) return;
@@ -279,7 +279,7 @@ class Bool2D extends Object
       _data.removeRange(newShape.row, shape.row);
     } else {
       for (int i = shape.row; i < newShape.row; i++) {
-        _data.add(new Bool1D.sized(newShape.col, fill: def));
+        _data.add(Bool1D.sized(newShape.col, fill: def));
       }
     }
 
@@ -289,7 +289,7 @@ class Bool2D extends Object
       }
     } else {
       for (Bool1D r in _data) {
-        r.addAll(new Bool1D.sized(newShape.col - r.length, fill: def));
+        r.addAll(Bool1D.sized(newShape.col - r.length, fill: def));
       }
     }
   }

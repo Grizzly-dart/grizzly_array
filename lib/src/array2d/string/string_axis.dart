@@ -3,7 +3,7 @@ part of grizzly.series.array2d;
 abstract class String2DAxisMixin implements StringAxis2DView {
   /// Minimum along y-axis
   String1D get min {
-    final ret = new String1D.sized(length);
+    final ret = String1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].min;
     }
@@ -12,7 +12,7 @@ abstract class String2DAxisMixin implements StringAxis2DView {
 
   /// Maximum along y-axis
   String1D get max {
-    final ret = new String1D.sized(length);
+    final ret = String1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].max;
     }
@@ -21,18 +21,18 @@ abstract class String2DAxisMixin implements StringAxis2DView {
 
   @override
   ArrayView<int> get argMax {
-    Int1D ret = new Int1D.sized(length);
+    Int1D ret = Int1D.sized(length);
     for (int r = 0; r < length; r++) ret[r] = this[r].argMax;
     return ret;
   }
 
   @override
   ArrayView<int> get argMin {
-    Int1D ret = new Int1D.sized(length);
+    Int1D ret = Int1D.sized(length);
     for (int r = 0; r < length; r++) ret[r] = this[r].argMin;
     return ret;
   }
 
   @override
-  StringArray makeArray(Iterable<String> newData) => new String1D(newData);
+  StringArray makeArray(Iterable<String> newData) => String1D(newData);
 }

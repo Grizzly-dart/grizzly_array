@@ -57,44 +57,44 @@ Double2D array2(
     {bool transpose: false}) {
   if (data is Iterable<Iterable<double>>) {
     if (!transpose) {
-      return new Double2D(data);
+      return Double2D(data);
     } else {
-      return new Double2D.columns(data);
+      return Double2D.columns(data);
     }
   } else if (data is Iterable<Iterable<num>>) {
     if (!transpose) {
-      return new Double2D.fromNums(data);
+      return Double2D.fromNums(data);
     } else {
-      return new Double2D.fromNums(data).transpose;
+      return Double2D.fromNums(data).transpose;
     }
   } else if (data is Iterable<double>) {
     if (!transpose) {
-      return new Double2D([data]);
+      return Double2D([data]);
     } else {
-      return new Double2D.columns([data]);
+      return Double2D.columns([data]);
     }
   } else if (data is Iterable<num>) {
     // TODO
   } else if (data is Index2D) {
     if (!transpose) {
-      return new Double2D.shaped(data);
+      return Double2D.shaped(data);
     } else {
-      return new Double2D.shaped(data.transpose);
+      return Double2D.shaped(data.transpose);
     }
   } else {
-    throw new ArgumentError.value(data, 'data', 'Invalid value!');
+    throw ArgumentError.value(data, 'data', 'Invalid value!');
   }
 }
 
 Double2D zeros(/* Index2D | Index1D | Array2DView */ spec) {
   if (spec is Index2D) {
-    return new Double2D.shaped(spec);
+    return Double2D.shaped(spec);
   } else if (spec is Index1D) {
-    return new Double2D.sized(spec.x, spec.x);
+    return Double2D.sized(spec.x, spec.x);
   } else if (spec is Array2DView) {
-    return new Double2D.shapedLike(spec);
+    return Double2D.shapedLike(spec);
   }
-  throw new ArgumentError.value(spec, 'spec', 'Invalid value!');
+  throw ArgumentError.value(spec, 'spec', 'Invalid value!');
 }
 
 Double2D doubles2(Iterable<Iterable<num>> matrix) => array2(matrix);
@@ -103,23 +103,23 @@ Int2D ints2(/* Iterable<Iterable<int>> | Iterable<int> | Index2D */ data,
     {bool transpose: false}) {
   if (data is Iterable<Iterable<int>>) {
     if (!transpose) {
-      return new Int2D(data);
+      return Int2D(data);
     } else {
-      return new Int2D.columns(data);
+      return Int2D.columns(data);
     }
   } else if (data is Iterable<int>) {
     if (!transpose) {
-      return new Int2D([data]);
+      return Int2D([data]);
     } else {
-      return new Int2D.columns([data]);
+      return Int2D.columns([data]);
     }
   } else if (data is Index2D) {
     if (!transpose) {
-      return new Int2D.shaped(data);
+      return Int2D.shaped(data);
     } else {
-      return new Int2D.shaped(data.transpose);
+      return Int2D.shaped(data.transpose);
     }
   } else {
-    throw new ArgumentError.value(data, 'data', 'Invalid value!');
+    throw ArgumentError.value(data, 'data', 'Invalid value!');
   }
 }

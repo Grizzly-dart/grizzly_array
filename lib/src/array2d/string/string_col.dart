@@ -13,14 +13,14 @@ class String2DCol extends Object
   String2DCol(this.inner);
 
   String1DFix operator [](int col) =>
-      new String1DFix.own(new ColList<String>(inner, col));
+      String1DFix.own(ColList<String>(inner, col));
 
   operator []=(int index, Iterable<String> col) {
     if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
+      throw RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
     if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
+      throw ArgumentError.value(col, 'col', 'Size mismatch!');
     }
     for (int i = 0; i < inner.numRows; i++) {
       inner[i][index] = col.elementAt(i);
@@ -29,7 +29,7 @@ class String2DCol extends Object
 
   void add(Iterable<String> col) {
     if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
+      throw ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
       inner._data[i].add(col.elementAt(i));
     }
@@ -44,7 +44,7 @@ class String2DCol extends Object
 
   void insert(int index, Iterable<String> col) {
     if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
+      throw ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
       inner._data[i].insert(index, col.elementAt(i));
     }
@@ -63,14 +63,14 @@ class String2DColFix extends Object
   String2DColFix(this.inner);
 
   String1DFix operator [](int col) =>
-      new String1DFix.own(new ColList<String>(inner, col));
+      String1DFix.own(ColList<String>(inner, col));
 
   operator []=(int index, Iterable<String> col) {
     if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
+      throw RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
     if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
+      throw ArgumentError.value(col, 'col', 'Size mismatch!');
     }
     for (int i = 0; i < inner.numRows; i++) {
       inner[i][index] = col.elementAt(i);
@@ -86,5 +86,5 @@ class String2DColView extends Object
   String2DColView(this.inner);
 
   String1DView operator [](int col) =>
-      new String1DView.own(new ColList<String>(inner, col));
+      String1DView.own(ColList<String>(inner, col));
 }

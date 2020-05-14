@@ -10,15 +10,15 @@ abstract class String2DMixin implements Array2DView<String> {
   String2DView get view;
 
   String2DView makeView(Iterable<Iterable<String>> newData) =>
-      new String2DView(newData);
+      String2DView(newData);
 
   String2DFix makeFix(Iterable<Iterable<String>> newData) =>
-      new String2DFix(newData);
+      String2DFix(newData);
 
-  String2D make(Iterable<Iterable<String>> newData) => new String2D(newData);
+  String2D make(Iterable<Iterable<String>> newData) => String2D(newData);
 
   @override
-  Array<String> makeArray(Iterable<String> newData) => new String1D(newData);
+  Array<String> makeArray(Iterable<String> newData) => String1D(newData);
 
   int get numCols {
     if (numRows == 0) return 0;
@@ -27,7 +27,7 @@ abstract class String2DMixin implements Array2DView<String> {
 
   int get numRows => _data.length;
 
-  Index2D get shape => new Index2D(numRows, numCols);
+  Index2D get shape => Index2D(numRows, numCols);
 
   bool get isSquare => numRows == numCols;
 
@@ -39,17 +39,17 @@ abstract class String2DMixin implements Array2DView<String> {
       end = myShape;
     } else {
       if (end < Index2D.zero)
-        throw new ArgumentError.value(end, 'end', 'Index out of range!');
+        throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (end >= myShape)
-        throw new ArgumentError.value(end, 'end', 'Index out of range!');
+        throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (start > end)
-        throw new ArgumentError.value(
+        throw ArgumentError.value(
             end, 'end', 'Must be greater than start!');
     }
     if (start < Index2D.zero)
-      throw new ArgumentError.value(start, 'start', 'Index out of range!');
+      throw ArgumentError.value(start, 'start', 'Index out of range!');
     if (start >= myShape)
-      throw new ArgumentError.value(start, 'start', 'Index out of range!');
+      throw ArgumentError.value(start, 'start', 'Index out of range!');
 
     final list = <String1D>[];
 
@@ -57,7 +57,7 @@ abstract class String2DMixin implements Array2DView<String> {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new String2D.own(list);
+    return String2D.own(list);
   }
 
   String get min {
@@ -118,21 +118,21 @@ abstract class String2DMixin implements Array2DView<String> {
 
   Array2D<String> head([int count = 10]) {
     // TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Array2D<String> tail([int count = 10]) {
     //TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Array2D<String> sample([int count = 10]) {
     //TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   String2D get transpose {
-    final ret = new String2D.sized(numCols, numRows);
+    final ret = String2D.sized(numCols, numRows);
     for (int j = 0; j < _data.first.length; j++) {
       for (int i = 0; i < numRows; i++) {
         ret[j][i] = _data[i][j];
@@ -145,7 +145,7 @@ abstract class String2DMixin implements Array2DView<String> {
     int dim = numCols;
     if (dim > numRows) dim = numRows;
 
-    final ret = new String1D.sized(dim);
+    final ret = String1D.sized(dim);
     for (int i = 0; i < dim; i++) {
       ret[i] = _data[i][i];
     }
@@ -155,5 +155,5 @@ abstract class String2DMixin implements Array2DView<String> {
   String2D reshaped(Index2D newShape, {String def}) =>
       clone()..reshape(newShape, def: def);
 
-  String2D clone() => new String2D(this);
+  String2D clone() => String2D(this);
 }

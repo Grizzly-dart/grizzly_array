@@ -28,7 +28,7 @@ class Int1D extends Object
 
   set name(String value) => _name = value;
 
-  Int1D(Iterable<int> data, [this._name]) : _data = new List<int>.from(data);
+  Int1D(Iterable<int> data, [this._name]) : _data = List<int>.from(data);
 
   /// Creates [Int1D] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1D] because it involves no
@@ -36,36 +36,36 @@ class Int1D extends Object
   Int1D.own(this._data, [this._name]);
 
   Int1D.sized(int length, {int fill: 0, String name})
-      : _data = new List<int>.filled(length, fill, growable: true),
+      : _data = List<int>.filled(length, fill, growable: true),
         _name = name;
 
   factory Int1D.shapedLike(Iterable d, {int fill: 0, String name}) =>
-      new Int1D.sized(d.length, fill: fill, name: name);
+      Int1D.sized(d.length, fill: fill, name: name);
 
   Int1D.single(int data, {String name})
       : _data = <int>[data],
         _name = name;
 
   Int1D.gen(int length, int maker(int index), [this._name])
-      : _data = new List<int>.generate(length, maker);
+      : _data = List<int>.generate(length, maker);
 
   factory Int1D.fromNums(Iterable<num> iterable, [String name]) {
-    final list = new Int1D.sized(iterable.length, name: name);
+    final list = Int1D.sized(iterable.length, name: name);
     for (int i = 0; i < iterable.length; i++)
       list[i] = iterable.elementAt(i).toInt();
     return list;
   }
 
   factory Int1D.range(int start, int stop, {int step: 1, String name}) =>
-      new Int1D.own(
+      Int1D.own(
           Ranger.range(start, stop, step).toList(growable: false), name);
 
   factory Int1D.until(int start, int stop, {int step: 1, String name}) =>
-      new Int1D.own(Ranger.until(stop, step).toList(growable: false), name);
+      Int1D.own(Ranger.until(stop, step).toList(growable: false), name);
 
   Stats<int> _stats;
 
-  Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
+  Stats<int> get stats => _stats ??= StatsImpl<int>(this);
 
   Iterator<int> get iterator => _data.iterator;
 
@@ -75,13 +75,13 @@ class Int1D extends Object
 
   operator []=(int i, int val) {
     if (i >= _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
-  Int1D slice(int start, [int end]) => new Int1D(_data.sublist(start, end));
+  Int1D slice(int start, [int end]) => Int1D(_data.sublist(start, end));
 
   @override
   void add(int a) => _data.add(a);
@@ -101,7 +101,7 @@ class Int1D extends Object
   }
 
   void keepIf(Iterable<bool> mask) {
-    if (mask.length != _data.length) throw new Exception('Length mismatch!');
+    if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
       if (!mask.elementAt(i)) _data.removeAt(i);
@@ -112,7 +112,7 @@ class Int1D extends Object
 
   void removeAtMany(ArrayView<int> pos) {
     final poss = pos.unique()..sort(descending: true);
-    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+    if (poss.first >= _data.length) throw RangeError.index(poss.last, this);
 
     for (int pos in poss) _data.removeAt(pos);
   }
@@ -132,10 +132,10 @@ class Int1D extends Object
   }
 
   Int1DView _view;
-  Int1DView get view => _view ??= new Int1DView.own(_data);
+  Int1DView get view => _view ??= Int1DView.own(_data);
 
   Int1DFix _fixed;
-  Int1DFix get fixed => _fixed ??= new Int1DFix.own(_data);
+  Int1DFix get fixed => _fixed ??= Int1DFix.own(_data);
 
   Int1D unique() => super.unique();
 }

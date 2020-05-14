@@ -2,17 +2,17 @@ part of grizzly.series.array.string;
 
 abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   String1DView makeView(Iterable<String> newData, [String name]) =>
-      new String1DView(newData, name);
+      String1DView(newData, name);
 
   String1DFix makeFix(Iterable<String> newData, [String name]) =>
-      new String1DFix(newData, name);
+      String1DFix(newData, name);
 
   String1D makeArray(Iterable<String> newData, [String name]) =>
-      new String1D(newData, name);
+      String1D(newData, name);
 
-  Index1D get shape => new Index1D(length);
+  Index1D get shape => Index1D(length);
 
-  String1D clone({String name}) => new String1D(this, name);
+  String1D clone({String name}) => String1D(this, name);
 
   String get min {
     String ret;
@@ -64,71 +64,71 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
 
   String2D to2D({int repeat: 1, bool t: false}) {
     if (!t)
-      return new String2D.aCol(this, repeat: repeat);
+      return String2D.aCol(this, repeat: repeat);
     else
-      return new String2D.aRow(this, repeat: repeat);
+      return String2D.aRow(this, repeat: repeat);
   }
 
-  String2D diagonal() => new String2D.diagonal(this);
+  String2D diagonal() => String2D.diagonal(this);
 
   Array<bool> get isAlphaNum {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = this[i].startsWith(new RegExp(r'[a-zA-Z0-9]*$'));
+      ret[i] = this[i].startsWith(RegExp(r'[a-zA-Z0-9]*$'));
     }
     return ret;
   }
 
   Array<bool> get isAlphabet {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = this[i].startsWith(new RegExp(r'[a-zA-Z]*$'));
+      ret[i] = this[i].startsWith(RegExp(r'[a-zA-Z]*$'));
     }
     return ret;
   }
 
   Array<bool> get isDecimal {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = this[i].startsWith(new RegExp(r'\d+(\.\d+)?$'));
+      ret[i] = this[i].startsWith(RegExp(r'\d+(\.\d+)?$'));
     }
     return ret;
   }
 
   Array<bool> get isNumber {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = this[i].startsWith(new RegExp(r'\d+$'));
+      ret[i] = this[i].startsWith(RegExp(r'\d+$'));
     }
     return ret;
   }
 
   Array<bool> get isLower {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = this[i].startsWith(new RegExp(r'[a-z]*$'));
+      ret[i] = this[i].startsWith(RegExp(r'[a-z]*$'));
     }
     return ret;
   }
 
   Array<bool> get isUpper {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = this[i].startsWith(new RegExp(r'[A-Z]*$'));
+      ret[i] = this[i].startsWith(RegExp(r'[A-Z]*$'));
     }
     return ret;
   }
 
   Array<bool> get isSpace {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
-      ret[i] = this[i].startsWith(new RegExp(r'\s*$'));
+      ret[i] = this[i].startsWith(RegExp(r'\s*$'));
     }
     return ret;
   }
 
   Array<bool> startsWith(Pattern pattern, [int index = 0]) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].startsWith(pattern, index);
     }
@@ -136,7 +136,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   }
 
   Array<bool> endsWith(String pattern) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].endsWith(pattern);
     }
@@ -144,7 +144,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   }
 
   Array<int> get lengths {
-    final ret = new Int1D.sized(length);
+    final ret = Int1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].length;
     }
@@ -152,7 +152,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   }
 
   Array<bool> get areEmpty {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].isEmpty;
     }
@@ -160,7 +160,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   }
 
   Array<bool> get areNotEmpty {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = this[i].isNotEmpty;
     }
@@ -183,7 +183,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
 
   Numeric1D<int> toInt(
       {int radix, int defaultValue, int onError(String source)}) {
-    final ret = new Int1D.sized(length);
+    final ret = Int1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = int.tryParse(this[i], radix: radix) ?? defaultValue;
     }
@@ -192,7 +192,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
 
   Numeric1D<double> toDouble(
       {double onError(String source), double defaultValue}) {
-    final ret = new Double1D.sized(length);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) {
       ret[i] = double.tryParse(this[i]) ?? defaultValue;
     }
@@ -201,7 +201,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
 
   @override
   String1D pickByIndices(Iterable<int> indices) {
-    final ret = new String1D.sized(indices.length);
+    final ret = String1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices.elementAt(i)];
     }
@@ -212,14 +212,14 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   int compareValue(String a, String b) => a.compareTo(b);
 
   String1D selectIf(Iterable<bool> mask) {
-    if (mask.length != length) throw new Exception('Length mismatch!');
+    if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;
-    final ret = new List<String>()..length = retLength;
+    final ret = List<String>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
       if (mask.elementAt(i)) ret[idx++] = this[i];
     }
-    return new String1D.own(ret);
+    return String1D.own(ret);
   }
 }

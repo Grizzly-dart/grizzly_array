@@ -13,14 +13,14 @@ class Dynamic2DCol extends Object
   Dynamic2DCol(this.inner);
 
   Dynamic1DFix operator [](int col) =>
-      new Dynamic1DFix.own(new ColList<dynamic>(inner, col));
+      Dynamic1DFix.own(ColList<dynamic>(inner, col));
 
   operator []=(int index, Iterable<dynamic> col) {
     if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
+      throw RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
     if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
+      throw ArgumentError.value(col, 'col', 'Size mismatch!');
     }
     for (int i = 0; i < inner.numRows; i++) {
       inner[i][index] = col.elementAt(i);
@@ -29,7 +29,7 @@ class Dynamic2DCol extends Object
 
   void add(Iterable<dynamic> col) {
     if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
+      throw ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
       inner._data[i].add(col.elementAt(i));
     }
@@ -44,7 +44,7 @@ class Dynamic2DCol extends Object
 
   void insert(int index, Iterable<dynamic> col) {
     if (col.length != inner.numRows)
-      throw new ArgumentError.value(col, 'col', 'Size mismatch');
+      throw ArgumentError.value(col, 'col', 'Size mismatch');
     for (int i = 0; i < inner.numRows; i++) {
       inner._data[i].insert(index, col.elementAt(i));
     }
@@ -63,14 +63,14 @@ class Dynamic2DColFix extends Object
   Dynamic2DColFix(this.inner);
 
   Dynamic1DFix operator [](int col) =>
-      new Dynamic1DFix.own(new ColList<dynamic>(inner, col));
+      Dynamic1DFix.own(ColList<dynamic>(inner, col));
 
   operator []=(int index, Iterable<dynamic> col) {
     if (index >= inner.numCols) {
-      throw new RangeError.range(index, 0, inner.numCols - 1, 'index');
+      throw RangeError.range(index, 0, inner.numCols - 1, 'index');
     }
     if (col.length != inner.numRows) {
-      throw new ArgumentError.value(col, 'col', 'Size mismatch!');
+      throw ArgumentError.value(col, 'col', 'Size mismatch!');
     }
     for (int i = 0; i < inner.numRows; i++) {
       inner[i][index] = col.elementAt(i);
@@ -86,5 +86,5 @@ class Dynamic2DColView extends Object
   Dynamic2DColView(this.inner);
 
   Dynamic1DView operator [](int col) =>
-      new Dynamic1DView.own(new ColList<dynamic>(inner, col));
+      Dynamic1DView.own(ColList<dynamic>(inner, col));
 }

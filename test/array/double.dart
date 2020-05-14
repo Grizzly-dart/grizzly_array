@@ -10,7 +10,7 @@ void main() {
     });
 
     test('to2D', () {
-      Double1D s1 = new Double1D.fromNums([1, 5]);
+      Double1D s1 = Double1D.fromNums([1, 5]);
       expect(s1.to2D(), [
         [1.0],
         [5.0],

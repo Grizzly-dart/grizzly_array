@@ -38,7 +38,7 @@ class StatsImpl<T extends num> implements Stats<T> {
       if (max == null || d > max) max = d;
       if (min == null || d < min) min = d;
     }
-    return new Extent<T>(min, max);
+    return Extent<T>(min, max);
   }
 
   T get ptp {
@@ -56,7 +56,7 @@ class StatsImpl<T extends num> implements Stats<T> {
   }
 
   T get mode {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   T get median {
@@ -67,7 +67,7 @@ class StatsImpl<T extends num> implements Stats<T> {
 
   double average(Iterable<num> weights) {
     if (weights.length != length) {
-      throw new Exception('Weights have mismatching length!');
+      throw Exception('Weights have mismatching length!');
     }
     if (length == 0) return 0.0;
 
@@ -157,7 +157,7 @@ class StatsImpl<T extends num> implements Stats<T> {
   }
 
   double cov(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
+    if (y.length != length) throw Exception('Size mismatch!');
     if (length == 0) return 0.0;
     final double meanX = mean;
     final double meanY = y.mean;
@@ -169,10 +169,10 @@ class StatsImpl<T extends num> implements Stats<T> {
   }
 
   Numeric1D<double> covMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
+    if (y.numRows != length) throw Exception('Size mismatch!');
     final double meanX = mean;
     final Double1D meanY = y.col.mean;
-    Double1D sum = new Double1D.sized(y.numCols);
+    Double1D sum = Double1D.sized(y.numCols);
     for (int i = 0; i < length; i++) {
       sum += (y.col[i] - meanY) * (values.elementAt(i) - meanX);
     }
@@ -180,12 +180,12 @@ class StatsImpl<T extends num> implements Stats<T> {
   }
 
   double corrcoef(Numeric1DView y) {
-    if (y.length != length) throw new Exception('Size mismatch!');
+    if (y.length != length) throw Exception('Size mismatch!');
     return cov(y) / (std * y.std);
   }
 
   Numeric1D<double> corrcoefMatrix(Numeric2DView y) {
-    if (y.numRows != length) throw new Exception('Size mismatch!');
+    if (y.numRows != length) throw Exception('Size mismatch!');
     return covMatrix(y) / (y.std * std);
   }
 

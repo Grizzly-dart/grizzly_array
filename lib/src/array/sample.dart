@@ -2,16 +2,16 @@ import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 
-final math.Random _rand = new math.Random();
+final math.Random _rand = math.Random();
 
 List<E> sampler<E>(ArrayView<E> population, int k) {
   final int n = population.length;
 
   if (k < 0 || k > n)
-    throw new ArgumentError.value(
+    throw ArgumentError.value(
         k, 'k', 'Must be between 0 and population.length');
 
-  final samples = new List<E>(k);
+  final samples = List<E>(k);
 
   if (n < 1000) {
     final unpicked = population.clone();
@@ -21,7 +21,7 @@ List<E> sampler<E>(ArrayView<E> population, int k) {
       unpicked[sampleIdx] = unpicked[n - i - 1];
     }
   } else {
-    final picked = new SplayTreeSet<int>();
+    final picked = SplayTreeSet<int>();
     for (int i = 0; i < k; i++) {
       final int sampleIdx = () {
         int newIdx;

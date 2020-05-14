@@ -24,7 +24,7 @@ class Dynamic1DFix extends Object
   Dynamic1DFix(Iterable<dynamic> data,
       {this.comparator: _dummyComparator,
       dynamic /* String | NameMaker */ name})
-      : _data = new List<dynamic>.from(data, growable: false),
+      : _data = List<dynamic>.from(data, growable: false),
         _name = name;
 
   Dynamic1DFix.own(this._data,
@@ -35,14 +35,14 @@ class Dynamic1DFix extends Object
       {dynamic fill,
       this.comparator: _dummyComparator,
       dynamic /* String | NameMaker */ name})
-      : _data = new List<dynamic>.filled(length, fill),
+      : _data = List<dynamic>.filled(length, fill),
         _name = name;
 
   factory Dynamic1DFix.shapedLike(Iterable d,
           {dynamic fill,
           Comparator comparator: _dummyComparator,
           dynamic /* String | NameMaker */ name}) =>
-      new Dynamic1DFix.sized(d.length,
+      Dynamic1DFix.sized(d.length,
           fill: fill, comparator: comparator, name: name);
 
   Dynamic1DFix.single(dynamic data,
@@ -54,7 +54,7 @@ class Dynamic1DFix extends Object
   Dynamic1DFix.gen(int length, dynamic maker(int index),
       {this.comparator: _dummyComparator,
       dynamic /* String | NameMaker */ name})
-      : _data = new List<dynamic>.generate(length, maker, growable: false),
+      : _data = List<dynamic>.generate(length, maker, growable: false),
         _name = name;
 
   Iterator<dynamic> get iterator => _data.iterator;
@@ -65,20 +65,20 @@ class Dynamic1DFix extends Object
 
   operator []=(int i, val) {
     if (i > _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
   Dynamic1D slice(int start, [int end]) =>
-      new Dynamic1D(_data.sublist(start, end), comparator: comparator);
+      Dynamic1D(_data.sublist(start, end), comparator: comparator);
 
   void sort({bool descending: false}) {}
 
   Dynamic1DView _view;
   Dynamic1DView get view =>
-      _view ??= new Dynamic1DView.own(_data, comparator: comparator);
+      _view ??= Dynamic1DView.own(_data, comparator: comparator);
 
   Dynamic1DFix get fixed => this;
 }

@@ -15,51 +15,51 @@ class Double1DView extends Object
   }
 
   Double1DView(Iterable<double> iterable, [/* String | NameMaker */ this._name])
-      : _data = new List<double>.from(iterable);
+      : _data = List<double>.from(iterable);
 
   Double1DView.own(this._data, [/* String | NameMaker */ this._name]);
 
   Double1DView.sized(int length,
       {double fill: 0.0, dynamic /* String | NameMaker */ name})
-      : _data = new List<double>.filled(length, fill),
+      : _data = List<double>.filled(length, fill),
         _name = name;
 
   factory Double1DView.shapedLike(Iterable d,
           {double fill: 0.0, dynamic /* String | NameMaker */ name}) =>
-      new Double1DView.sized(d.length, fill: fill, name: name);
+      Double1DView.sized(d.length, fill: fill, name: name);
 
   Double1DView.single(double data, {dynamic /* String | NameMaker */ name})
-      : _data = new List<double>.from([data], growable: false),
+      : _data = List<double>.from([data], growable: false),
         _name = name;
 
   Double1DView.gen(int length, double maker(int index),
       {dynamic /* String | NameMaker */ name})
-      : _data = new List<double>.generate(length, maker, growable: false),
+      : _data = List<double>.generate(length, maker, growable: false),
         _name = name;
 
   factory Double1DView.fromNums(Iterable<num> iterable,
       {dynamic /* String | NameMaker */ name}) {
-    final list = new List<double>(iterable.length);
+    final list = List<double>(iterable.length);
     for (int i = 0; i < list.length; i++) {
       list[i] = iterable.elementAt(i)?.toDouble();
     }
-    return new Double1DView.own(list, name);
+    return Double1DView.own(list, name);
   }
 
   Stats<double> _stats;
 
-  Stats<double> get stats => _stats ??= new StatsImpl<double>(this);
+  Stats<double> get stats => _stats ??= StatsImpl<double>(this);
 
   Iterator<double> get iterator => _data.iterator;
 
   int get length => _data.length;
 
-  Index1D get shape => new Index1D(_data.length);
+  Index1D get shape => Index1D(_data.length);
 
   double operator [](int i) => _data[i];
 
   Double1D slice(int start, [int end]) =>
-      new Double1D(_data.sublist(start, end));
+      Double1D(_data.sublist(start, end));
 
   int count(double v, {double absTol: 1e-8}) => super.count(v, absTol: absTol);
 

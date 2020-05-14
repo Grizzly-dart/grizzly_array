@@ -2,18 +2,18 @@ part of grizzly.series.array.dynamic;
 
 abstract class Dynamic1DViewMixin implements DynamicArrayView {
   Dynamic1DView makeView(Iterable<dynamic> newData, [String name]) =>
-      new Dynamic1DView(newData, comparator: comparator, name: name);
+      Dynamic1DView(newData, comparator: comparator, name: name);
 
   Dynamic1DFix makeFix(Iterable<dynamic> newData, [String name]) =>
-      new Dynamic1DFix(newData, comparator: comparator, name: name);
+      Dynamic1DFix(newData, comparator: comparator, name: name);
 
   Dynamic1D makeArray(Iterable<dynamic> newData, [String name]) =>
-      new Dynamic1D(newData, comparator: comparator, name: name);
+      Dynamic1D(newData, comparator: comparator, name: name);
 
-  Index1D get shape => new Index1D(length);
+  Index1D get shape => Index1D(length);
 
   Dynamic1D clone({String name}) =>
-      new Dynamic1D(this, comparator: comparator, name: name);
+      Dynamic1D(this, comparator: comparator, name: name);
 
   dynamic get min {
     dynamic ret;
@@ -65,17 +65,17 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
 
   Dynamic2D to2D({int repeat: 1, bool t: false}) {
     if (!t) {
-      return new Dynamic2D.aCol(this, repeat: repeat);
+      return Dynamic2D.aCol(this, repeat: repeat);
     } else {
-      return new Dynamic2D.aRow(this, repeat: repeat);
+      return Dynamic2D.aRow(this, repeat: repeat);
     }
   }
 
-  Dynamic2D diagonal() => new Dynamic2D.diagonal(this);
+  Dynamic2D diagonal() => Dynamic2D.diagonal(this);
 
   @override
   Dynamic1D pickByIndices(Iterable<int> indices) {
-    final ret = new Dynamic1D.sized(indices.length, comparator: comparator);
+    final ret = Dynamic1D.sized(indices.length, comparator: comparator);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices.elementAt(i)];
     }
@@ -87,7 +87,7 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
 
   @override
   Int1D toIntArray({int defaultValue, int onInvalid(value)}) {
-    final ret = new Int1D.sized(length);
+    final ret = Int1D.sized(length);
     for (int i = 0; i < length; i++) {
       dynamic v = this[i];
       if (v is int) {
@@ -105,7 +105,7 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
 
   @override
   Double1D toDoubleArray({double defaultValue, double onInvalid(value)}) {
-    final ret = new Double1D.sized(length);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) {
       dynamic v = this[i];
       if (v is double) {
@@ -123,7 +123,7 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
 
   @override
   Bool1D toBoolArray({bool defaultValue, bool onInvalid(value)}) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     for (int i = 0; i < length; i++) {
       dynamic v = this[i];
       if (v is bool) {
@@ -139,7 +139,7 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
 
   @override
   String1D toStringArray({String defaultValue, String onInvalid(value)}) {
-    final ret = new String1D.sized(length);
+    final ret = String1D.sized(length);
     for (int i = 0; i < length; i++) {
       dynamic v = this[i];
       if (v is String) {
@@ -154,14 +154,14 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
   }
 
   Dynamic1D selectIf(Iterable<bool> mask) {
-    if (mask.length != length) throw new Exception('Length mismatch!');
+    if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;
-    final ret = new List<dynamic>()..length = retLength;
+    final ret = List<dynamic>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
       if (mask.elementAt(i)) ret[idx++] = this[i];
     }
-    return new Dynamic1D.own(ret);
+    return Dynamic1D.own(ret);
   }
 }

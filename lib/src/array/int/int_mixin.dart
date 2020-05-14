@@ -2,18 +2,18 @@ part of grizzly.series.array.int;
 
 abstract class Int1DViewMixin implements Numeric1DView<int> {
   Int1DView makeView(Iterable<int> newData, [String name]) =>
-      new Int1DView(newData, name);
+      Int1DView(newData, name);
 
   Int1DFix makeFix(Iterable<int> newData, [String name]) =>
-      new Int1DFix(newData, name);
+      Int1DFix(newData, name);
 
   Int1D makeArray(Iterable<int> newData, [String name]) =>
-      new Int1D(newData, name);
+      Int1D(newData, name);
 
-  Int1D clone({String name}) => new Int1D(this, name);
+  Int1D clone({String name}) => Int1D(this, name);
 
   Int1D operator -() {
-    final ret = new Int1D.sized(length);
+    final ret = Int1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = -this[i];
     return ret;
   }
@@ -41,7 +41,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   int compareValue(int a, int b) => a.compareTo(b);
 
   Bool1D operator <(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is num) {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] < other;
@@ -51,13 +51,13 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
         ret[i] = this[i] < other[i];
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   Bool1D operator <=(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is num) {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] <= other;
@@ -67,13 +67,13 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
         ret[i] = this[i] <= other[i];
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   Bool1D operator >(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is num) {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] > other;
@@ -83,13 +83,13 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
         ret[i] = this[i] > other[i];
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
 
   Bool1D operator >=(/* Numeric1D | num */ other) {
-    final ret = new Bool1D.sized(length);
+    final ret = Bool1D.sized(length);
     if (other is num) {
       for (int i = 0; i < length; i++) {
         ret[i] = this[i] >= other;
@@ -99,7 +99,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
         ret[i] = this[i] >= other[i];
       }
     } else {
-      throw new UnsupportedError('Type not supported!');
+      throw UnsupportedError('Type not supported!');
     }
     return ret;
   }
@@ -149,7 +149,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   double average(Iterable<num> weights) => stats.average(weights);
 
   Int1D get cumsum {
-    final ret = new Int1D.sized(length);
+    final ret = Int1D.sized(length);
     int sum = 0;
     for (int i = 0; i < length; i++) {
       final int d = this[i];
@@ -164,7 +164,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   Int1D get cumprod {
-    final ret = new Int1D.sized(length);
+    final ret = Int1D.sized(length);
     int prod = 1;
     for (int i = 0; i < length; i++) {
       final int d = this[i];
@@ -193,35 +193,35 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   double get std => math.sqrt(variance);
 
   Double1D sqrt() {
-    final ret = new Double1D.sized(length);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = math.sqrt(this[i]);
     return ret;
   }
 
   @override
   Double1D get log {
-    final ret = new Double1D.sized(length);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = math.log(this[i]);
     return ret;
   }
 
   @override
   Double1D get log10 {
-    final ret = new Double1D.sized(length);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = math.log(this[i]) / math.ln10;
     return ret;
   }
 
   @override
   Double1D logN(double n) {
-    final ret = new Double1D.sized(length);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = math.log(this[i]) / math.log(n);
     return ret;
   }
 
   @override
   Double1D get exp {
-    final ret = new Double1D.sized(length);
+    final ret = Double1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = math.exp(this[i]);
     return ret;
   }
@@ -236,24 +236,24 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret.toInt();
   }
 
-  Double1D toDouble() => new Double1D.fromNums(this);
+  Double1D toDouble() => Double1D.fromNums(this);
 
-  Int1D toInt() => new Int1D(this);
+  Int1D toInt() => Int1D(this);
 
   Int2D diagonal({Index2D shape, num def: 0}) =>
-      new Int2D.diagonal(this, shape: shape, fill: def?.toInt());
+      Int2D.diagonal(this, shape: shape, fill: def?.toInt());
 
   Int2D to2D({int repeat: 1, bool t: false}) {
     if (!t) {
-      return new Int2D.aCol(this, repeat: repeat);
+      return Int2D.aCol(this, repeat: repeat);
     } else {
-      return new Int2D.aRow(this, repeat: repeat);
+      return Int2D.aRow(this, repeat: repeat);
     }
   }
 
   @override
   Int1D pickByIndices(Iterable<int> indices) {
-    final ret = new Int1D.sized(indices.length);
+    final ret = Int1D.sized(indices.length);
     for (int i = 0; i < indices.length; i++) {
       ret[i] = this[indices.elementAt(i)];
     }
@@ -261,21 +261,21 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   Int1D abs() {
-    final ret = new Int1D.sized(length);
+    final ret = Int1D.sized(length);
     for (int i = 0; i < length; i++) ret[i] = this[i].abs();
     return ret;
   }
 
   Int1D selectIf(Iterable<bool> mask) {
-    if (mask.length != length) throw new Exception('Length mismatch!');
+    if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;
-    final ret = new List<int>()..length = retLength;
+    final ret = List<int>()..length = retLength;
     int idx = 0;
     for (int i = 0; i < mask.length; i++) {
       if (mask.elementAt(i)) ret[idx++] = this[i];
     }
-    return new Int1D.own(ret);
+    return Int1D.own(ret);
   }
 
   bool operator ==(other) {

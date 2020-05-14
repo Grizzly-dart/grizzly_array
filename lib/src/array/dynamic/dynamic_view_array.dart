@@ -21,7 +21,7 @@ class Dynamic1DView extends Object
   Dynamic1DView(Iterable<dynamic> data,
       {this.comparator: _dummyComparator,
       dynamic /* String | NameMaker */ name})
-      : _data = new List<dynamic>.from(data),
+      : _data = List<dynamic>.from(data),
         _name = name;
 
   Dynamic1DView.own(this._data,
@@ -32,26 +32,26 @@ class Dynamic1DView extends Object
       {dynamic fill,
       this.comparator: _dummyComparator,
       dynamic /* String | NameMaker */ name})
-      : _data = new List<dynamic>.filled(length, fill),
+      : _data = List<dynamic>.filled(length, fill),
         _name = name;
 
   factory Dynamic1DView.shapedLike(Iterable d,
           {dynamic fill,
           Comparator comparator: _dummyComparator,
           dynamic /* String | NameMaker */ name}) =>
-      new Dynamic1DView.sized(d.length,
+      Dynamic1DView.sized(d.length,
           fill: fill, comparator: comparator, name: name);
 
   Dynamic1DView.single(dynamic data,
       {this.comparator: _dummyComparator,
       dynamic /* String | NameMaker */ name})
-      : _data = new List<dynamic>.from([data]),
+      : _data = List<dynamic>.from([data]),
         _name = name;
 
   Dynamic1DView.gen(int length, dynamic maker(int index),
       {this.comparator: _dummyComparator,
       dynamic /* String | NameMaker */ name})
-      : _data = new List<dynamic>.generate(length, maker, growable: false),
+      : _data = List<dynamic>.generate(length, maker, growable: false),
         _name = name;
 
   Iterator<dynamic> get iterator => _data.iterator;
@@ -61,7 +61,7 @@ class Dynamic1DView extends Object
   dynamic operator [](int i) => _data[i];
 
   Dynamic1D slice(int start, [int end]) =>
-      new Dynamic1D(_data.sublist(start, end), comparator: comparator);
+      Dynamic1D(_data.sublist(start, end), comparator: comparator);
 
   Dynamic1DView get view => this;
 

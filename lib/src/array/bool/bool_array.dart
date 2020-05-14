@@ -27,24 +27,24 @@ class Bool1D extends Object
   set name(String value) => _name = value;
 
   Bool1D(Iterable<bool> data, [String name])
-      : _data = new List<bool>.from(data),
+      : _data = List<bool>.from(data),
         _name = name;
 
   Bool1D.own(this._data, [String name]) : _name = name;
 
   Bool1D.sized(int length, {bool fill: false, String name})
-      : _data = new List<bool>.filled(length, fill, growable: true),
+      : _data = List<bool>.filled(length, fill, growable: true),
         _name = name;
 
   factory Bool1D.shapedLike(Iterable d, {bool fill: false, String name}) =>
-      new Bool1D.sized(d.length, fill: fill, name: name);
+      Bool1D.sized(d.length, fill: fill, name: name);
 
   Bool1D.single(bool data, {String name})
       : _data = <bool>[data],
         _name = name;
 
   Bool1D.gen(int length, bool maker(int index), {String name})
-      : _data = new List<bool>.generate(length, maker),
+      : _data = List<bool>.generate(length, maker),
         _name = name;
 
   Iterator<bool> get iterator => _data.iterator;
@@ -55,13 +55,13 @@ class Bool1D extends Object
 
   operator []=(int i, bool val) {
     if (i >= _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
-  Bool1D slice(int start, [int end]) => new Bool1D(_data.sublist(start, end));
+  Bool1D slice(int start, [int end]) => Bool1D(_data.sublist(start, end));
 
   @override
   void add(bool a) => _data.add(a);
@@ -81,7 +81,7 @@ class Bool1D extends Object
   }
 
   void keepIf(Iterable<bool> mask) {
-    if (mask.length != _data.length) throw new Exception('Length mismatch!');
+    if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
       if (!mask.elementAt(i)) _data.removeAt(i);
@@ -92,7 +92,7 @@ class Bool1D extends Object
 
   void removeAtMany(ArrayView<int> pos) {
     final poss = pos.unique()..sort(descending: true);
-    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+    if (poss.first >= _data.length) throw RangeError.index(poss.last, this);
 
     for (int pos in poss) {
       _data.removeAt(pos);
@@ -114,8 +114,8 @@ class Bool1D extends Object
   }
 
   Bool1DView _view;
-  Bool1DView get view => _view ??= new Bool1DView.own(_data);
+  Bool1DView get view => _view ??= Bool1DView.own(_data);
 
   Bool1DFix _fixed;
-  Bool1DFix get fixed => _fixed ??= new Bool1DFix.own(_data);
+  Bool1DFix get fixed => _fixed ??= Bool1DFix.own(_data);
 }

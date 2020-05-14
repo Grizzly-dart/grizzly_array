@@ -52,18 +52,18 @@ class String1DFix extends Object
   }
 
   String1DFix(Iterable<String> data, [/* String | NameMaker */ this._name])
-      : _data = new List<String>.from(data, growable: false);
+      : _data = List<String>.from(data, growable: false);
 
   String1DFix.own(this._data, [/* String | NameMaker */ this._name]);
 
   String1DFix.sized(int length,
       {String fill, dynamic /* String | NameMaker */ name})
-      : _data = new List<String>.filled(length, fill),
+      : _data = List<String>.filled(length, fill),
         _name = name;
 
   factory String1DFix.shapedLike(Iterable d,
           {String fill, dynamic /* String | NameMaker */ name}) =>
-      new String1DFix.sized(d.length, fill: fill, name: name);
+      String1DFix.sized(d.length, fill: fill, name: name);
 
   String1DFix.single(String data, {dynamic /* String | NameMaker */ name})
       : _data = <String>[data],
@@ -71,7 +71,7 @@ class String1DFix extends Object
 
   String1DFix.gen(int length, String maker(int index),
       {dynamic /* String | NameMaker */ name})
-      : _data = new List<String>.generate(length, maker, growable: false),
+      : _data = List<String>.generate(length, maker, growable: false),
         _name = name;
 
   Iterator<String> get iterator => _data.iterator;
@@ -82,14 +82,14 @@ class String1DFix extends Object
 
   operator []=(int i, String val) {
     if (i > _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
   String1D slice(int start, [int end]) =>
-      new String1D(_data.sublist(start, end));
+      String1D(_data.sublist(start, end));
 
   void sort({bool descending: false}) {
     if (!descending)
@@ -99,7 +99,7 @@ class String1DFix extends Object
   }
 
   String1DView _view;
-  String1DView get view => _view ??= new String1DView.own(_data);
+  String1DView get view => _view ??= String1DView.own(_data);
 
   String1DFix get fixed => this;
 }

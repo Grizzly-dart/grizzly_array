@@ -17,13 +17,13 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
         throw lengthMismatch(expected: d, found: val.length, subject: 'val');
       for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r)?.toDouble();
     } else if (val is Array2DView<double>) {
-      if (val.numRows < d || val.numCols < d) throw new Exception();
+      if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r];
     } else if (val is Array2DView<num>) {
-      if (val.numRows < d || val.numCols < d) throw new Exception();
+      if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r]?.toDouble();
     } else {
-      throw new UnsupportedError('Type!');
+      throw UnsupportedError('Type!');
     }
   }
 
@@ -46,7 +46,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Iterable<double>) {
       if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] += other.elementAt(c);
@@ -55,7 +55,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Numeric2D<double>) {
       if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] += other[r][c];
@@ -68,7 +68,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       }
       return;
     }
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+    throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
   void subtract(
@@ -82,7 +82,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Iterable<double>) {
       if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] -= other.elementAt(c);
@@ -91,7 +91,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Numeric2D<double>) {
       if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] -= other[r][c];
@@ -104,7 +104,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       }
       return;
     }
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+    throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
   void multiply(
@@ -118,7 +118,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Iterable<double>) {
       if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] *= other.elementAt(c);
@@ -127,7 +127,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Numeric2D<double>) {
       if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] *= other[r][c];
@@ -140,7 +140,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       }
       return;
     }
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+    throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
   void divide(
@@ -154,7 +154,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Iterable<double>) {
       if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] /= other.elementAt(c);
@@ -163,7 +163,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Numeric2D<double>) {
       if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] /= other[r][c];
@@ -176,7 +176,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       }
       return;
     }
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+    throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
   void truncDiv(
@@ -190,7 +190,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Iterable<double>) {
       if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] /= other.elementAt(c);
@@ -199,7 +199,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Numeric2D<double>) {
       if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] /= other[r][c];
@@ -212,7 +212,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       }
       return;
     }
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+    throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
   void rdivMe(
@@ -226,7 +226,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Iterable<double>) {
       if (other.length != numCols)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] = other.elementAt(c) / this[r][c];
@@ -235,7 +235,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       return;
     } else if (other is Numeric2D<double>) {
       if (shape != other.shape)
-        throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+        throw ArgumentError.value(other, 'other', 'Size mismatch!');
       for (int r = 0; r < numRows; r++) {
         for (int c = 0; c < numCols; c++) {
           this[r][c] = other[r][c] / this[r][c];
@@ -248,14 +248,14 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       }
       return;
     }
-    throw new ArgumentError.value(other, 'other', 'Unsupported type!');
+    throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
   void matmulMe(Array2DView<num> other) {
     if (!other.isSquare || numCols != other.numRows)
-      throw new Exception('Invalid size!');
+      throw Exception('Invalid size!');
 
-    final temp = new Double1DFix.sized(numCols);
+    final temp = Double1DFix.sized(numCols);
     for (int i = 0; i < numRows; i++) {
       temp.set = 0.0;
       for (int j = 0; j < numCols; j++) {
@@ -270,7 +270,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
   }
 
   void matmulDiagMe(ArrayView<num> other) {
-    if (numCols != other.length) throw new Exception('Invalid size!');
+    if (numCols != other.length) throw Exception('Invalid size!');
 
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < other.length; j++) {
@@ -293,10 +293,10 @@ class Double2DFix extends Object
   final String1DFix names;
 
   Double2DFix(Iterable<Iterable<double>> rows, [Iterable<String> names])
-      : _data = new List<Double1DFix>(rows.length),
+      : _data = List<Double1DFix>(rows.length),
         names = names != null
-            ? new String1DFix(names, "Names")
-            : new String1DFix.sized(rows.isNotEmpty ? rows.first.length : 0,
+            ? String1DFix(names, "Names")
+            : String1DFix.sized(rows.isNotEmpty ? rows.first.length : 0,
                 name: 'Names') {
     if (rows.isEmpty) {
       Exceptions.labelLen(0, this.names.length);
@@ -305,14 +305,14 @@ class Double2DFix extends Object
     Exceptions.labelLen(rows.first.length, this.names.length);
     Exceptions.rowsLen(rows);
     for (int i = 0; i < rows.length; i++) {
-      _data[i] = new Double1DFix(rows.elementAt(i));
+      _data[i] = Double1DFix(rows.elementAt(i));
     }
   }
 
   Double2DFix.own(this._data, [Iterable<String> names])
       : names = names != null
-            ? new String1DFix(names, "Names")
-            : new String1DFix.sized(_data.isNotEmpty ? _data.first.length : 0,
+            ? String1DFix(names, "Names")
+            : String1DFix.sized(_data.isNotEmpty ? _data.first.length : 0,
                 name: 'Names') {
     Exceptions.labelLen(numCols, this.names.length);
     Exceptions.rowsLen(rows);
@@ -320,55 +320,55 @@ class Double2DFix extends Object
 
   factory Double2DFix.fromNums(Iterable<Iterable<num>> rows,
       [Iterable<String> names]) {
-    final data = new List<Double1DFix>(rows.length);
+    final data = List<Double1DFix>(rows.length);
     for (int i = 0; i < rows.length; i++)
-      data[i] = new Double1DFix.fromNums(rows.elementAt(i));
-    return new Double2DFix.own(data, names);
+      data[i] = Double1DFix.fromNums(rows.elementAt(i));
+    return Double2DFix.own(data, names);
   }
 
   factory Double2DFix.sized(int rows, int cols,
       {double fill: 0.0, Iterable<String> names}) {
-    final data = new List<Double1DFix>(rows);
+    final data = List<Double1DFix>(rows);
     for (int i = 0; i < rows; i++) {
-      data[i] = new Double1DFix.sized(cols, fill: fill);
+      data[i] = Double1DFix.sized(cols, fill: fill);
     }
-    return new Double2DFix.own(data, names);
+    return Double2DFix.own(data, names);
   }
 
   factory Double2DFix.shaped(Index2D shape,
           {double fill: 0.0, Iterable<String> names}) =>
-      new Double2DFix.sized(shape.row, shape.col, fill: fill, names: names);
+      Double2DFix.sized(shape.row, shape.col, fill: fill, names: names);
 
   factory Double2DFix.shapedLike(Array2DView like,
           {double fill: 0.0, Iterable<String> names}) =>
-      new Double2DFix.sized(like.numRows, like.numCols,
+      Double2DFix.sized(like.numRows, like.numCols,
           fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Double2DFix.columns(Iterable<Iterable<double>> columns,
       [Iterable<String> names]) {
-    if (columns.length == 0) return new Double2DFix.sized(0, 0, names: names);
+    if (columns.length == 0) return Double2DFix.sized(0, 0, names: names);
 
     Exceptions.columnsLen(columns);
 
     final int numRows = columns.first.length;
     final int numCols = columns.length;
 
-    final data = new List<Double1DFix>(numRows);
+    final data = List<Double1DFix>(numRows);
     for (int i = 0; i < numRows; i++) {
-      final row = new List<double>(numCols);
+      final row = List<double>(numCols);
       for (int j = 0; j < numCols; j++) {
         row[j] = columns.elementAt(j).elementAt(i);
       }
-      data[i] = new Double1DFix.own(row);
+      data[i] = Double1DFix.own(row);
     }
-    return new Double2DFix.own(data, names);
+    return Double2DFix.own(data, names);
   }
 
   factory Double2DFix.diagonal(Iterable<double> diagonal,
       {Index2D shape, Iterable<String> names, double fill: 0.0}) {
-    shape ??= new Index2D(diagonal.length, diagonal.length);
-    final ret = new Double2DFix.shaped(shape, fill: fill, names: names);
+    shape ??= Index2D(diagonal.length, diagonal.length);
+    final ret = Double2DFix.shaped(shape, fill: fill, names: names);
     int length = math.min(math.min(shape.row, shape.col), diagonal.length);
     for (int i = 0; i < length; i++) {
       ret[i][i] = diagonal.elementAt(i);
@@ -378,26 +378,26 @@ class Double2DFix extends Object
 
   factory Double2DFix.aRow(Iterable<double> row,
       {int repeat = 1, Iterable<String> names}) {
-    final data = new List<Double1DFix>.filled(repeat, null, growable: true);
+    final data = List<Double1DFix>.filled(repeat, null, growable: true);
     if (row is Iterable<double>) {
-      for (int i = 0; i < repeat; i++) data[i] = new Double1DFix(row);
+      for (int i = 0; i < repeat; i++) data[i] = Double1DFix(row);
     } else {
-      final temp = new Double1DFix.fromNums(row);
+      final temp = Double1DFix.fromNums(row);
       data[0] = temp;
-      for (int i = 1; i < repeat; i++) data[i] = new Double1DFix(temp);
+      for (int i = 1; i < repeat; i++) data[i] = Double1DFix(temp);
     }
-    return new Double2DFix.own(data, names);
+    return Double2DFix.own(data, names);
   }
 
   factory Double2DFix.aCol(Iterable<double> column,
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<double>) {
-      return new Double2DFix.columns(
-          new ConstantIterable<Iterable<double>>(column, repeat), names);
+      return Double2DFix.columns(
+          ConstantIterable<Iterable<double>>(column, repeat), names);
     }
-    return new Double2DFix.columns(
-        new ConstantIterable<Iterable<double>>(
-            new Double1DView.fromNums(column), repeat),
+    return Double2DFix.columns(
+        ConstantIterable<Iterable<double>>(
+            Double1DView.fromNums(column), repeat),
         names);
   }
 
@@ -409,10 +409,10 @@ class Double2DFix extends Object
       final v = rowMaker(i);
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Double1DFix(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Double1DFix(v));
     }
-    return new Double2DFix.own(rows);
+    return Double2DFix.own(rows);
   }
 
   factory Double2DFix.genCols(
@@ -423,14 +423,14 @@ class Double2DFix extends Object
       final v = colMaker(i);
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Double2DFix.columns(cols);
+    return Double2DFix.columns(cols);
   }
 
   factory Double2DFix.gen(Index2D shape, double maker(int row, int col)) {
-    final ret = new Double2DFix.shaped(shape);
+    final ret = Double2DFix.shaped(shape);
     for (int r = 0; r < ret.numRows; r++) {
       for (int c = 0; c < ret.numCols; c++) {
         ret[r][c] = maker(r, c);
@@ -447,10 +447,10 @@ class Double2DFix extends Object
       final v = rowMaker(iterable.elementAt(i));
       if (v == null) continue;
       colLen ??= v.length;
-      if (colLen != v.length) throw new Exception('Size mismatch!');
-      rows.add(new Double1DFix(v));
+      if (colLen != v.length) throw Exception('Size mismatch!');
+      rows.add(Double1DFix(v));
     }
-    return new Double2DFix.own(rows);
+    return Double2DFix.own(rows);
   }
 
   static Double2DFix buildCols<T>(
@@ -461,22 +461,22 @@ class Double2DFix extends Object
       final v = colMaker(iterable.elementAt(i));
       if (v == null) continue;
       rowLen ??= v.length;
-      if (rowLen != v.length) throw new Exception('Size mismatch!');
+      if (rowLen != v.length) throw Exception('Size mismatch!');
       cols.add(v);
     }
-    return new Double2DFix.columns(cols);
+    return Double2DFix.columns(cols);
   }
 
   static Double2DFix build<T>(Iterable<Iterable<T>> data, double maker(T v)) {
     if (data.length == 0) {
-      return new Double2DFix.sized(0, 0);
+      return Double2DFix.sized(0, 0);
     }
 
     if (!data.every((i) => i.length == data.first.length)) {
-      throw new Exception('Size mismatch!');
+      throw Exception('Size mismatch!');
     }
 
-    final ret = new Double2DFix.sized(data.length, data.first.length);
+    final ret = Double2DFix.sized(data.length, data.first.length);
     for (int r = 0; r < ret.numRows; r++) {
       final Iterator<T> row = data.elementAt(r).iterator;
       row.moveNext();
@@ -492,27 +492,27 @@ class Double2DFix extends Object
 
   covariant Double2DColFix _col;
 
-  Double2DColFix get col => _col ??= new Double2DColFix(this);
+  Double2DColFix get col => _col ??= Double2DColFix(this);
 
   covariant Double2DRowFix _row;
 
-  Double2DRowFix get row => _row ??= new Double2DRowFix(this);
+  Double2DRowFix get row => _row ??= Double2DRowFix(this);
 
   Double1DFix operator [](int i) => _data[i].fixed;
 
   operator []=(final int i, Iterable<double> val) {
     if (i >= numRows) {
-      throw new RangeError.range(i, 0, numRows - 1, 'i');
+      throw RangeError.range(i, 0, numRows - 1, 'i');
     }
 
     if (numRows == 0) {
-      final arr = new Double1D(val);
+      final arr = Double1D(val);
       _data.add(arr);
       return;
     }
 
-    if (val.length != numCols) throw new Exception('Invalid size!');
-    final arr = new Double1D(val);
+    if (val.length != numCols) throw Exception('Invalid size!');
+    final arr = Double1D(val);
     _data[i] = arr;
   }
 
@@ -528,7 +528,7 @@ class Double2DFix extends Object
   @override
   void assign(Array2DView<double> other) {
     if (other.shape != shape)
-      throw new ArgumentError.value(other, 'other', 'Size mismatch!');
+      throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++) {
@@ -605,7 +605,7 @@ class Double2DFix extends Object
 
   Double2DView _view;
 
-  Double2DView get view => _view ??= new Double2DView.own(_data);
+  Double2DView get view => _view ??= Double2DView.own(_data);
 
   Double2DFix get fixed => this;
 
@@ -613,7 +613,7 @@ class Double2DFix extends Object
   Iterable<ArrayFix<double>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<double>> get cols => new ColsListFix<double>(this);
+  Iterable<ArrayFix<double>> get cols => ColsListFix<double>(this);
 
   Double1D unique() => super.unique();
 }

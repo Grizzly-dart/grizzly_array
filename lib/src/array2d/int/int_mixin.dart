@@ -3,14 +3,14 @@ part of grizzly.series.array2d;
 abstract class Int2DViewMixin implements Numeric2DView<int> {
   List<Int1DView> get _data;
 
-  Int2DView makeView(Iterable<Iterable<int>> newData) => new Int2DView(newData);
+  Int2DView makeView(Iterable<Iterable<int>> newData) => Int2DView(newData);
 
-  Int2DFix makeFix(Iterable<Iterable<int>> newData) => new Int2DFix(newData);
+  Int2DFix makeFix(Iterable<Iterable<int>> newData) => Int2DFix(newData);
 
-  Int2D make(Iterable<Iterable<int>> newData) => new Int2D(newData);
+  Int2D make(Iterable<Iterable<int>> newData) => Int2D(newData);
 
   @override
-  Array<int> makeArray(Iterable<int> newData) => new Int1D(newData);
+  Array<int> makeArray(Iterable<int> newData) => Int1D(newData);
 
   int get numCols {
     if (numRows == 0) return 0;
@@ -27,17 +27,17 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
       end = myShape;
     } else {
       if (end < Index2D.zero)
-        throw new ArgumentError.value(end, 'end', 'Index out of range!');
+        throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (end >= myShape)
-        throw new ArgumentError.value(end, 'end', 'Index out of range!');
+        throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (start > end)
-        throw new ArgumentError.value(
+        throw ArgumentError.value(
             end, 'end', 'Must be greater than start!');
     }
     if (start < Index2D.zero)
-      throw new ArgumentError.value(start, 'start', 'Index out of range!');
+      throw ArgumentError.value(start, 'start', 'Index out of range!');
     if (start >= myShape)
-      throw new ArgumentError.value(start, 'start', 'Index out of range!');
+      throw ArgumentError.value(start, 'start', 'Index out of range!');
 
     final list = <Int1D>[];
 
@@ -45,7 +45,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new Int2D.own(list);
+    return Int2D.own(list);
   }
 
   int get min {
@@ -86,7 +86,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
         if (min == null || d < min) min = d;
       }
     }
-    return new Extent<int>(min, max);
+    return Extent<int>(min, max);
   }
 
   Index2D get argMin {
@@ -132,7 +132,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
 
   double average(Iterable<Iterable<num>> weights) {
     if (weights.length != numRows)
-      throw new ArgumentError.value(weights, 'weights', 'Size mismatch');
+      throw ArgumentError.value(weights, 'weights', 'Size mismatch');
     if (numRows == 0) return 0.0;
 
     final int yL = numCols;
@@ -143,7 +143,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
       final weightsI = weights.elementAt(i);
 
       if (weightsI.length != yL) {
-        throw new Exception('Weights have mismatching length!');
+        throw Exception('Weights have mismatching length!');
       }
 
       for (int j = 0; j < _data.first.length; j++) {
@@ -189,14 +189,14 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   }
 
   Int2D operator -() {
-    final ret = new Int2D.sized(numRows, numCols);
+    final ret = Int2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++)
       for (int c = 0; c < numCols; c++) ret[r][c] = -_data[r][c];
     return ret;
   }
 
   Double2D get log {
-    final ret = new Double2D.sized(numRows, numCols);
+    final ret = Double2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++) ret[r][c] = math.log(_data[r][c]);
     }
@@ -204,7 +204,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   }
 
   Double2D get log10 {
-    final ret = new Double2D.sized(numRows, numCols);
+    final ret = Double2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++)
         ret[r][c] = math.log(_data[r][c]) / math.ln10;
@@ -213,7 +213,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   }
 
   Double2D logN(double n) {
-    final ret = new Double2D.sized(numRows, numCols);
+    final ret = Double2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++)
         ret[r][c] = math.log(_data[r][c]) / math.log(n);
@@ -222,7 +222,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   }
 
   Double2D get exp {
-    final ret = new Double2D.sized(numRows, numCols);
+    final ret = Double2D.sized(numRows, numCols);
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++) ret[r][c] = math.exp(_data[r][c]);
     }
@@ -231,9 +231,9 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
 
   Int1D dot(Iterable<num> other) {
     if (numCols != other.length)
-      throw new ArgumentError.value(other, 'other', 'Invalid shape!');
+      throw ArgumentError.value(other, 'other', 'Invalid shape!');
 
-    final ret = new Int1D.sized(numRows);
+    final ret = Int1D.sized(numRows);
     for (int r = 0; r < numRows; r++) {
       ret[r] = _data[r].dot(other).toInt();
     }
@@ -241,7 +241,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   }
 
   Int2D get transpose {
-    final Int2D ret = new Int2D.sized(numCols, numRows);
+    final Int2D ret = Int2D.sized(numCols, numRows);
     for (int j = 0; j < _data.first.length; j++) {
       for (int i = 0; i < numRows; i++) {
         ret[j][i] = _data[i][j];
@@ -254,16 +254,16 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
     int dim = numCols;
     if (dim > numRows) dim = numRows;
 
-    final ret = new Int1D.sized(dim);
+    final ret = Int1D.sized(dim);
     for (int i = 0; i < dim; i++) {
       ret[i] = _data[i][i];
     }
     return ret;
   }
 
-  Int2D toInt() => new Int2D(_data);
+  Int2D toInt() => Int2D(_data);
 
-  Double2D toDouble() => new Double2D.fromNums(_data);
+  Double2D toDouble() => Double2D.fromNums(_data);
 
   double get variance {
     if (numRows == 0) return 0.0;
@@ -306,7 +306,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   */
 
   Double2D get covMatrix {
-    final ret = new Double2D.sized(numCols, numCols);
+    final ret = Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
       ret[c] = col[c].stats.covMatrix(view);
     }
@@ -314,7 +314,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   }
 
   Double2D get corrcoefMatrix {
-    final ret = new Double2D.sized(numCols, numCols);
+    final ret = Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
       ret[c] = col[c].stats.corrcoefMatrix(view);
     }
@@ -324,12 +324,12 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   Int2D reshaped(Index2D newShape, {int def: 0}) =>
       clone()..reshape(newShape, def: def);
 
-  Int2D clone() => new Int2D(this);
+  Int2D clone() => Int2D(this);
 
   Int2D matmul(Array2DView<int> other) {
-    if (numCols != other.numRows) throw new Exception('Invalid size!');
+    if (numCols != other.numRows) throw Exception('Invalid size!');
 
-    Int2D ret = new Int2D.sized(numRows, other.numCols);
+    Int2D ret = Int2D.sized(numRows, other.numCols);
 
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < other.numCols; j++) {
@@ -344,9 +344,9 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   }
 
   Int2D matmulDiag(ArrayView<int> other) {
-    if (numCols != other.length) throw new Exception('Invalid size!');
+    if (numCols != other.length) throw Exception('Invalid size!');
 
-    Int2D ret = new Int2D.sized(numRows, other.length);
+    Int2D ret = Int2D.sized(numRows, other.length);
 
     for (int i = 0; i < numRows; i++) {
       for (int j = 0; j < other.length; j++) {

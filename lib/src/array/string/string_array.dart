@@ -28,23 +28,23 @@ class String1D extends Object
   set name(String value) => _name = value;
 
   String1D(Iterable<String> data, [this._name])
-      : _data = new List<String>.from(data);
+      : _data = List<String>.from(data);
 
   String1D.own(this._data, [this._name]);
 
   String1D.sized(int length, {String fill, String name})
-      : _data = new List<String>.filled(length, fill, growable: true),
+      : _data = List<String>.filled(length, fill, growable: true),
         _name = name;
 
   factory String1D.shapedLike(Iterable d, {String fill, String name}) =>
-      new String1D.sized(d.length, fill: fill, name: name);
+      String1D.sized(d.length, fill: fill, name: name);
 
   String1D.single(String data, {String name})
       : _data = <String>[data],
         _name = name;
 
   String1D.gen(int length, String maker(int index), {String name})
-      : _data = new List<String>.generate(length, maker),
+      : _data = List<String>.generate(length, maker),
         _name = name;
 
   Iterator<String> get iterator => _data.iterator;
@@ -55,14 +55,14 @@ class String1D extends Object
 
   operator []=(int i, String val) {
     if (i >= _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
   String1D slice(int start, [int end]) =>
-      new String1D(_data.sublist(start, end));
+      String1D(_data.sublist(start, end));
 
   @override
   void add(String a) => _data.add(a);
@@ -82,7 +82,7 @@ class String1D extends Object
   }
 
   void keepIf(Iterable<bool> mask) {
-    if (mask.length != _data.length) throw new Exception('Length mismatch!');
+    if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
       if (!mask.elementAt(i)) _data.removeAt(i);
@@ -93,7 +93,7 @@ class String1D extends Object
 
   void removeAtMany(ArrayView<int> pos) {
     final poss = pos.unique()..sort(descending: true);
-    if (poss.first >= _data.length) throw new RangeError.index(poss.last, this);
+    if (poss.first >= _data.length) throw RangeError.index(poss.last, this);
 
     for (int pos in poss) _data.removeAt(pos);
   }
@@ -113,8 +113,8 @@ class String1D extends Object
   }
 
   String1DView _view;
-  String1DView get view => _view ??= new String1DView.own(_data);
+  String1DView get view => _view ??= String1DView.own(_data);
 
   String1DFix _fixed;
-  String1DFix get fixed => _fixed ??= new String1DFix.own(_data);
+  String1DFix get fixed => _fixed ??= String1DFix.own(_data);
 }

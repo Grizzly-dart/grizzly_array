@@ -44,7 +44,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is int) {
@@ -69,7 +69,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is int) {
@@ -94,7 +94,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is int) {
@@ -123,7 +123,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
     } else if (other is Iterable<int>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is int) {
@@ -148,7 +148,7 @@ abstract class IntFixMixin implements Numeric1DFix<int> {
     } else if (other is Iterable<num>) {
       checkLengths(this, other, subject: 'other');
     } else {
-      throw new UnimplementedError();
+      throw UnimplementedError();
     }
 
     if (other is int) {
@@ -187,7 +187,7 @@ class Int1DFix extends Object
   }
 
   Int1DFix(Iterable<int> data, [/* String | NameMaker */ this._name])
-      : _data = new List<int>.from(data, growable: false);
+      : _data = List<int>.from(data, growable: false);
 
   /// Creates [Int1DFix] from [_data] and also takes ownership of it. It is
   /// efficient than other ways of creating [Int1DFix] because it involves no
@@ -196,24 +196,24 @@ class Int1DFix extends Object
 
   Int1DFix.sized(int length,
       {int fill: 0, dynamic /* String | NameMaker */ name})
-      : _data = new List<int>.filled(length, fill),
+      : _data = List<int>.filled(length, fill),
         _name = name;
 
   factory Int1DFix.shapedLike(Iterable d,
           {int fill: 0, dynamic /* String | NameMaker */ name}) =>
-      new Int1DFix.sized(d.length, fill: fill, name: name);
+      Int1DFix.sized(d.length, fill: fill, name: name);
 
   Int1DFix.single(int data, {dynamic /* String | NameMaker */ name})
-      : _data = new List<int>.from(<int>[data], growable: false),
+      : _data = List<int>.from(<int>[data], growable: false),
         _name = name;
 
   Int1DFix.gen(int length, int maker(int index),
       {dynamic /* String | NameMaker */ name})
-      : _data = new List<int>.generate(length, maker, growable: false),
+      : _data = List<int>.generate(length, maker, growable: false),
         _name = name;
 
   factory Int1DFix.fromNums(Iterable<num> iterable, [String name]) {
-    final list = new Int1DFix.sized(iterable.length, name: name);
+    final list = Int1DFix.sized(iterable.length, name: name);
     for (int i = 0; i < iterable.length; i++)
       list[i] = iterable.elementAt(i).toInt();
     return list;
@@ -221,16 +221,16 @@ class Int1DFix extends Object
 
   factory Int1DFix.range(int start, int stop,
           {int step: 1, dynamic /* String | NameMaker */ name}) =>
-      new Int1DFix.own(
+      Int1DFix.own(
           Ranger.range(start, stop, step).toList(growable: false), name);
 
   factory Int1DFix.until(int stop,
           {int step: 1, dynamic /* String | NameMaker */ name}) =>
-      new Int1DFix.own(Ranger.until(stop, step).toList(growable: false), name);
+      Int1DFix.own(Ranger.until(stop, step).toList(growable: false), name);
 
   Stats<int> _stats;
 
-  Stats<int> get stats => _stats ??= new StatsImpl<int>(this);
+  Stats<int> get stats => _stats ??= StatsImpl<int>(this);
 
   Iterator<int> get iterator => _data.iterator;
 
@@ -240,13 +240,13 @@ class Int1DFix extends Object
 
   operator []=(int i, int val) {
     if (i > _data.length) {
-      throw new RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
+      throw RangeError.range(i, 0, _data.length, 'i', 'Out of range!');
     }
 
     _data[i] = val;
   }
 
-  Int1D slice(int start, [int end]) => new Int1D(_data.sublist(start, end));
+  Int1D slice(int start, [int end]) => Int1D(_data.sublist(start, end));
 
   void sort({bool descending: false}) {
     if (!descending)
@@ -256,7 +256,7 @@ class Int1DFix extends Object
   }
 
   Int1DView _view;
-  Int1DView get view => _view ??= new Int1DView.own(_data);
+  Int1DView get view => _view ??= Int1DView.own(_data);
 
   Int1DFix get fixed => this;
 

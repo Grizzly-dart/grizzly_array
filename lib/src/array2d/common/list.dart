@@ -17,7 +17,7 @@ class ColList<T> extends Object with ListMixin<T> implements List<T> {
     if (inner is Array2DFix<T>) {
       (inner as Array2DFix<T>)[index][colIdx] = value;
     } else {
-      throw new UnsupportedError('Array2DView is not modifiable!');
+      throw UnsupportedError('Array2DView is not modifiable!');
     }
   }
 
@@ -26,7 +26,7 @@ class ColList<T> extends Object with ListMixin<T> implements List<T> {
 
   @override
   set length(int newLength) {
-    throw new UnsupportedError('Changing lenght not supported!');
+    throw UnsupportedError('Changing lenght not supported!');
   }
 }
 
@@ -47,7 +47,7 @@ class ColsListView<T> extends Object
     if (inner is Array2DFix<T>) {
       (inner as Array2DFix<T>).col[index] = value;
     } else {
-      throw new UnsupportedError('Array2DView is not modifiable!');
+      throw UnsupportedError('Array2DView is not modifiable!');
     }
   }
 
@@ -56,7 +56,7 @@ class ColsListView<T> extends Object
 
   @override
   set length(int newLength) {
-    throw new UnsupportedError('Changing lenght not supported!');
+    throw UnsupportedError('Changing lenght not supported!');
   }
 }
 
@@ -77,7 +77,7 @@ class ColsListFix<T> extends Object
     if (inner is Array2DFix<T>) {
       inner.col[index] = value;
     } else {
-      throw new UnsupportedError('Array2DView is not modifiable!');
+      throw UnsupportedError('Array2DView is not modifiable!');
     }
   }
 
@@ -86,6 +86,6 @@ class ColsListFix<T> extends Object
 
   @override
   set length(int newLength) {
-    throw new UnsupportedError('Changing lenght not supported!');
+    throw UnsupportedError('Changing lenght not supported!');
   }
 }

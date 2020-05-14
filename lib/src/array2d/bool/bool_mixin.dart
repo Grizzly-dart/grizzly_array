@@ -10,14 +10,14 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
   Bool2DView get view;
 
   Bool2DView makeView(Iterable<Iterable<bool>> newData) =>
-      new Bool2DView(newData);
+      Bool2DView(newData);
 
-  Bool2DFix makeFix(Iterable<Iterable<bool>> newData) => new Bool2DFix(newData);
+  Bool2DFix makeFix(Iterable<Iterable<bool>> newData) => Bool2DFix(newData);
 
-  Bool2D make(Iterable<Iterable<bool>> newData) => new Bool2D(newData);
+  Bool2D make(Iterable<Iterable<bool>> newData) => Bool2D(newData);
 
   @override
-  Array<bool> makeArray(Iterable<bool> newData) => new Bool1D(newData);
+  Array<bool> makeArray(Iterable<bool> newData) => Bool1D(newData);
 
   int get numCols {
     if (numRows == 0) return 0;
@@ -26,7 +26,7 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
 
   int get numRows => _data.length;
 
-  Index2D get shape => new Index2D(numRows, numCols);
+  Index2D get shape => Index2D(numRows, numCols);
 
   bool get isSquare => numRows == numCols;
 
@@ -38,17 +38,17 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
       end = myShape;
     } else {
       if (end < Index2D.zero)
-        throw new ArgumentError.value(end, 'end', 'Index out of range!');
+        throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (end >= myShape)
-        throw new ArgumentError.value(end, 'end', 'Index out of range!');
+        throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (start > end)
-        throw new ArgumentError.value(
+        throw ArgumentError.value(
             end, 'end', 'Must be greater than start!');
     }
     if (start < Index2D.zero)
-      throw new ArgumentError.value(start, 'start', 'Index out of range!');
+      throw ArgumentError.value(start, 'start', 'Index out of range!');
     if (start >= myShape)
-      throw new ArgumentError.value(start, 'start', 'Index out of range!');
+      throw ArgumentError.value(start, 'start', 'Index out of range!');
 
     final list = <Bool1D>[];
 
@@ -56,7 +56,7 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
       list.add(_data[c].slice(start.col, end.col));
     }
 
-    return new Bool2D.own(list);
+    return Bool2D.own(list);
   }
 
   bool get min {
@@ -139,21 +139,21 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
 
   Array2D<bool> head([int count = 10]) {
     // TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Array2D<bool> tail([int count = 10]) {
     //TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Array2D<bool> sample([int count = 10]) {
     //TODO
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   Bool2D get transpose {
-    final ret = new Bool2D.sized(numCols, numRows);
+    final ret = Bool2D.sized(numCols, numRows);
     for (int j = 0; j < _data.first.length; j++) {
       for (int i = 0; i < numRows; i++) {
         ret[j][i] = _data[i][j];
@@ -166,7 +166,7 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
     int dim = numCols;
     if (dim > numRows) dim = numRows;
 
-    final ret = new Bool1D.sized(dim);
+    final ret = Bool1D.sized(dim);
     for (int i = 0; i < dim; i++) {
       ret[i] = _data[i][i];
     }
@@ -190,5 +190,5 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
   Bool2D reshaped(Index2D newShape, {bool def: false}) =>
       clone()..reshape(newShape, def: def);
 
-  Bool2D clone() => new Bool2D(this);
+  Bool2D clone() => Bool2D(this);
 }
