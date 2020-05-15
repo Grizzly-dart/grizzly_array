@@ -5,7 +5,7 @@ class Bool2DFix extends Object
         Array2DViewMixin<bool>,
         Array2DFixMixin<bool>,
         IterableMixin<Iterable<bool>>,
-        Bool2DViewMixin
+      Bool2DViewMixin
     implements Array2DFix<bool>, Bool2DView {
   final List<Bool1DFix> _data;
 

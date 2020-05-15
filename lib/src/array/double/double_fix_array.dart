@@ -156,13 +156,11 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     return this;
   }
 
-  @override
   Double1D expMe(num x) {
     for (int i = 0; i < length; i++) this[i] = math.exp(this[i]);
     return this;
   }
 
-  @override
   Double1DFix logNMe(double n) {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.log(n);
     return this;

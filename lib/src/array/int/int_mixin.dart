@@ -18,22 +18,22 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   }
 
   Int1D operator +(
-          /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) =>
+          /* num | Iterable<num> | Numeric2D<int> */ other) =>
       toInt()..addition(other);
 
-  Int1D operator -(/* num | IterView<num> | Iterable<num> */ other) =>
+  Int1D operator -(/* num | Iterable<num> */ other) =>
       toInt()..subtract(other);
 
-  Int1D operator *(/* num | IterView<num> | Iterable<num> */ other) =>
+  Int1D operator *(/* num | Iterable<num> */ other) =>
       toInt()..multiply(other);
 
-  Double1D operator /(/* num | IterView<num> | Iterable<num> */ other) =>
+  Double1D operator /(/* num | Iterable<num> */ other) =>
       toDouble()..divide(other);
 
-  Int1D operator ~/(/* num | IterView<num> | Iterable<num> */ other) =>
+  Int1D operator ~/(/* num | Iterable<num> */ other) =>
       toInt()..truncDiv(other);
 
-  Double1D rdiv(/* num | IterView<num> | Iterable<num> */ other) =>
+  Double1D rdiv(/* num | Iterable<num> */ other) =>
       toDouble()..rdivMe(other);
 
   @override

@@ -192,6 +192,8 @@ class String2DView extends Object
 
   String2DRowView get row => _row ??= String2DRowView(this);
 
+  String1DView operator [](int i) => _data[i].view;
+
   @override
   Iterable<ArrayView<String>> get rows => _data;
 

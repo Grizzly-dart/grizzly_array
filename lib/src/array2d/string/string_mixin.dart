@@ -3,12 +3,6 @@ part of grizzly.series.array2d;
 abstract class String2DMixin implements Array2DView<String> {
   List<String1DView> get _data;
 
-  String2DColView get col;
-
-  String2DRowView get row;
-
-  String2DView get view;
-
   String2DView makeView(Iterable<Iterable<String>> newData) =>
       String2DView(newData);
 
@@ -30,8 +24,6 @@ abstract class String2DMixin implements Array2DView<String> {
   Index2D get shape => Index2D(numRows, numCols);
 
   bool get isSquare => numRows == numCols;
-
-  String1DView operator [](int i) => _data[i].view;
 
   String2D slice(Index2D start, [Index2D end]) {
     final Index2D myShape = shape;

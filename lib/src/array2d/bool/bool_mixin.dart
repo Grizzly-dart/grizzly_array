@@ -3,12 +3,6 @@ part of grizzly.series.array2d;
 abstract class Bool2DViewMixin implements Array2DView<bool> {
   List<Bool1DView> get _data;
 
-  Bool2DColView get col;
-
-  Bool2DRowView get row;
-
-  Bool2DView get view;
-
   Bool2DView makeView(Iterable<Iterable<bool>> newData) => Bool2DView(newData);
 
   Bool2DFix makeFix(Iterable<Iterable<bool>> newData) => Bool2DFix(newData);
@@ -28,8 +22,6 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
   Index2D get shape => Index2D(numRows, numCols);
 
   bool get isSquare => numRows == numCols;
-
-  Bool1DView operator [](int i) => _data[i].view;
 
   Bool2D slice(Index2D start, [Index2D end]) {
     final Index2D myShape = shape;
@@ -185,7 +177,7 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
     return true;
   }
 
-  Bool2D reshaped(Index2D newShape, {bool def: false}) =>
+  Bool2D reshaped(Index2D newShape, {bool def = false}) =>
       clone()..reshape(newShape, def: def);
 
   Bool2D clone() => Bool2D(this);

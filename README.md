@@ -12,7 +12,7 @@ A simple usage example:
     import 'package:grizzly_array/grizzly_array.dart';
 
     main() {
-      var awesome = new Awesome();
+      var awesome = Awesome();
     }
 
 ## Features and bugs

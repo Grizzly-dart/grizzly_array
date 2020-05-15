@@ -19,8 +19,6 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
 
   int get numRows => _data.length;
 
-  Int1DView operator [](int i) => _data[i];
-
   Int2D slice(Index2D start, [Index2D end]) {
     final Index2D myShape = shape;
     if (end == null) {
@@ -157,10 +155,8 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
     return sum / denom;
   }
 
-  // TODO implement clone
-
   Int2D operator +(
-          /* num | IterView<num> | Iterable<num> | Numeric2D<int> */ other) =>
+          /* num | Iterable<num> | Numeric2D<int> */ other) =>
       toInt()..addition(other);
 
   Int2D operator -(/* int | Numeric1DView<int> | Int2DArray */ other) =>
@@ -285,7 +281,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
       bool ascending: false,
       bool dropNull: false,
       dynamic name: ''}) {
-    final groups = new Map<int, List<int>>();
+    final groups = Map<int, List<int>>();
     for (int r = 0; r < numRows; r++) {
       for (int c = 0; c < numCols; c++) {
         final int v = _data[r][c];
@@ -293,7 +289,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
         groups[v][0]++;
       }
     }
-    final ret = new IntSeries<int>.fromMap(groups, name: name);
+    final ret = IntSeries<int>.fromMap(groups, name: name);
     // Sort
     if (sortByValue) {
       ret.sortByIndex(ascending: ascending, inplace: true);

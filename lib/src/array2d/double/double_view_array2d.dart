@@ -207,6 +207,8 @@ class Double2DView extends Object
 
   Iterator<Double1DView> get iterator => _data.iterator;
 
+  Double1DView operator [](int i) => _data[i];
+
   covariant Double2DColView _col;
 
   Double2DColView get col => _col ??= Double2DColView(this);

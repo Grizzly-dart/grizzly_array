@@ -208,6 +208,8 @@ class Bool2DView extends Object
 
   Iterator<Bool1DView> get iterator => _data.iterator;
 
+  Bool1DView operator [](int i) => _data[i].view;
+
   covariant Bool2DColView _col;
 
   Bool2DColView get col => _col ??= Bool2DColView(this);

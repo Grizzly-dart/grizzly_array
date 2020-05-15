@@ -215,6 +215,8 @@ class Int2DView extends Object
 
   Int2DRowView get row => _row ??= Int2DRowView(this);
 
+  Int1DView operator [](int i) => _data[i];
+
   Int2DView get view => this;
 
   @override

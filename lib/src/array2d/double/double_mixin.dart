@@ -25,8 +25,6 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
 
   bool get isSquare => numRows == numCols;
 
-  Double1DView operator [](int i) => _data[i];
-
   Double2D slice(Index2D start, [Index2D end]) {
     final Index2D myShape = shape;
     if (end == null) {
@@ -420,12 +418,12 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     return false;
   }
 
-  String toDecString() {
+  String toString() {
     StringBuffer sb = StringBuffer();
     sb.writeln('[');
     for (int i = 0; i < numRows; i++) {
       sb.write('  ');
-      sb.write(this[i].toDecString());
+      sb.write(this[i].toString());
       sb.writeln(',');
     }
     sb.writeln(']');

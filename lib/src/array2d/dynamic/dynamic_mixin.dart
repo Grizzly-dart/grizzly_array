@@ -3,12 +3,6 @@ part of grizzly.series.array2d;
 abstract class Dynamic2DMixin implements DynamicArray2DView {
   List<Dynamic1DView> get _data;
 
-  Dynamic2DColView get col;
-
-  Dynamic2DRowView get row;
-
-  Dynamic2DView get view;
-
   Dynamic2DView makeView(Iterable<Iterable<dynamic>> newData) =>
       Dynamic2DView(newData);
 
@@ -30,8 +24,6 @@ abstract class Dynamic2DMixin implements DynamicArray2DView {
   Index2D get shape => Index2D(numRows, numCols);
 
   bool get isSquare => numRows == numCols;
-
-  Dynamic1DView operator [](int i) => _data[i].view;
 
   Dynamic2D slice(Index2D start, [Index2D end]) {
     final Index2D myShape = shape;

@@ -49,7 +49,7 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
     throw UnimplementedError();
   }
 
-  bool operator ==(/* E | IterView<E> | Iterable<E> */ other) {
+  bool operator ==(/* E | Iterable<E> */ other) {
     if (other is Array2DView<E>) {
       if (shape != other.shape) return false;
       for (int i = 0; i < numRows; i++) {

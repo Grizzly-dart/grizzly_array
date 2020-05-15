@@ -192,6 +192,8 @@ class Dynamic2DView extends Object
 
   Dynamic2DRowView get row => _row ??= Dynamic2DRowView(this);
 
+  Dynamic1DView operator [](int i) => _data[i].view;
+
   @override
   Iterable<ArrayView<dynamic>> get rows => _data;
 

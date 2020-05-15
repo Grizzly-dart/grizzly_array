@@ -347,7 +347,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return Double1D.own(ret);
   }
 
-  bool operator ==(/* IterView<num> | Iterable<num> */ other) {
+  bool operator ==(/* Iterable<num> */ other) {
     if (other is Iterable<num>) {
       if (other.length != length) return false;
       for (int i = 0; i < length; i++) {
@@ -358,7 +358,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return false;
   }
 
-  String toDecString() {
+  String toString() {
     StringBuffer sb = StringBuffer();
     sb.write('[');
     for (int i = 0; i < length; i++) {
