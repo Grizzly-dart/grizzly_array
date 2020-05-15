@@ -2,13 +2,10 @@ part of grizzly.series.array2d;
 
 class Int2DCol extends Object
     with
-        AxisViewMixin<int>,
-        AxisFixMixin<int>,
-        AxisMixin<int>,
+        Axis2DMixin<int>,
         ColMixin<int>,
-        IntAxis2DViewMixin,
-        Int2DColViewMixin
-    implements Numeric2DAxis<int>, Int2DColFix {
+        IntAxis2DViewMixin
+    implements Numeric2DAxis<int> {
   final Int2D inner;
 
   Int2DCol(this.inner);
@@ -50,46 +47,4 @@ class Int2DCol extends Object
       inner._data[i].insert(index, col.elementAt(i));
     }
   }
-}
-
-class Int2DColFix extends Object
-    with
-        AxisViewMixin<int>,
-        AxisFixMixin<int>,
-        ColFixMixin<int>,
-        IntAxis2DViewMixin,
-        Int2DColViewMixin
-    implements Numeric2DAxisFix<int>, Int2DColView {
-  final Int2DFix inner;
-
-  Int2DColFix(this.inner);
-
-  Int1DFix operator [](int col) => Int1DFix.own(ColList<int>(inner, col));
-
-  operator []=(int index, Iterable<int> col) {
-    if (index >= inner.numCols) {
-      throw RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-
-    if (col.length != inner.numRows) {
-      throw ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-}
-
-class Int2DColView extends Object
-    with
-        AxisViewMixin<int>,
-        ColViewMixin<int>,
-        IntAxis2DViewMixin,
-        Int2DColViewMixin
-    implements Numeric2DAxisView<int> {
-  final Int2DView inner;
-
-  Int2DColView(this.inner);
-
-  Int1DView operator [](int col) => Int1DView.own(ColList<int>(inner, col));
 }

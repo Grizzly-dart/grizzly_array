@@ -1,11 +1,7 @@
 part of grizzly.series.array2d;
 
-abstract class Bool2DViewMixin implements Array2DView<bool> {
+abstract class Bool2DViewMixin implements Array2D<bool> {
   List<Bool1DView> get _data;
-
-  Bool2DView makeView(Iterable<Iterable<bool>> newData) => Bool2DView(newData);
-
-  Bool2DFix makeFix(Iterable<Iterable<bool>> newData) => Bool2DFix(newData);
 
   Bool2D make(Iterable<Iterable<bool>> newData) => Bool2D(newData);
 

@@ -2,11 +2,10 @@ part of grizzly.series.array2d;
 
 class Bool2D extends Object
     with
-        Array2DViewMixin<bool>,
-        Array2DFixMixin<bool>,
+        Array2DMixin<bool>,
         IterableMixin<Iterable<bool>>,
         Bool2DViewMixin
-    implements Array2D<bool>, Bool2DFix {
+    implements Array2D<bool> {
   final List<Bool1D> _data;
 
   final String1D _names;
@@ -53,7 +52,7 @@ class Bool2D extends Object
           {bool fill: false, Iterable<String> names}) =>
       Bool2D.sized(shape.row, shape.col, fill: fill, names: names);
 
-  factory Bool2D.shapedLike(Array2DView like,
+  factory Bool2D.shapedLike(Array2D like,
           {bool fill: false, Iterable<String> names}) =>
       Bool2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
@@ -231,7 +230,7 @@ class Bool2D extends Object
   }
 
   @override
-  void assign(Array2DView<bool> other) {
+  void assign(Array2D<bool> other) {
     if (other.shape != shape)
       throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
@@ -256,19 +255,11 @@ class Bool2D extends Object
     _data.insert(index, Bool1D(row));
   }
 
-  Bool2DView _view;
-
-  Bool2DView get view => _view ??= Bool2DView.own(_data);
-
-  Bool2DFix _fixed;
-
-  Bool2DFix get fixed => _fixed ??= Bool2DFix.own(_data);
-
   @override
   Iterable<ArrayFix<bool>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<bool>> get cols => ColsListFix<bool>(this);
+  Iterable<ArrayFix<bool>> get cols => ColsList<bool>(this);
 
   void reshape(Index2D newShape, {bool def: false}) {
     if (shape == newShape) return;

@@ -1,5 +1,6 @@
 part of grizzly.series.array2d;
 
+/*
 class String2DView extends Object
     with
         Array2DViewMixin<String>,
@@ -202,3 +203,4 @@ class String2DView extends Object
 
   String2DView get view => this;
 }
+*/

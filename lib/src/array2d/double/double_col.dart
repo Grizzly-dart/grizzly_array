@@ -2,13 +2,10 @@ part of grizzly.series.array2d;
 
 class Double2DCol extends Object
     with
-        AxisViewMixin<double>,
-        AxisFixMixin<double>,
-        AxisMixin<double>,
+        Axis2DMixin<double>,
         ColMixin<double>,
-        DoubleAxis2DViewMixin,
-        Double2DColViewMixin
-    implements Numeric2DAxis<double>, Double2DColFix {
+        DoubleAxis2DViewMixin
+    implements Numeric2DAxis<double> {
   final Double2D inner;
 
   Double2DCol(this.inner);
@@ -50,47 +47,4 @@ class Double2DCol extends Object
       inner._data[i].insert(index, col.elementAt(i));
     }
   }
-}
-
-class Double2DColFix extends Object
-    with
-        AxisViewMixin<double>,
-        AxisFixMixin<double>,
-        ColFixMixin<double>,
-        DoubleAxis2DViewMixin,
-        Double2DColViewMixin
-    implements Numeric2DAxisFix<double>, Double2DColView {
-  final Double2DFix inner;
-
-  Double2DColFix(this.inner);
-
-  Double1DFix operator [](int col) =>
-      Double1DFix.own(ColList<double>(inner, col));
-
-  operator []=(int index, Iterable<double> col) {
-    if (index >= inner.numCols) {
-      throw RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-}
-
-class Double2DColView extends Object
-    with
-        AxisViewMixin<double>,
-        ColViewMixin<double>,
-        DoubleAxis2DViewMixin,
-        Double2DColViewMixin
-    implements Numeric2DAxisView<double> {
-  final Double2DView inner;
-
-  Double2DColView(this.inner);
-
-  Double1DView operator [](int col) =>
-      Double1DView.own(ColList<double>(inner, col));
 }

@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class IntAxis2DViewMixin implements Numeric2DAxisView<int> {
+abstract class IntAxis2DViewMixin implements Numeric2DAxis<int> {
   /// Minimum along y-axis
   Int1D get min {
     final ret = Int1D.sized(length);
@@ -81,16 +81,14 @@ abstract class IntAxis2DViewMixin implements Numeric2DAxisView<int> {
 
   @override
   Array<int> makeArray(Iterable<int> newData) => Int1D(newData);
-}
 
-abstract class Int2DRowViewMixin implements Numeric2DAxisView<int> {
   Numeric2D<int> operator +(
       /* num | Iterable<num> | Numeric2DView<int> */ other) {
     if (other is num || other is Iterable<num>) {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] + other;
       return ret;
-    } else if (other is Numeric2DView<int>) {
+    } else if (other is Numeric2D<int>) {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] + other[r];
       return ret;
@@ -104,7 +102,7 @@ abstract class Int2DRowViewMixin implements Numeric2DAxisView<int> {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] - other;
       return ret;
-    } else if (other is Numeric2DView<int>) {
+    } else if (other is Numeric2D<int>) {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] - other[r];
       return ret;
@@ -118,7 +116,7 @@ abstract class Int2DRowViewMixin implements Numeric2DAxisView<int> {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] * other;
       return ret;
-    } else if (other is Numeric2DView<int>) {
+    } else if (other is Numeric2D<int>) {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] * other[r];
       return ret;
@@ -132,7 +130,7 @@ abstract class Int2DRowViewMixin implements Numeric2DAxisView<int> {
       Double2D ret = Double2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] / other;
       return ret;
-    } else if (other is Numeric2DView<int>) {
+    } else if (other is Numeric2D<int>) {
       Double2D ret = Double2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] / other[r];
       return ret;
@@ -146,81 +144,9 @@ abstract class Int2DRowViewMixin implements Numeric2DAxisView<int> {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] ~/ other;
       return ret;
-    } else if (other is Numeric2DView<int>) {
+    } else if (other is Numeric2D<int>) {
       Int2D ret = Int2D.sized(length, otherDLength);
       for (int r = 0; r < length; r++) ret[r] = this[r] ~/ other[r];
-      return ret;
-    }
-    throw UnsupportedError(other?.runtimeType?.toString());
-  }
-}
-
-abstract class Int2DColViewMixin implements Numeric2DAxisView<int> {
-  Numeric2D<int> operator +(
-      /* num | Iterable<num> | Numeric2DView<int> */ other) {
-    if (other is num || other is Iterable<num>) {
-      Int2D ret = Int2D.sized(otherDLength, length);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] + other;
-      return ret;
-    } else if (other is Numeric2DView<int>) {
-      Int2D ret = Int2D.sized(length, otherDLength);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] + other.col[c];
-      return ret;
-    }
-    throw UnsupportedError(other?.runtimeType?.toString());
-  }
-
-  Numeric2D<int> operator -(
-      /* num | Iterable<num> | Numeric2DView<int> */ other) {
-    if (other is num || other is Iterable<num>) {
-      Int2D ret = Int2D.sized(otherDLength, length);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] - other;
-      return ret;
-    } else if (other is Numeric2DView<int>) {
-      Int2D ret = Int2D.sized(length, otherDLength);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] - other.col[c];
-      return ret;
-    }
-    throw UnsupportedError(other?.runtimeType?.toString());
-  }
-
-  Numeric2D<int> operator *(
-      /* num | Iterable<num> | Numeric2DView<int> */ other) {
-    if (other is num || other is Iterable<num>) {
-      Int2D ret = Int2D.sized(otherDLength, length);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] * other;
-      return ret;
-    } else if (other is Numeric2DView<int>) {
-      Int2D ret = Int2D.sized(length, otherDLength);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] * other.col[c];
-      return ret;
-    }
-    throw UnsupportedError(other?.runtimeType?.toString());
-  }
-
-  Numeric2D<double> operator /(
-      /* num | Iterable<num> | Numeric2DView<int> */ other) {
-    if (other is num || other is Iterable<num>) {
-      Double2D ret = Double2D.sized(otherDLength, length);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] / other;
-      return ret;
-    } else if (other is Numeric2DView<int>) {
-      Double2D ret = Double2D.sized(length, otherDLength);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] / other.col[c];
-      return ret;
-    }
-    throw UnsupportedError(other?.runtimeType?.toString());
-  }
-
-  Numeric2D<int> operator ~/(
-      /* num | Iterable<num> | Numeric2DView<int> */ other) {
-    if (other is num || other is Iterable<num>) {
-      Int2D ret = Int2D.sized(otherDLength, length);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] ~/ other;
-      return ret;
-    } else if (other is Numeric2DView<int>) {
-      Int2D ret = Int2D.sized(length, otherDLength);
-      for (int c = 0; c < length; c++) ret.col[c] = this[c] ~/ other.col[c];
       return ret;
     }
     throw UnsupportedError(other?.runtimeType?.toString());

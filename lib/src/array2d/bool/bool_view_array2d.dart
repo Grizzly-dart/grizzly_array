@@ -30,6 +30,7 @@ class Exceptions {
   }
 }
 
+/*
 class Bool2DView extends Object
     with Array2DViewMixin<bool>, IterableMixin<Iterable<bool>>, Bool2DViewMixin
     implements BoolArray2DView {
@@ -208,7 +209,7 @@ class Bool2DView extends Object
 
   Iterator<Bool1DView> get iterator => _data.iterator;
 
-  Bool1DView operator [](int i) => _data[i].view;
+  Bool1DView operator[](int i) => _data[i].view;
 
   covariant Bool2DColView _col;
 
@@ -226,3 +227,4 @@ class Bool2DView extends Object
   @override
   Iterable<ArrayView<bool>> get cols => ColsListView<bool>(this);
 }
+*/

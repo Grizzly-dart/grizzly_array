@@ -2,11 +2,10 @@ part of grizzly.series.array2d;
 
 class Dynamic2D extends Object
     with
-        Array2DViewMixin<dynamic>,
-        Array2DFixMixin<dynamic>,
+        Array2DMixin<dynamic>,
         IterableMixin<Iterable<dynamic>>,
         Dynamic2DMixin
-    implements Array2D<dynamic>, Dynamic2DFix {
+    implements Array2D<dynamic> {
   final List<Dynamic1D> _data;
 
   final String1D _names;
@@ -53,7 +52,7 @@ class Dynamic2D extends Object
           {dynamic fill, Iterable<String> names}) =>
       Dynamic2D.sized(shape.row, shape.col, fill: fill, names: names);
 
-  factory Dynamic2D.shapedLike(Array2DView like,
+  factory Dynamic2D.shapedLike(Array2D like,
           {dynamic fill, Iterable<String> names}) =>
       Dynamic2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
@@ -233,7 +232,7 @@ class Dynamic2D extends Object
   }
 
   @override
-  void assign(Array2DView<dynamic> other) {
+  void assign(Array2D<dynamic> other) {
     if (other.shape != shape)
       throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
@@ -258,19 +257,11 @@ class Dynamic2D extends Object
     _data.insert(index, Dynamic1D(row));
   }
 
-  Dynamic2DView _view;
-
-  Dynamic2DView get view => _view ??= Dynamic2DView.own(_data);
-
-  Dynamic2DFix _fixed;
-
-  Dynamic2DFix get fixed => _fixed ??= Dynamic2DFix.own(_data);
-
   @override
   Iterable<ArrayFix<dynamic>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<dynamic>> get cols => ColsListFix<dynamic>(this);
+  Iterable<ArrayFix<dynamic>> get cols => ColsList<dynamic>(this);
 
   void reshape(Index2D newShape, {dynamic def}) {
     if (shape == newShape) return;

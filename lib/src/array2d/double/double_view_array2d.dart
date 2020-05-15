@@ -1,5 +1,6 @@
 part of grizzly.series.array2d;
 
+/*
 class Double2DView extends Object
     with
         Array2DViewMixin<double>,
@@ -227,3 +228,4 @@ class Double2DView extends Object
 
   Double1D unique() => super.unique();
 }
+*/

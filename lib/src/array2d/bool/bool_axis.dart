@@ -1,6 +1,7 @@
 part of grizzly.series.array2d;
 
-abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
+abstract class BoolAxis2DViewMixin implements Axis2D<bool> {
+  /*
   Double1D get mean {
     if (length == 0) return Double1D.sized(0);
     final ret = Double1D.sized(length);
@@ -18,6 +19,7 @@ abstract class BoolAxis2DViewMixin implements BoolAxis2DView {
     }
     return ret;
   }
+   */
 
   /// Minimum along y-axis
   Bool1D get min {

@@ -1,13 +1,7 @@
 part of grizzly.series.array2d;
 
-abstract class String2DMixin implements Array2DView<String> {
+abstract class String2DMixin implements Array2D<String> {
   List<String1DView> get _data;
-
-  String2DView makeView(Iterable<Iterable<String>> newData) =>
-      String2DView(newData);
-
-  String2DFix makeFix(Iterable<Iterable<String>> newData) =>
-      String2DFix(newData);
 
   String2D make(Iterable<Iterable<String>> newData) => String2D(newData);
 

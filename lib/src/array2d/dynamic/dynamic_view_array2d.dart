@@ -1,5 +1,6 @@
 part of grizzly.series.array2d;
 
+/*
 class Dynamic2DView extends Object
     with
         Array2DViewMixin<dynamic>,
@@ -202,3 +203,4 @@ class Dynamic2DView extends Object
 
   Dynamic2DView get view => this;
 }
+*/

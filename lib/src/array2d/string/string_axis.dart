@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class String2DAxisMixin implements StringAxis2DView {
+abstract class String2DAxisMixin implements Axis2D<String> {
   /// Minimum along y-axis
   String1D get min {
     final ret = String1D.sized(length);

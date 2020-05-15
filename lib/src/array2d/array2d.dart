@@ -53,7 +53,7 @@ part 'dynamic/dynamic_mixin.dart';
 part 'dynamic/dynamic_row.dart';
 part 'dynamic/dynamic_view_array2d.dart';
 
-Double2D array2(
+Double2D doubles2(
     /* Iterable<Iterable<num>> | Iterable<double> | Index2D */ data,
     {bool transpose: false}) {
   if (data is Iterable<Iterable<double>>) {
@@ -92,13 +92,11 @@ Double2D zeros(/* Index2D | Index1D | Array2DView */ spec) {
     return Double2D.shaped(spec);
   } else if (spec is Index1D) {
     return Double2D.sized(spec.x, spec.x);
-  } else if (spec is Array2DView) {
+  } else if (spec is Array2D) {
     return Double2D.shapedLike(spec);
   }
   throw ArgumentError.value(spec, 'spec', 'Invalid value!');
 }
-
-Double2D doubles2(Iterable<Iterable<num>> matrix) => array2(matrix);
 
 Int2D ints2(/* Iterable<Iterable<int>> | Iterable<int> | Index2D */ data,
     {bool transpose: false}) {

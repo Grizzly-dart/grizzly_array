@@ -2,12 +2,11 @@ part of grizzly.series.array2d;
 
 class Int2D extends Object
     with
-        Array2DViewMixin<int>,
-        Array2DFixMixin<int>,
+        Array2DMixin<int>,
         IterableMixin<Iterable<int>>,
         Int2DViewMixin,
         Int2DFixMixin
-    implements Numeric2D<int>, Int2DFix {
+    implements Numeric2D<int> {
   final List<Int1D> _data;
 
   final String1D _names;
@@ -61,7 +60,7 @@ class Int2D extends Object
   factory Int2D.shaped(Index2D shape, {int fill: 0, Iterable<String> names}) =>
       Int2D.sized(shape.row, shape.col, fill: fill, names: names);
 
-  factory Int2D.shapedLike(Array2DView like,
+  factory Int2D.shapedLike(Array2D like,
           {int fill: 0, Iterable<String> names}) =>
       Int2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
@@ -218,8 +217,9 @@ class Int2D extends Object
   Iterable<ArrayFix<int>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<int>> get cols => ColsListFix<int>(this);
+  Iterable<ArrayFix<int>> get cols => ColsList<int>(this);
 
+  @override
   Int1DFix operator [](int i) => _data[i].fixed;
 
   operator []=(final int i, Iterable<int> val) {
@@ -251,7 +251,7 @@ class Int2D extends Object
   }
 
   @override
-  void assign(Array2DView<int> other) {
+  void assign(Array2D<int> other) {
     if (other.shape != shape)
       throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
@@ -320,14 +320,6 @@ class Int2D extends Object
   // TODO return view
   Iterable<IntPair<Int1D>> enumerate() =>
       ranger.indices(numRows).map((i) => intPair<Int1D>(i, _data[i]));
-
-  Int2DView _view;
-
-  Int2DView get view => _view ??= Int2DView.own(_data);
-
-  Int2DFix _fixed;
-
-  Int2DFix get fixed => _fixed ??= Int2DFix.own(_data);
 
   void reshape(Index2D newShape, {int def: 0}) {
     if (shape == newShape) return;

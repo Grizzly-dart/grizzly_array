@@ -6,7 +6,6 @@ import 'int/int_array.dart';
 import 'double/double_array.dart';
 import 'bool/bool_array.dart';
 import 'string/string_array.dart';
-import 'dynamic/dynamic_array.dart';
 
 export 'int/int_array.dart';
 export 'double/double_array.dart';
@@ -15,24 +14,6 @@ export 'string/string_array.dart';
 export 'dynamic/dynamic_array.dart';
 
 // TODO DateTime
-
-/// Creates a 1-dimensional array of double from given [data]
-Double1D array(
-    /* Iterable<num> | ArrayView<num> | double | int | Index1D */ data) {
-  if (data is Iterable<num>) {
-    return Double1D.fromNums(data);
-  } else if (data is Numeric1DView<num>) {
-    return data.toDouble();
-  } else if (data is double) {
-    return Double1D.single(data);
-  } else if (data is num) {
-    return Double1D.single(data.toDouble());
-  } else if (data is Index1D) {
-    return Double1D.sized(data.x);
-  } else {
-    throw ArgumentError.value(data, 'data', 'Invalid value!');
-  }
-}
 
 /// Creates a 1-dimensional array of integers from given [data]
 Int1D ints(/* Iterable<num> | num | Index1D */ data) {

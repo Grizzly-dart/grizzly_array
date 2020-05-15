@@ -3,7 +3,7 @@ library grizzly.series.array.common;
 import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_range/grizzly_range.dart';
-import 'package:grizzly_series/grizzly_series.dart';
+//import 'package:grizzly_series/grizzly_series.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import '../array.dart';
 import '../sample.dart';
@@ -117,6 +117,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   @override
   StringArray toStringArray() => String1D(this.map((e) => e.toString()));
 
+  /*
   @override
   IntSeries<E> valueCounts(
       {bool sortByValue: false, bool descending: false, name: ''}) {
@@ -135,6 +136,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
     }
     return ret;
   }
+   */
 
   @override
   BoolArray ne(other) {

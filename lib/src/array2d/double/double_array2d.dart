@@ -2,12 +2,10 @@ part of grizzly.series.array2d;
 
 class Double2D extends Object
     with
-        Array2DViewMixin<double>,
-        Array2DFixMixin<double>,
+        Array2DMixin<double>,
         IterableMixin<Iterable<double>>,
-        Double2DViewMixin,
-        Double2DFixMixin
-    implements Numeric2D<double>, Double2DFix {
+        Double2DViewMixin, Double2DMixin
+    implements Numeric2D<double> {
   final List<Double1D> _data;
 
   final String1D _names;
@@ -62,7 +60,7 @@ class Double2D extends Object
           {double fill: 0.0, Iterable<String> names}) =>
       Double2D.sized(shape.row, shape.col, fill: fill, names: names);
 
-  factory Double2D.shapedLike(Array2DView like,
+  factory Double2D.shapedLike(Array2D like,
           {double fill: 0.0, Iterable<String> names}) =>
       Double2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
@@ -218,6 +216,7 @@ class Double2D extends Object
 
   Double2DRow get row => _row ??= Double2DRow(this);
 
+  @override
   Double1DFix operator [](int i) => _data[i].fixed;
 
   operator []=(final int i, final Iterable<double> val) {
@@ -251,7 +250,7 @@ class Double2D extends Object
   }
 
   @override
-  void assign(Array2DView<double> other) {
+  void assign(Array2D<double> other) {
     if (other.shape != shape)
       throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
@@ -338,19 +337,11 @@ class Double2D extends Object
     return this;
   }
 
-  Double2DView _view;
-
-  Double2DView get view => _view ??= Double2DView.own(_data);
-
-  Double2DFix _fixed;
-
-  Double2DFix get fixed => _fixed ??= Double2DFix.own(_data);
-
   @override
   Iterable<ArrayFix<double>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<double>> get cols => ColsListFix<double>(this);
+  Iterable<ArrayFix<double>> get cols => ColsList<double>(this);
 
   void reshape(Index2D newShape, {double def: 0.0}) {
     if (shape == newShape) return;

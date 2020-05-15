@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class Dynamic2DAxisMixin implements DynamicAxis2DView {
+abstract class Dynamic2DAxisMixin implements Axis2D<dynamic> {
   /// Minimum along y-axis
   Dynamic1D get min {
     final ret = Dynamic1D.sized(length);

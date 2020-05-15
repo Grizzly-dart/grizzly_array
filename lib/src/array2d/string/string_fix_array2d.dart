@@ -1,5 +1,6 @@
 part of grizzly.series.array2d;
 
+/*
 class String2DFix extends Object
     with
         Array2DViewMixin<String>,
@@ -245,3 +246,5 @@ class String2DFix extends Object
 
   String2DFix get fixed => this;
 }
+*/
+

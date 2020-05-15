@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class Array2DFixMixin<E> implements Array2DFix<E> {
+abstract class Array2DMixin<E> implements Array2D<E> {
   set diagonal(val) {
     int d = math.min(numRows, numCols);
     if (val is E) {
@@ -9,16 +9,14 @@ abstract class Array2DFixMixin<E> implements Array2DFix<E> {
       if (val.length != d)
         throw lengthMismatch(expected: d, found: val.length, subject: 'val');
       for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r);
-    } else if (val is Array2DView<E>) {
+    } else if (val is Array2D<E>) {
       if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r];
     } else {
       throw UnsupportedError('Type!');
     }
   }
-}
 
-abstract class Array2DViewMixin<E> implements Array2DView<E> {
   Index2D get shape => Index2D(numRows, numCols);
 
   bool get isSquare => numRows == numCols;
@@ -50,7 +48,7 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
   }
 
   bool operator ==(/* E | Iterable<E> */ other) {
-    if (other is Array2DView<E>) {
+    if (other is Array2D<E>) {
       if (shape != other.shape) return false;
       for (int i = 0; i < numRows; i++) {
         if (this[i] != other[i]) return false;
@@ -69,9 +67,7 @@ abstract class Array2DViewMixin<E> implements Array2DView<E> {
   }
 }
 
-abstract class AxisMixin<E> implements Axis2D<E> {}
-
-abstract class AxisFixMixin<E> implements Axis2DFix<E> {
+abstract class Axis2DMixin<E> implements Axis2D<E> {
   @override
   void sort({bool descending: false}) {
     for (int i = 0; i < length; i++) this[i].sort(descending: descending);
@@ -89,9 +85,7 @@ abstract class AxisFixMixin<E> implements Axis2DFix<E> {
       this[j][r] = temp;
     }
   }
-}
 
-abstract class AxisViewMixin<E> implements Axis2DView<E> {
   @override
   Iterable<Array<E>> unique() {
     final ret = List<Array<E>>(length);

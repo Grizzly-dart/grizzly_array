@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class Int2DFixMixin implements Numeric2DFix<int> {
+abstract class Int2DFixMixin implements Numeric2D<int> {
   set diagonal(/* num | Iterable<num> | Array2DView<num> */ val) {
     int d = math.min(numRows, numCols);
     if (val is int) {
@@ -16,10 +16,10 @@ abstract class Int2DFixMixin implements Numeric2DFix<int> {
       if (val.length != d)
         throw lengthMismatch(expected: d, found: val.length, subject: 'val');
       for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r)?.toInt();
-    } else if (val is Array2DView<int>) {
+    } else if (val is Array2D<int>) {
       if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r];
-    } else if (val is Array2DView<num>) {
+    } else if (val is Array2D<num>) {
       if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r]?.toInt();
     } else {
@@ -219,7 +219,7 @@ abstract class Int2DFixMixin implements Numeric2DFix<int> {
     throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
-  void matmulMe(Array2DView<int> other) {
+  void matmulMe(Array2D<int> other) {
     if (!other.isSquare || numCols != other.numRows)
       throw Exception('Invalid size!');
 
@@ -248,6 +248,7 @@ abstract class Int2DFixMixin implements Numeric2DFix<int> {
   }
 }
 
+/*
 class Int2DFix extends Object
     with
         Array2DViewMixin<int>,
@@ -255,7 +256,7 @@ class Int2DFix extends Object
         IterableMixin<Iterable<int>>,
         Int2DViewMixin,
         Int2DFixMixin
-    implements Numeric2DFix<int>, Int2DView {
+    implements Int2DView, Numeric2DFix<int> {
   final List<Int1DFix> _data;
 
   final String1DFix names;
@@ -468,6 +469,7 @@ class Int2DFix extends Object
   @override
   Iterable<ArrayFix<int>> get cols => ColsListFix<int>(this);
 
+  @override
   Int1DFix operator [](int i) => _data[i].fixed;
 
   operator []=(final int i, Iterable<int> val) {
@@ -550,3 +552,4 @@ class Int2DFix extends Object
 
   Int1D unique() => super.unique();
 }
+ */

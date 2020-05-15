@@ -1,5 +1,6 @@
 part of grizzly.series.array2d;
 
+/*
 class Bool2DFix extends Object
     with
         Array2DViewMixin<bool>,
@@ -190,7 +191,7 @@ class Bool2DFix extends Object
 
   Bool2DRowFix get row => _row ??= Bool2DRowFix(this);
 
-  Bool1DFix operator [](int i) => _data[i].fixed;
+  Bool1DFix operator[](int i) => _data[i].fixed;
 
   operator []=(final int i, Iterable<bool> val) {
     if (i >= numRows)
@@ -244,3 +245,4 @@ class Bool2DFix extends Object
   @override
   Iterable<ArrayFix<bool>> get cols => ColsListFix<bool>(this);
 }
+*/

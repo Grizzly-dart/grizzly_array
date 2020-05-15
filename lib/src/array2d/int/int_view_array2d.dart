@@ -1,5 +1,6 @@
 part of grizzly.series.array2d;
 
+/*
 class Int2DView extends Object
     with Array2DViewMixin<int>, IterableMixin<Iterable<int>>, Int2DViewMixin
     implements Numeric2DView<int>, Array2DView<int> {
@@ -227,3 +228,4 @@ class Int2DView extends Object
 
   Int1D unique() => super.unique();
 }
+*/

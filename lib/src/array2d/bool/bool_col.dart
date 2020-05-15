@@ -3,11 +3,9 @@ part of grizzly.series.array2d;
 class Bool2DCol extends Object
     with
         ColMixin<bool>,
-        AxisMixin<bool>,
-        AxisFixMixin<bool>,
-        AxisViewMixin<bool>,
+        Axis2DMixin<bool>,
         BoolAxis2DViewMixin
-    implements Axis2D<bool>, Bool2DColFix {
+    implements Axis2D<bool> {
   final Bool2D inner;
 
   Bool2DCol(this.inner);
@@ -48,40 +46,4 @@ class Bool2DCol extends Object
       inner._data[i].insert(index, col.elementAt(i));
     }
   }
-}
-
-class Bool2DColFix extends Object
-    with
-        ColFixMixin<bool>,
-        AxisFixMixin<bool>,
-        AxisViewMixin<bool>,
-        BoolAxis2DViewMixin
-    implements Axis2DFix<bool>, Bool2DColView {
-  final Bool2DFix inner;
-
-  Bool2DColFix(this.inner);
-
-  Bool1DFix operator [](int col) => Bool1DFix(ColList<bool>(inner, col));
-
-  operator []=(int index, Iterable<bool> col) {
-    if (index >= inner.numCols) {
-      throw RangeError.range(index, 0, inner.numCols - 1, 'index');
-    }
-    if (col.length != inner.numRows) {
-      throw ArgumentError.value(col, 'col', 'Size mismatch!');
-    }
-    for (int i = 0; i < inner.numRows; i++) {
-      inner[i][index] = col.elementAt(i);
-    }
-  }
-}
-
-class Bool2DColView extends Object
-    with ColViewMixin<bool>, AxisViewMixin<bool>, BoolAxis2DViewMixin
-    implements Axis2DView<bool> {
-  final Bool2DView inner;
-
-  Bool2DColView(this.inner);
-
-  Bool1DView operator [](int col) => Bool1DView.own(ColList<bool>(inner, col));
 }

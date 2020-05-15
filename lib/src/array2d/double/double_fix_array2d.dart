@@ -1,6 +1,6 @@
 part of grizzly.series.array2d;
 
-abstract class Double2DFixMixin implements Numeric2DFix<double> {
+abstract class Double2DMixin implements Numeric2D<double> {
   set diagonal(val) {
     int d = math.min(numRows, numCols);
     if (val is double) {
@@ -16,10 +16,10 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
       if (val.length != d)
         throw lengthMismatch(expected: d, found: val.length, subject: 'val');
       for (int r = 0; r < d; r++) this[r][r] = val.elementAt(r)?.toDouble();
-    } else if (val is Array2DView<double>) {
+    } else if (val is Array2D<double>) {
       if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r];
-    } else if (val is Array2DView<num>) {
+    } else if (val is Array2D<num>) {
       if (val.numRows < d || val.numCols < d) throw Exception();
       for (int r = 0; r < d; r++) this[r][r] = val[r][r]?.toDouble();
     } else {
@@ -251,7 +251,7 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
     throw ArgumentError.value(other, 'other', 'Unsupported type!');
   }
 
-  void matmulMe(Array2DView<num> other) {
+  void matmulMe(Array2D<num> other) {
     if (!other.isSquare || numCols != other.numRows)
       throw Exception('Invalid size!');
 
@@ -279,6 +279,9 @@ abstract class Double2DFixMixin implements Numeric2DFix<double> {
     }
   }
 }
+
+/*
+
 
 class Double2DFix extends Object
     with
@@ -616,3 +619,4 @@ class Double2DFix extends Object
 
   Double1D unique() => super.unique();
 }
+*/

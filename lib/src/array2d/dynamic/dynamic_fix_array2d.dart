@@ -1,5 +1,6 @@
 part of grizzly.series.array2d;
 
+/*
 class Dynamic2DFix extends Object
     with
         Array2DViewMixin<dynamic>,
@@ -246,3 +247,4 @@ class Dynamic2DFix extends Object
 
   Dynamic2DFix get fixed => this;
 }
+*/

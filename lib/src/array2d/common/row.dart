@@ -19,29 +19,3 @@ abstract class RowMixin<E> implements Axis2D<E> {
 
   Iterable<ArrayFix<E>> get iterable => inner.rows;
 }
-
-abstract class RowFixMixin<E> implements Axis2DFix<E> {
-  Array2DFix<E> get inner;
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  ArrayFix<E> operator [](int row) => inner[row];
-
-  operator []=(int index, Iterable<E> row) => inner[index] = row;
-
-  Iterable<ArrayFix<E>> get iterable => inner.rows;
-}
-
-abstract class RowViewMixin<E> implements Axis2DView<E> {
-  Array2DView<E> get inner;
-
-  int get length => inner.numRows;
-
-  int get otherDLength => inner.numCols;
-
-  ArrayView<E> operator [](int row) => inner[row];
-
-  Iterable<ArrayView<E>> get iterable => inner.rows;
-}

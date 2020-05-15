@@ -1,13 +1,7 @@
 part of grizzly.series.array2d;
 
-abstract class Dynamic2DMixin implements DynamicArray2DView {
+abstract class Dynamic2DMixin implements Array2D<dynamic> {
   List<Dynamic1DView> get _data;
-
-  Dynamic2DView makeView(Iterable<Iterable<dynamic>> newData) =>
-      Dynamic2DView(newData);
-
-  Dynamic2DFix makeFix(Iterable<Iterable<dynamic>> newData) =>
-      Dynamic2DFix(newData);
 
   Dynamic2D make(Iterable<Iterable<dynamic>> newData) => Dynamic2D(newData);
 

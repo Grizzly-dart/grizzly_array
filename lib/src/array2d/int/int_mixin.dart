@@ -1,11 +1,7 @@
 part of grizzly.series.array2d;
 
-abstract class Int2DViewMixin implements Numeric2DView<int> {
+abstract class Int2DViewMixin implements Numeric2D<int> {
   List<Int1DView> get _data;
-
-  Int2DView makeView(Iterable<Iterable<int>> newData) => Int2DView(newData);
-
-  Int2DFix makeFix(Iterable<Iterable<int>> newData) => Int2DFix(newData);
 
   Int2D make(Iterable<Iterable<int>> newData) => Int2D(newData);
 
@@ -303,7 +299,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   Double2D get covMatrix {
     final ret = Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
-      ret[c] = col[c].stats.covMatrix(view);
+      ret[c] = col[c].stats.covMatrix(this);
     }
     return ret;
   }
@@ -311,7 +307,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
   Double2D get corrcoefMatrix {
     final ret = Double2D.sized(numCols, numCols);
     for (int c = 0; c < numCols; c++) {
-      ret[c] = col[c].stats.corrcoefMatrix(view);
+      ret[c] = col[c].stats.corrcoefMatrix(this);
     }
     return ret;
   }
@@ -321,7 +317,7 @@ abstract class Int2DViewMixin implements Numeric2DView<int> {
 
   Int2D clone() => Int2D(this);
 
-  Int2D matmul(Array2DView<int> other) {
+  Int2D matmul(Array2D<int> other) {
     if (numCols != other.numRows) throw Exception('Invalid size!');
 
     Int2D ret = Int2D.sized(numRows, other.numCols);

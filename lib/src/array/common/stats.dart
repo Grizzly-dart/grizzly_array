@@ -168,7 +168,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     return sum / length;
   }
 
-  Numeric1D<double> covMatrix(Numeric2DView y) {
+  Numeric1D<double> covMatrix(Numeric2D y) {
     if (y.numRows != length) throw Exception('Size mismatch!');
     final double meanX = mean;
     final Double1D meanY = y.col.mean;
@@ -184,7 +184,7 @@ class StatsImpl<T extends num> implements Stats<T> {
     return cov(y) / (std * y.std);
   }
 
-  Numeric1D<double> corrcoefMatrix(Numeric2DView y) {
+  Numeric1D<double> corrcoefMatrix(Numeric2D y) {
     if (y.numRows != length) throw Exception('Size mismatch!');
     return covMatrix(y) / (y.std * std);
   }

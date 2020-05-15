@@ -2,11 +2,10 @@ part of grizzly.series.array2d;
 
 class String2D extends Object
     with
-        Array2DViewMixin<String>,
-        Array2DFixMixin<String>,
+        Array2DMixin<String>,
         IterableMixin<Iterable<String>>,
         String2DMixin
-    implements Array2D<String>, String2DFix {
+    implements Array2D<String> {
   final List<String1D> _data;
 
   final String1D _names;
@@ -53,7 +52,7 @@ class String2D extends Object
           {String fill, Iterable<String> names}) =>
       String2D.sized(shape.row, shape.col, fill: fill, names: names);
 
-  factory String2D.shapedLike(Array2DView like,
+  factory String2D.shapedLike(Array2D like,
           {String fill, Iterable<String> names}) =>
       String2D.sized(like.numRows, like.numCols, fill: fill, names: names);
 
@@ -226,7 +225,7 @@ class String2D extends Object
   }
 
   @override
-  void assign(Array2DView<String> other) {
+  void assign(Array2D<String> other) {
     if (other.shape != shape)
       throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
@@ -251,19 +250,11 @@ class String2D extends Object
     _data.insert(index, String1D(row));
   }
 
-  String2DView _view;
-
-  String2DView get view => _view ??= String2DView.own(_data);
-
-  String2DFix _fixed;
-
-  String2DFix get fixed => _fixed ??= String2DFix.own(_data);
-
   @override
   Iterable<ArrayFix<String>> get rows => _data;
 
   @override
-  Iterable<ArrayFix<String>> get cols => ColsListFix<String>(this);
+  Iterable<ArrayFix<String>> get cols => ColsList<String>(this);
 
   void reshape(Index2D newShape, {String def}) {
     if (shape == newShape) return;
