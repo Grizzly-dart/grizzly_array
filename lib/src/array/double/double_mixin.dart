@@ -117,7 +117,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
 
   double get max => stats.max;
 
-  Extent<double> get extent => stats.extent;
+  ranger.Extent<double> get extent => stats.extent;
 
   int get argMin {
     int ret;
@@ -373,7 +373,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
   @override
   Double1D sin() {
     final ret = toDouble();
-    for(int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
+    for (int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
     return ret;
   }
 }

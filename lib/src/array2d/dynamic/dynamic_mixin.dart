@@ -43,8 +43,7 @@ abstract class Dynamic2DMixin implements DynamicArray2DView {
       if (end >= myShape)
         throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (start > end)
-        throw ArgumentError.value(
-            end, 'end', 'Must be greater than start!');
+        throw ArgumentError.value(end, 'end', 'Must be greater than start!');
     }
     if (start < Index2D.zero)
       throw ArgumentError.value(start, 'start', 'Index out of range!');

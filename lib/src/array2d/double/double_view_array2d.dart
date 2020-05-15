@@ -59,8 +59,7 @@ class Double2DView extends Object
 
   factory Double2DView.shapedLike(Array2DView like,
           {double fill: 0.0, Iterable<String> names}) =>
-      Double2DView.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      Double2DView.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Double2DView] from column major
   factory Double2DView.columns(Iterable<Iterable<double>> columns,
@@ -111,10 +110,10 @@ class Double2DView extends Object
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<double>) {
       return Double2DView.columns(
-          ConstantIterable<Iterable<double>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<double>>(column, repeat), names);
     }
     return Double2DView.columns(
-        ConstantIterable<Iterable<double>>(
+        ranger.ConstantIterable<Iterable<double>>(
             Double1DView.fromNums(column), repeat),
         names);
   }

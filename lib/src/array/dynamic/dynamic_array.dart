@@ -46,8 +46,7 @@ class Dynamic1D extends Object
           {dynamic fill,
           Comparator comparator: _dummyComparator,
           String name}) =>
-      Dynamic1D.sized(d.length,
-          fill: fill, comparator: comparator, name: name);
+      Dynamic1D.sized(d.length, fill: fill, comparator: comparator, name: name);
 
   Dynamic1D.single(dynamic data,
       {this.comparator: _dummyComparator, String name})

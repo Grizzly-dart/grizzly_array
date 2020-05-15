@@ -7,8 +7,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   Int1DFix makeFix(Iterable<int> newData, [String name]) =>
       Int1DFix(newData, name);
 
-  Int1D makeArray(Iterable<int> newData, [String name]) =>
-      Int1D(newData, name);
+  Int1D makeArray(Iterable<int> newData, [String name]) => Int1D(newData, name);
 
   Int1D clone({String name}) => Int1D(this, name);
 
@@ -108,7 +107,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
 
   int get max => stats.max;
 
-  Extent<int> get extent => stats.extent;
+  ranger.Extent<int> get extent => stats.extent;
 
   int get argMin {
     int ret;
@@ -292,7 +291,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   @override
   Double1D sin() {
     final ret = toDouble();
-    for(int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
+    for (int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
     return ret;
   }
 }

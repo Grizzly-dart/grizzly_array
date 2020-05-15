@@ -82,8 +82,7 @@ class String2D extends Object
       {Iterable<String> names, String fill}) {
     final ret = List<String1D>()..length = diagonal.length;
     for (int i = 0; i < diagonal.length; i++) {
-      final row =
-          List<String>.filled(diagonal.length, fill, growable: true);
+      final row = List<String>.filled(diagonal.length, fill, growable: true);
       row[i] = diagonal.elementAt(i);
       ret[i] = String1D.own(row);
     }
@@ -93,14 +92,13 @@ class String2D extends Object
   factory String2D.aRow(Iterable<String> row,
           {int repeat = 1, Iterable<String> names}) =>
       String2D(
-          List<String1DView>.filled(repeat, String1DView(row),
-              growable: true),
+          List<String1DView>.filled(repeat, String1DView(row), growable: true),
           names);
 
   factory String2D.aCol(Iterable<String> column,
           {int repeat = 1, Iterable<String> names}) =>
       String2D.columns(
-          ConstantIterable<Iterable<String>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<String>>(column, repeat), names);
 
   factory String2D.genRows(int numRows, Iterable<String> rowMaker(int index)) {
     final rows = <String1D>[];

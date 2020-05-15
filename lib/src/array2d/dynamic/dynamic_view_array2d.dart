@@ -51,8 +51,7 @@ class Dynamic2DView extends Object
 
   factory Dynamic2DView.shapedLike(Array2DView like,
           {dynamic fill, Iterable<String> names}) =>
-      Dynamic2DView.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      Dynamic2DView.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Dynamic2DView] from column major
   factory Dynamic2DView.columns(Iterable<Iterable<dynamic>> columns,
@@ -89,13 +88,12 @@ class Dynamic2DView extends Object
   factory Dynamic2DView.aRow(Iterable<dynamic> row,
           {int repeat = 1, Iterable<String> names}) =>
       Dynamic2DView.own(
-          List<Dynamic1DView>.filled(repeat, Dynamic1DView(row)),
-          names);
+          List<Dynamic1DView>.filled(repeat, Dynamic1DView(row)), names);
 
   factory Dynamic2DView.repeatCol(Iterable<dynamic> column,
           {int repeat = 1, Iterable<String> names}) =>
       Dynamic2DView.columns(
-          ConstantIterable<Iterable<dynamic>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<dynamic>>(column, repeat), names);
 
   factory Dynamic2DView.genRows(
       int numRows, Iterable<dynamic> rowMaker(int index)) {

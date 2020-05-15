@@ -88,13 +88,12 @@ class Bool2DFix extends Object
 
   factory Bool2DFix.aRow(Iterable<bool> row,
           {int repeat = 1, Iterable<String> names}) =>
-      Bool2DFix(
-          List<Bool1DView>.filled(repeat, Bool1DView(row)), names);
+      Bool2DFix(List<Bool1DView>.filled(repeat, Bool1DView(row)), names);
 
   factory Bool2DFix.aCol(Iterable<bool> column,
           {int repeat = 1, Iterable<String> names}) =>
       Bool2DFix.columns(
-          ConstantIterable<Iterable<bool>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<bool>>(column, repeat), names);
 
   factory Bool2DFix.genRows(int numRows, Iterable<bool> rowMaker(int index)) {
     final rows = <Bool1DFix>[];

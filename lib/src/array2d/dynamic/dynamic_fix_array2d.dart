@@ -52,8 +52,7 @@ class Dynamic2DFix extends Object
 
   factory Dynamic2DFix.shapedLike(Array2DView like,
           {dynamic fill, Iterable<String> names}) =>
-      Dynamic2DFix.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      Dynamic2DFix.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Dynamic2DFix.columns(Iterable<Iterable<dynamic>> columns,
@@ -90,13 +89,12 @@ class Dynamic2DFix extends Object
   factory Dynamic2DFix.aRow(Iterable<dynamic> row,
           {int repeat = 1, Iterable<String> names}) =>
       Dynamic2DFix(
-          List<Dynamic1DView>.filled(repeat, Dynamic1DView(row)),
-          names);
+          List<Dynamic1DView>.filled(repeat, Dynamic1DView(row)), names);
 
   factory Dynamic2DFix.aCol(Iterable<dynamic> column,
           {int repeat = 1, Iterable<String> names}) =>
       Dynamic2DFix.columns(
-          ConstantIterable<Iterable<dynamic>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<dynamic>>(column, repeat), names);
 
   factory Dynamic2DFix.genRows(
       int numRows, Iterable<dynamic> rowMaker(int index)) {

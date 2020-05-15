@@ -37,8 +37,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
       if (end >= myShape)
         throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (start > end)
-        throw ArgumentError.value(
-            end, 'end', 'Must be greater than start!');
+        throw ArgumentError.value(end, 'end', 'Must be greater than start!');
     }
     if (start < Index2D.zero)
       throw ArgumentError.value(start, 'start', 'Index out of range!');
@@ -84,7 +83,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
     return max;
   }
 
-  Extent<double> get extent {
+  ranger.Extent<double> get extent {
     if (numRows == 0) return null;
     double min;
     double max;
@@ -98,7 +97,7 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
         if (min == null || d < min) min = d;
       }
     }
-    return Extent<double>(min, max);
+    return ranger.Extent<double>(min, max);
   }
 
   Index2D get argMin {
@@ -435,8 +434,8 @@ abstract class Double2DViewMixin implements Numeric2DView<double> {
 
   Double2D sin() {
     final ret = toDouble();
-    for(int i = 0; i < numRows; i++) {
-      for(int j = 0; j < numCols; j++) ret[i][j] = math.sin(ret[i][j]);
+    for (int i = 0; i < numRows; i++) {
+      for (int j = 0; j < numCols; j++) ret[i][j] = math.sin(ret[i][j]);
     }
     return ret;
   }

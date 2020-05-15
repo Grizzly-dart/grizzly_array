@@ -58,8 +58,7 @@ class Double1DView extends Object
 
   double operator [](int i) => _data[i];
 
-  Double1D slice(int start, [int end]) =>
-      Double1D(_data.sublist(start, end));
+  Double1D slice(int start, [int end]) => Double1D(_data.sublist(start, end));
 
   int count(double v, {double absTol: 1e-8}) => super.count(v, absTol: absTol);
 

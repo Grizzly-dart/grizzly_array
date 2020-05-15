@@ -6,6 +6,7 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
 import '../common/common.dart';
+import 'package:grizzly_range/grizzly_range.dart' as ranger;
 
 part 'double_view_array.dart';
 part 'double_fix_array.dart';
@@ -74,8 +75,7 @@ class Double1D extends Object
     _data[i] = val;
   }
 
-  Double1D slice(int start, [int end]) =>
-      Double1D(_data.sublist(start, end));
+  Double1D slice(int start, [int end]) => Double1D(_data.sublist(start, end));
 
   @override
   void add(double a) => _data.add(a);

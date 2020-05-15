@@ -30,7 +30,7 @@ class Int1DView extends Object
 
   Int1DView.sized(int length,
       {int fill: 0, dynamic /* String | NameMaker */ name})
-      : _data = ConstantIterable<int>(fill, length),
+      : _data = ranger.ConstantIterable<int>(fill, length),
         _name = name;
 
   factory Int1DView.shapedLike(Iterable d,
@@ -56,11 +56,11 @@ class Int1DView extends Object
 
   factory Int1DView.range(int start, int stop,
           {int step: 1, dynamic /* String | NameMaker */ name}) =>
-      Int1DView.own(Ranger.range(start, stop, step), name);
+      Int1DView.own(ranger.range(start, stop, step), name);
 
   factory Int1DView.until(int stop,
           {int step: 1, dynamic /* String | NameMaker */ name}) =>
-      Int1DView.own(Ranger.until(stop, step), name);
+      Int1DView.own(ranger.until(stop, step), name);
 
   Stats<int> _stats;
 

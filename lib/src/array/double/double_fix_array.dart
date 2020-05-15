@@ -146,13 +146,11 @@ abstract class DoubleFixMixin implements Numeric1DFix<double> {
     }
   }
 
-  @override
   Double1DFix get logMe {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]);
     return this;
   }
 
-  @override
   Double1DFix get log10Me {
     for (int i = 0; i < length; i++) this[i] = math.log(this[i]) / math.ln10;
     return this;
@@ -240,8 +238,7 @@ class Double1DFix extends Object
     _data[i] = val;
   }
 
-  Double1D slice(int start, [int end]) =>
-      Double1D(_data.sublist(start, end));
+  Double1D slice(int start, [int end]) => Double1D(_data.sublist(start, end));
 
   Double1DFix sqrt({bool self: false}) {
     if (self) {

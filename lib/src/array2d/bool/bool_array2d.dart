@@ -91,15 +91,13 @@ class Bool2D extends Object
 
   factory Bool2D.aRow(Iterable<bool> row,
           {int repeat = 1, Iterable<String> names}) =>
-      Bool2D(
-          List<Bool1DView>.filled(repeat, Bool1DView(row),
-              growable: true),
+      Bool2D(List<Bool1DView>.filled(repeat, Bool1DView(row), growable: true),
           names);
 
   factory Bool2D.aCol(Iterable<bool> column,
           {int repeat = 1, Iterable<String> names}) =>
       Bool2D.columns(
-          ConstantIterable<Iterable<bool>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<bool>>(column, repeat), names);
 
   factory Bool2D.genRows(int numRows, Iterable<bool> rowMaker(int index)) {
     final rows = <Bool1D>[];

@@ -115,10 +115,10 @@ class Double2D extends Object
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<double>) {
       return Double2D.columns(
-          ConstantIterable<Iterable<double>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<double>>(column, repeat), names);
     }
     return Double2D.columns(
-        ConstantIterable<Iterable<double>>(
+        ranger.ConstantIterable<Iterable<double>>(
             Double1DView.fromNums(column), repeat),
         names);
   }

@@ -3,6 +3,7 @@ library grizzly.series.array2d;
 import 'dart:collection';
 import 'dart:math' as math;
 import 'package:grizzly_primitives/grizzly_primitives.dart';
+import 'package:grizzly_range/grizzly_range.dart' as ranger;
 import 'package:text_table/text_table.dart';
 
 import 'package:grizzly_array/src/array/array.dart';

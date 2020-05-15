@@ -88,8 +88,7 @@ class String1DFix extends Object
     _data[i] = val;
   }
 
-  String1D slice(int start, [int end]) =>
-      String1D(_data.sublist(start, end));
+  String1D slice(int start, [int end]) => String1D(_data.sublist(start, end));
 
   void sort({bool descending: false}) {
     if (!descending)

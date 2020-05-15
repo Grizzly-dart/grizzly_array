@@ -12,8 +12,7 @@ class Bool2DCol extends Object
 
   Bool2DCol(this.inner);
 
-  Bool1DFix operator [](int col) =>
-      Bool1DFix(ColList<bool>(inner, col));
+  Bool1DFix operator [](int col) => Bool1DFix(ColList<bool>(inner, col));
 
   operator []=(int index, Iterable<bool> col) {
     if (index >= inner.numCols) {
@@ -62,8 +61,7 @@ class Bool2DColFix extends Object
 
   Bool2DColFix(this.inner);
 
-  Bool1DFix operator [](int col) =>
-      Bool1DFix(ColList<bool>(inner, col));
+  Bool1DFix operator [](int col) => Bool1DFix(ColList<bool>(inner, col));
 
   operator []=(int index, Iterable<bool> col) {
     if (index >= inner.numCols) {
@@ -85,6 +83,5 @@ class Bool2DColView extends Object
 
   Bool2DColView(this.inner);
 
-  Bool1DView operator [](int col) =>
-      Bool1DView.own(ColList<bool>(inner, col));
+  Bool1DView operator [](int col) => Bool1DView.own(ColList<bool>(inner, col));
 }

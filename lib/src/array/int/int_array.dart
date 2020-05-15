@@ -6,6 +6,7 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
 import '../common/common.dart';
+import 'package:grizzly_range/grizzly_range.dart' as ranger;
 
 part 'int_fix_array.dart';
 part 'int_view_array.dart';
@@ -57,11 +58,10 @@ class Int1D extends Object
   }
 
   factory Int1D.range(int start, int stop, {int step: 1, String name}) =>
-      Int1D.own(
-          Ranger.range(start, stop, step).toList(growable: false), name);
+      Int1D.own(ranger.range(start, stop, step).toList(growable: false), name);
 
   factory Int1D.until(int start, int stop, {int step: 1, String name}) =>
-      Int1D.own(Ranger.until(stop, step).toList(growable: false), name);
+      Int1D.own(ranger.until(stop, step).toList(growable: false), name);
 
   Stats<int> _stats;
 

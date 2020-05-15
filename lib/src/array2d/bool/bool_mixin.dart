@@ -9,8 +9,7 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
 
   Bool2DView get view;
 
-  Bool2DView makeView(Iterable<Iterable<bool>> newData) =>
-      Bool2DView(newData);
+  Bool2DView makeView(Iterable<Iterable<bool>> newData) => Bool2DView(newData);
 
   Bool2DFix makeFix(Iterable<Iterable<bool>> newData) => Bool2DFix(newData);
 
@@ -42,8 +41,7 @@ abstract class Bool2DViewMixin implements Array2DView<bool> {
       if (end >= myShape)
         throw ArgumentError.value(end, 'end', 'Index out of range!');
       if (start > end)
-        throw ArgumentError.value(
-            end, 'end', 'Must be greater than start!');
+        throw ArgumentError.value(end, 'end', 'Must be greater than start!');
     }
     if (start < Index2D.zero)
       throw ArgumentError.value(start, 'start', 'Index out of range!');

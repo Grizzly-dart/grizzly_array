@@ -114,11 +114,10 @@ class Int2D extends Object
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<int>) {
       return Int2D.columns(
-          ConstantIterable<Iterable<int>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<int>>(column, repeat), names);
     }
     return Int2D.columns(
-        ConstantIterable<Iterable<int>>(
-            Int1DView.fromNums(column), repeat),
+        ranger.ConstantIterable<Iterable<int>>(Int1DView.fromNums(column), repeat),
         names);
   }
 
@@ -320,7 +319,7 @@ class Int2D extends Object
   // TODO return lazy
   // TODO return view
   Iterable<IntPair<Int1D>> enumerate() =>
-      indices(numRows).map((i) => intPair<Int1D>(i, _data[i]));
+      ranger.indices(numRows).map((i) => intPair<Int1D>(i, _data[i]));
 
   Int2DView _view;
 

@@ -13,8 +13,7 @@ class Int2DCol extends Object
 
   Int2DCol(this.inner);
 
-  Int1DFix operator [](int col) =>
-      Int1DFix.own(ColList<int>(inner, col));
+  Int1DFix operator [](int col) => Int1DFix.own(ColList<int>(inner, col));
 
   operator []=(int col, Iterable<int> val) {
     if (col >= inner.numCols) {
@@ -65,8 +64,7 @@ class Int2DColFix extends Object
 
   Int2DColFix(this.inner);
 
-  Int1DFix operator [](int col) =>
-      Int1DFix.own(ColList<int>(inner, col));
+  Int1DFix operator [](int col) => Int1DFix.own(ColList<int>(inner, col));
 
   operator []=(int index, Iterable<int> col) {
     if (index >= inner.numCols) {
@@ -93,6 +91,5 @@ class Int2DColView extends Object
 
   Int2DColView(this.inner);
 
-  Int1DView operator [](int col) =>
-      Int1DView.own(ColList<int>(inner, col));
+  Int1DView operator [](int col) => Int1DView.own(ColList<int>(inner, col));
 }

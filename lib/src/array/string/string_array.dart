@@ -61,8 +61,7 @@ class String1D extends Object
     _data[i] = val;
   }
 
-  String1D slice(int start, [int end]) =>
-      String1D(_data.sublist(start, end));
+  String1D slice(int start, [int end]) => String1D(_data.sublist(start, end));
 
   @override
   void add(String a) => _data.add(a);

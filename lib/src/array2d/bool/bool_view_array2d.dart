@@ -78,8 +78,7 @@ class Bool2DView extends Object
 
   factory Bool2DView.shapedLike(Array2DView like,
           {bool fill: false, Iterable<String> names}) =>
-      Bool2DView.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      Bool2DView.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Bool2DView] from column major
   factory Bool2DView.columns(Iterable<Iterable<bool>> columns,
@@ -115,13 +114,12 @@ class Bool2DView extends Object
 
   factory Bool2DView.aRow(Iterable<bool> row,
           {int repeat = 1, Iterable<String> names}) =>
-      Bool2DView.own(
-          List<Bool1DView>.filled(repeat, Bool1DView(row)), names);
+      Bool2DView.own(List<Bool1DView>.filled(repeat, Bool1DView(row)), names);
 
   factory Bool2DView.repeatCol(Iterable<bool> column,
           {int repeat = 1, Iterable<String> names}) =>
       Bool2DView.columns(
-          ConstantIterable<Iterable<bool>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<bool>>(column, repeat), names);
 
   factory Bool2DView.genRows(int numRows, Iterable<bool> rowMaker(int index)) {
     final rows = <Bool1DView>[];

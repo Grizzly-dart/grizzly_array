@@ -8,6 +8,7 @@ import 'package:grizzly_primitives/grizzly_primitives.dart';
 import '../array.dart';
 import '../sample.dart';
 import 'package:text_table/text_table.dart';
+import 'package:grizzly_range/grizzly_range.dart' as ranger;
 
 part 'stats.dart';
 
@@ -267,7 +268,7 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   }
 
   String toString() {
-    final tab = table(Ranger.indices(length).map((i) => i.toString()).toList());
+    final tab = table(ranger.indices(length).map((i) => i.toString()).toList());
     tab.row(toStringArray().toList());
     return tab.toString();
   }

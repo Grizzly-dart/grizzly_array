@@ -82,8 +82,7 @@ class Dynamic2D extends Object
       {Iterable<String> names, dynamic fill}) {
     final ret = List<Dynamic1D>()..length = diagonal.length;
     for (int i = 0; i < diagonal.length; i++) {
-      final row =
-          List<dynamic>.filled(diagonal.length, fill, growable: true);
+      final row = List<dynamic>.filled(diagonal.length, fill, growable: true);
       row[i] = diagonal.elementAt(i);
       ret[i] = Dynamic1D.own(row);
     }
@@ -100,7 +99,7 @@ class Dynamic2D extends Object
   factory Dynamic2D.aCol(Iterable<dynamic> column,
           {int repeat = 1, Iterable<String> names}) =>
       Dynamic2D.columns(
-          ConstantIterable<Iterable<dynamic>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<dynamic>>(column, repeat), names);
 
   factory Dynamic2D.genRows(
       int numRows, Iterable<dynamic> rowMaker(int index)) {

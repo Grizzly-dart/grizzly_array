@@ -341,8 +341,7 @@ class Double2DFix extends Object
 
   factory Double2DFix.shapedLike(Array2DView like,
           {double fill: 0.0, Iterable<String> names}) =>
-      Double2DFix.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      Double2DFix.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory Double2DFix.columns(Iterable<Iterable<double>> columns,
@@ -393,10 +392,10 @@ class Double2DFix extends Object
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<double>) {
       return Double2DFix.columns(
-          ConstantIterable<Iterable<double>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<double>>(column, repeat), names);
     }
     return Double2DFix.columns(
-        ConstantIterable<Iterable<double>>(
+        ranger.ConstantIterable<Iterable<double>>(
             Double1DView.fromNums(column), repeat),
         names);
   }

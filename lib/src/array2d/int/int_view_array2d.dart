@@ -107,11 +107,10 @@ class Int2DView extends Object
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<int>) {
       return Int2DView.columns(
-          ConstantIterable<Iterable<int>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<int>>(column, repeat), names);
     }
     return Int2DView.columns(
-        ConstantIterable<Iterable<int>>(
-            Int1DView.fromNums(column), repeat),
+        ranger.ConstantIterable<Iterable<int>>(Int1DView.fromNums(column), repeat),
         names);
   }
 

@@ -43,8 +43,7 @@ class String1DView extends Object
 
   String operator [](int i) => _data[i];
 
-  String1D slice(int start, [int end]) =>
-      String1D(_data.sublist(start, end));
+  String1D slice(int start, [int end]) => String1D(_data.sublist(start, end));
 
   String1DView get view => this;
 

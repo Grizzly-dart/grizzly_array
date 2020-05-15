@@ -360,11 +360,10 @@ class Int2DFix extends Object
       {int repeat = 1, Iterable<String> names}) {
     if (column is Iterable<int>) {
       return Int2DFix.columns(
-          ConstantIterable<Iterable<int>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<int>>(column, repeat), names);
     }
     return Int2DFix.columns(
-        ConstantIterable<Iterable<int>>(
-            Int1DView.fromNums(column), repeat),
+        ranger.ConstantIterable<Iterable<int>>(Int1DView.fromNums(column), repeat),
         names);
   }
 

@@ -52,8 +52,7 @@ class String2DFix extends Object
 
   factory String2DFix.shapedLike(Array2DView like,
           {String fill, Iterable<String> names}) =>
-      String2DFix.sized(like.numRows, like.numCols,
-          fill: fill, names: names);
+      String2DFix.sized(like.numRows, like.numCols, fill: fill, names: names);
 
   /// Create [Int2D] from column major
   factory String2DFix.columns(Iterable<Iterable<String>> columns,
@@ -89,13 +88,12 @@ class String2DFix extends Object
 
   factory String2DFix.aRow(Iterable<String> row,
           {int repeat = 1, Iterable<String> names}) =>
-      String2DFix(
-          List<String1DView>.filled(repeat, String1DView(row)), names);
+      String2DFix(List<String1DView>.filled(repeat, String1DView(row)), names);
 
   factory String2DFix.aCol(Iterable<String> column,
           {int repeat = 1, Iterable<String> names}) =>
       String2DFix.columns(
-          ConstantIterable<Iterable<String>>(column, repeat), names);
+          ranger.ConstantIterable<Iterable<String>>(column, repeat), names);
 
   factory String2DFix.genRows(
       int numRows, Iterable<String> rowMaker(int index)) {
