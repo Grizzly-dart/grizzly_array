@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2DCol extends Object
-    with
-        ColMixin<String>,
-        Axis2DMixin<String>,
-        String2DAxisMixin
+    with ColMixin<String>, Axis2DMixin<String>, String2DAxisMixin
     implements Axis2D<String> {
   final String2D inner;
 

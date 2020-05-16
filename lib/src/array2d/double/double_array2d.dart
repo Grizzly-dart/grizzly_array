@@ -4,7 +4,8 @@ class Double2D extends Object
     with
         Array2DMixin<double>,
         IterableMixin<Iterable<double>>,
-        Double2DViewMixin, Double2DMixin
+        Double2DViewMixin,
+        Double2DMixin
     implements Numeric2D<double> {
   final List<Double1D> _data;
 

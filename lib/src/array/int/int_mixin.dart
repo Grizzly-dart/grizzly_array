@@ -21,11 +21,9 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
           /* num | Iterable<num> | Numeric2D<int> */ other) =>
       toInt()..addition(other);
 
-  Int1D operator -(/* num | Iterable<num> */ other) =>
-      toInt()..subtract(other);
+  Int1D operator -(/* num | Iterable<num> */ other) => toInt()..subtract(other);
 
-  Int1D operator *(/* num | Iterable<num> */ other) =>
-      toInt()..multiply(other);
+  Int1D operator *(/* num | Iterable<num> */ other) => toInt()..multiply(other);
 
   Double1D operator /(/* num | Iterable<num> */ other) =>
       toDouble()..divide(other);
@@ -33,8 +31,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
   Int1D operator ~/(/* num | Iterable<num> */ other) =>
       toInt()..truncDiv(other);
 
-  Double1D rdiv(/* num | Iterable<num> */ other) =>
-      toDouble()..rdivMe(other);
+  Double1D rdiv(/* num | Iterable<num> */ other) => toDouble()..rdivMe(other);
 
   @override
   int compareValue(int a, int b) => a.compareTo(b);

@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class Dynamic2D extends Object
-    with
-        Array2DMixin<dynamic>,
-        IterableMixin<Iterable<dynamic>>,
-        Dynamic2DMixin
+    with Array2DMixin<dynamic>, IterableMixin<Iterable<dynamic>>, Dynamic2DMixin
     implements Array2D<dynamic> {
   final List<Dynamic1D> _data;
 

@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class Dynamic2DCol extends Object
-    with
-        ColMixin<dynamic>,
-        Axis2DMixin<dynamic>,
-        Dynamic2DAxisMixin
+    with ColMixin<dynamic>, Axis2DMixin<dynamic>, Dynamic2DAxisMixin
     implements Axis2D<dynamic> {
   final Dynamic2D inner;
 

@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class Int2DCol extends Object
-    with
-        Axis2DMixin<int>,
-        ColMixin<int>,
-        IntAxis2DViewMixin
+    with Axis2DMixin<int>, ColMixin<int>, IntAxis2DViewMixin
     implements Numeric2DAxis<int> {
   final Int2D inner;
 

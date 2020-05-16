@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class Double2DCol extends Object
-    with
-        Axis2DMixin<double>,
-        ColMixin<double>,
-        DoubleAxis2DViewMixin
+    with Axis2DMixin<double>, ColMixin<double>, DoubleAxis2DViewMixin
     implements Numeric2DAxis<double> {
   final Double2D inner;
 

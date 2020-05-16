@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class Double2DRow extends Object
-    with
-        Axis2DMixin<double>,
-        RowMixin<double>,
-        DoubleAxis2DViewMixin
+    with Axis2DMixin<double>, RowMixin<double>, DoubleAxis2DViewMixin
     implements Numeric2DAxis<double> {
   final Double2D inner;
 

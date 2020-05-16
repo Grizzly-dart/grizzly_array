@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class Bool2DCol extends Object
-    with
-        ColMixin<bool>,
-        Axis2DMixin<bool>,
-        BoolAxis2DViewMixin
+    with ColMixin<bool>, Axis2DMixin<bool>, BoolAxis2DViewMixin
     implements Axis2D<bool> {
   final Bool2D inner;
 

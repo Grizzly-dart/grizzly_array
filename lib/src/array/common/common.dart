@@ -56,10 +56,10 @@ abstract class ArrayFixMixin<E> implements ArrayFix<E> {
 abstract class ArrayViewMixin<E> implements ArrayView<E> {
   Index1D get shape => Index1D(length);
 
-  IntPair<E> pairAt(int index) => intPair<E>(index, this[index]);
+  MapEntry<int, E> pairAt(int index) => MapEntry<int, E>(index, this[index]);
 
-  Iterable<IntPair<E>> enumerate() =>
-      indices(length).map((i) => intPair<E>(i, this[i]));
+  Iterable<MapEntry<int, E>> enumerate() =>
+      indices(length).map((i) => MapEntry<int, E>(i, this[i]));
 
   Iterable<int> get i => indices(length);
 

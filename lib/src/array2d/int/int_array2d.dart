@@ -116,7 +116,8 @@ class Int2D extends Object
           ranger.ConstantIterable<Iterable<int>>(column, repeat), names);
     }
     return Int2D.columns(
-        ranger.ConstantIterable<Iterable<int>>(Int1DView.fromNums(column), repeat),
+        ranger.ConstantIterable<Iterable<int>>(
+            Int1DView.fromNums(column), repeat),
         names);
   }
 
@@ -312,14 +313,16 @@ class Int2D extends Object
     }
   }
 
+  /* TODO
   // TODO return lazy
   // TODO return view
-  IntPair<Int1D> pairAt(int index) => intPair<Int1D>(index, _data[index]);
+  MapEntry<int, Int1D> pairAt(int index) => MapEntry<int, Int1D>(index, _data[index]);
 
   // TODO return lazy
   // TODO return view
-  Iterable<IntPair<Int1D>> enumerate() =>
-      ranger.indices(numRows).map((i) => intPair<Int1D>(i, _data[i]));
+  Iterable<MapEntry<int, Int1D>> enumerate() =>
+      ranger.indices(numRows).map((i) => MapEntry<int, Int1D>(i, _data[i]));
+   */
 
   void reshape(Index2D newShape, {int def: 0}) {
     if (shape == newShape) return;

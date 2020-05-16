@@ -1,10 +1,7 @@
 part of grizzly.series.array2d;
 
 class String2D extends Object
-    with
-        Array2DMixin<String>,
-        IterableMixin<Iterable<String>>,
-        String2DMixin
+    with Array2DMixin<String>, IterableMixin<Iterable<String>>, String2DMixin
     implements Array2D<String> {
   final List<String1D> _data;
 
