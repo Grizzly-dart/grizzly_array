@@ -1,4 +1,4 @@
-part of grizzly.series.array.int;
+part of grizzly.array.int;
 
 void checkLengths(expected, found, {String subject}) {
   if (expected.length != found.length)

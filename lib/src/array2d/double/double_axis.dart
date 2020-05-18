@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class DoubleAxis2DViewMixin implements Numeric2DAxis<double> {
   Double1D get mean {

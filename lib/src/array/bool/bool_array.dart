@@ -1,8 +1,9 @@
-library grizzly.series.array.bool;
+library grizzly.array.bool;
 
 import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 import 'package:grizzly_array/src/array2d/array2d.dart';
+import 'package:grizzly_range/grizzly_range.dart' as ranger;
 import '../common/common.dart';
 import '../array.dart';
 
@@ -80,7 +81,7 @@ class Bool1D extends Object
       _data.sort((bool a, bool b) => b ? 1 : 0);
   }
 
-  void keepIf(Iterable<bool> mask) {
+  void keepByMask(Iterable<bool> mask) {
     if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

@@ -11,7 +11,7 @@ void main() {
         [5, 6, 7, 8]
       ]);
 
-      expect(s1.shape, idx2D(2, 4));
+      expect(s1.shape, Index2D(2, 4));
       expect(s1.min, 1);
       expect(s1.max, 8);
 

@@ -1,4 +1,4 @@
-part of grizzly.series.array.double;
+part of grizzly.array.double;
 
 class Double1DView extends Object
     with ArrayViewMixin<double>, IterableMixin<double>, Double1DViewMixin

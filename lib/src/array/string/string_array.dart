@@ -1,4 +1,4 @@
-library grizzly.series.array.string;
+library grizzly.array.string;
 
 import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
@@ -80,7 +80,7 @@ class String1D extends Object
       _data.sort((String a, String b) => b.compareTo(a));
   }
 
-  void keepIf(Iterable<bool> mask) {
+  void keepByMask(Iterable<bool> mask) {
     if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class Bool2DRow extends Object
     with Axis2DMixin<bool>, RowMixin<bool>, BoolAxis2DViewMixin

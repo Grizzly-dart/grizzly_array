@@ -1,4 +1,4 @@
-part of grizzly.series.array.bool;
+part of grizzly.array.bool;
 
 class Bool1DFix extends Object
     with

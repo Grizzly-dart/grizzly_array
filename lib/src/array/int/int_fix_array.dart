@@ -1,4 +1,4 @@
-part of grizzly.series.array.int;
+part of grizzly.array.int;
 
 abstract class IntFixMixin implements Numeric1DFix<int> {
   @override

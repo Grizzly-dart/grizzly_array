@@ -1,4 +1,4 @@
-library grizzly.series.array2d;
+library grizzly.array2d;
 
 import 'dart:collection';
 import 'dart:math' as math;

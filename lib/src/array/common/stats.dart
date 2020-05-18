@@ -1,4 +1,4 @@
-part of grizzly.series.array.common;
+part of grizzly.array.common;
 
 class StatsImpl<T extends num> implements Stats<T> {
   final Iterable<T> values;

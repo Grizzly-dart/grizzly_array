@@ -1,4 +1,4 @@
-part of grizzly.series.array.string;
+part of grizzly.array.string;
 
 abstract class String1DFixMixin implements ArrayFix<String>, StringArrayFix {
   void toLowerCase() {

@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class Bool2D extends Object
     with Array2DMixin<bool>, IterableMixin<Iterable<bool>>, Bool2DViewMixin

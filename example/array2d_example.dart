@@ -7,4 +7,6 @@ main() {
     [7.0, 8.0, 9.0],
   ]);
   print(v);
+  v.addition(1.5);
+  print(v);
 }

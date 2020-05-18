@@ -1,4 +1,4 @@
-part of grizzly.series.array.int;
+part of grizzly.array.int;
 
 abstract class Int1DViewMixin implements Numeric1DView<int> {
   Int1DView makeView(Iterable<int> newData, [String name]) =>
@@ -262,7 +262,7 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     return ret;
   }
 
-  Int1D selectIf(Iterable<bool> mask) {
+  Int1D selectByMask(Iterable<bool> mask) {
     if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;
@@ -290,5 +290,50 @@ abstract class Int1DViewMixin implements Numeric1DView<int> {
     final ret = toDouble();
     for (int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
     return ret;
+  }
+
+  List<ranger.Extent<int>> generateBins(
+      {ranger.Extent<int> range, int count = 10}) {
+    range ??= this.extent;
+    final edges = ranger.linspace<int>(range.lower, range.upper, count);
+    return ranger.Extent.consecutive(edges);
+  }
+
+  @override
+  IntSeries<ranger.Extent<int>> histogram(/* Iterable<E> | int */ bins,
+      {ranger.Extent<int> range, Iterable<int> weights}) {
+    if (bins is int) {
+      bins = generateBins(range: range, count: bins);
+    } else if (bins is! Iterable<int>) {
+      throw Exception('bins must be integer or Iterable<int>');
+    }
+
+    final Iterable<ranger.Extent<int>> binExtents = bins;
+    final counts = List<int>.filled(binExtents.length, 0);
+
+    int dataIndex = -1;
+    for (final v in this) {
+      dataIndex++;
+
+      if (range != null) {
+        if (!range.has(v)) continue;
+      }
+
+      int extentIndex = -1;
+      for (final e in binExtents) {
+        extentIndex++;
+        if (!e.has(v)) continue;
+
+        if (weights == null) {
+          counts[extentIndex]++;
+        } else {
+          int inc = weights.elementAt(dataIndex) ?? 1;
+          counts[extentIndex] += inc;
+        }
+        break;
+      }
+    }
+
+    return IntSeries(counts, labels: binExtents);
   }
 }

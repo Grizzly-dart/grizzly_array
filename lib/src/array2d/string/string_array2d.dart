@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class String2D extends Object
     with Array2DMixin<String>, IterableMixin<Iterable<String>>, String2DMixin

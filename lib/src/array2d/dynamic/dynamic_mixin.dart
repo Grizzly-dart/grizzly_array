@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class Dynamic2DMixin implements Array2D<dynamic> {
   List<Dynamic1DView> get _data;
@@ -79,7 +79,7 @@ abstract class Dynamic2DMixin implements Array2D<dynamic> {
         if (min == null || d.compareTo(min) < 0) {
           // TODO
           min = d;
-          ret = idx2D(i, j);
+          ret = Index2D(i, j);
         }
       }
     }
@@ -96,7 +96,7 @@ abstract class Dynamic2DMixin implements Array2D<dynamic> {
         if (max == null || d.compareTo(max) > 0) {
           // TODO
           max = d;
-          ret = idx2D(i, j);
+          ret = Index2D(i, j);
         }
       }
     }

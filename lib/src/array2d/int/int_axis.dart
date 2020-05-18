@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class IntAxis2DViewMixin implements Numeric2DAxis<int> {
   /// Minimum along y-axis

@@ -1,4 +1,4 @@
-part of grizzly.series.array.string;
+part of grizzly.array.string;
 
 class String1DView extends Object
     with ArrayViewMixin<String>, IterableMixin<String>, String1DViewMixin

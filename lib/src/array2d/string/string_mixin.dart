@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class String2DMixin implements Array2D<String> {
   List<String1DView> get _data;
@@ -78,7 +78,7 @@ abstract class String2DMixin implements Array2D<String> {
         if (d == null) continue;
         if (min == null || d.compareTo(min) < 0) {
           min = d;
-          ret = idx2D(i, j);
+          ret = Index2D(i, j);
         }
       }
     }
@@ -94,7 +94,7 @@ abstract class String2DMixin implements Array2D<String> {
         if (d == null) continue;
         if (max == null || d.compareTo(max) > 0) {
           max = d;
-          ret = idx2D(i, j);
+          ret = Index2D(i, j);
         }
       }
     }

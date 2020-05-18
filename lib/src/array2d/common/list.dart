@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 /// List of elements along a column of Array2D
 class ColList<T> extends Object with ListMixin<T> implements List<T> {

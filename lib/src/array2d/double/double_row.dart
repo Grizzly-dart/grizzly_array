@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class Double2DRow extends Object
     with Axis2DMixin<double>, RowMixin<double>, DoubleAxis2DViewMixin

@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class Int2DViewMixin implements Numeric2D<int> {
   List<Int1DView> get _data;
@@ -91,7 +91,7 @@ abstract class Int2DViewMixin implements Numeric2D<int> {
         if (d == null) continue;
         if (min == null || d < min) {
           min = d;
-          ret = idx2D(i, j);
+          ret = Index2D(i, j);
         }
       }
     }
@@ -107,7 +107,7 @@ abstract class Int2DViewMixin implements Numeric2D<int> {
         if (d == null) continue;
         if (max == null || d > max) {
           max = d;
-          ret = idx2D(i, j);
+          ret = Index2D(i, j);
         }
       }
     }

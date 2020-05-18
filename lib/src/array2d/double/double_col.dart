@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class Double2DCol extends Object
     with Axis2DMixin<double>, ColMixin<double>, DoubleAxis2DViewMixin

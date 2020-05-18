@@ -1,10 +1,11 @@
-library grizzly.series.array.common;
+library grizzly.array.common;
 
 import 'dart:math' as math;
 import 'dart:collection';
 import 'package:grizzly_range/grizzly_range.dart';
 //import 'package:grizzly_series/grizzly_series.dart';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
+import 'package:grizzly_series/grizzly_series.dart';
 import '../array.dart';
 import '../sample.dart';
 import 'package:text_table/text_table.dart';
@@ -20,7 +21,7 @@ abstract class ArrayMixin<E> implements Array<E> {
     }
   }
 
-  set assign(Iterable<E> other) {
+  set setAll(Iterable<E> other) {
     if (length == other.length) {
       for (int i = 0; i < length; i++) this[i] = other.elementAt(i);
       return;
@@ -45,7 +46,7 @@ abstract class ArrayFixMixin<E> implements ArrayFix<E> {
     }
   }
 
-  set assign(Iterable<E> other) {
+  set setAll(Iterable<E> other) {
     if (other.length != length)
       throw ArgumentError.value(other, 'other', 'Size mismatch!');
 
@@ -117,7 +118,6 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
   @override
   StringArray toStringArray() => String1D(this.map((e) => e.toString()));
 
-  /*
   @override
   IntSeries<E> valueCounts(
       {bool sortByValue: false, bool descending: false, name: ''}) {
@@ -136,7 +136,6 @@ abstract class ArrayViewMixin<E> implements ArrayView<E> {
     }
     return ret;
   }
-   */
 
   @override
   BoolArray ne(other) {

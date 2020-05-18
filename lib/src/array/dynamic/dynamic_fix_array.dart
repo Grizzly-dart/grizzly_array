@@ -1,4 +1,4 @@
-part of grizzly.series.array.dynamic;
+part of grizzly.array.dynamic;
 
 class Dynamic1DFix extends Object
     with

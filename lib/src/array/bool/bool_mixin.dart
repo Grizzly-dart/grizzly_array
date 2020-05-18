@@ -1,4 +1,4 @@
-part of grizzly.series.array.bool;
+part of grizzly.array.bool;
 
 abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   Bool1DView makeView(Iterable<bool> newData, [String name]) =>
@@ -173,7 +173,7 @@ abstract class Bool1DViewMixin implements ArrayView<bool>, BoolArrayView {
   @override
   int compareValue(bool a, bool b) => a == b ? 0 : a ? 1 : -1;
 
-  Bool1D selectIf(Iterable<bool> mask) {
+  Bool1D selectByMask(Iterable<bool> mask) {
     if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;

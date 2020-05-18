@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class Int2DRow extends Object
     with Axis2DMixin<int>, RowMixin<int>, IntAxis2DViewMixin

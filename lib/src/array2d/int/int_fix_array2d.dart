@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class Int2DFixMixin implements Numeric2D<int> {
   set diagonal(/* num | Iterable<num> | Array2DView<num> */ val) {

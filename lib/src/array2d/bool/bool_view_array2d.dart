@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class Exceptions {
   static void labelLen(int data, int labels) {

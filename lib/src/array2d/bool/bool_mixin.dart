@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class Bool2DViewMixin implements Array2D<bool> {
   List<Bool1DView> get _data;
@@ -82,9 +82,9 @@ abstract class Bool2DViewMixin implements Array2D<bool> {
         final bool d = _data[r][c];
         if (d == null) continue;
         if (!d)
-          return idx2D(r, c);
+          return Index2D(r, c);
         else
-          ret ??= idx2D(r, c);
+          ret ??= Index2D(r, c);
       }
     }
     return ret;
@@ -97,9 +97,9 @@ abstract class Bool2DViewMixin implements Array2D<bool> {
         final bool d = _data[r][c];
         if (d == null) continue;
         if (d)
-          return idx2D(r, c);
+          return Index2D(r, c);
         else
-          ret ??= idx2D(r, c);
+          ret ??= Index2D(r, c);
       }
     }
     return ret;

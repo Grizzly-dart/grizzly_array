@@ -1,4 +1,4 @@
-part of grizzly.series.array.bool;
+part of grizzly.array.bool;
 
 class Bool1DView extends Object
     with ArrayViewMixin<bool>, Bool1DViewMixin, IterableMixin<bool>

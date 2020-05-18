@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class BoolAxis2DViewMixin implements Axis2D<bool> {
   /*

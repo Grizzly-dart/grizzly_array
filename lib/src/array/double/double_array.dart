@@ -1,4 +1,4 @@
-library grizzly.series.array.double;
+library grizzly.array.double;
 
 import 'dart:math' as math;
 import 'dart:collection';
@@ -7,6 +7,7 @@ import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
 import '../common/common.dart';
 import 'package:grizzly_range/grizzly_range.dart' as ranger;
+import 'package:grizzly_series/grizzly_series.dart';
 
 part 'double_view_array.dart';
 part 'double_fix_array.dart';
@@ -122,7 +123,7 @@ class Double1D extends Object
       _data.sort((double a, double b) => b.compareTo(a));
   }
 
-  void keepIf(Iterable<bool> mask) {
+  void keepByMask(Iterable<bool> mask) {
     if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

@@ -1,4 +1,4 @@
-part of grizzly.series.array.double;
+part of grizzly.array.double;
 
 abstract class DoubleFixMixin implements Numeric1DFix<double> {
   @override

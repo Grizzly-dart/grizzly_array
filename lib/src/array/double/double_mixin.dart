@@ -1,4 +1,4 @@
-part of grizzly.series.array.double;
+part of grizzly.array.double;
 
 abstract class Double1DViewMixin implements Numeric1DView<double> {
   Double1DView makeView(Iterable<double> newData, [String name]) =>
@@ -335,7 +335,7 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     return ret;
   }
 
-  Double1D selectIf(Iterable<bool> mask) {
+  Double1D selectByMask(Iterable<bool> mask) {
     if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;
@@ -375,5 +375,50 @@ abstract class Double1DViewMixin implements Numeric1DView<double> {
     final ret = toDouble();
     for (int i = 0; i < length; i++) ret[i] = math.sin(ret[i]);
     return ret;
+  }
+
+  List<ranger.Extent<double>> generateBins(
+      {ranger.Extent<double> range, int count = 10}) {
+    range ??= this.extent;
+    final edges = ranger.linspace<double>(range.lower, range.upper, count);
+    return ranger.Extent.consecutive(edges);
+  }
+
+  @override
+  IntSeries<ranger.Extent<double>> histogram(/* Iterable<E> | int */ bins,
+      {ranger.Extent<double> range, Iterable<int> weights}) {
+    if (bins is int) {
+      bins = generateBins(range: range, count: bins);
+    } else if (bins is! Iterable<double>) {
+      throw Exception('bins must be integer or Iterable<double>');
+    }
+
+    final Iterable<ranger.Extent<double>> binExtents = bins;
+    final counts = List<int>.filled(binExtents.length, 0);
+
+    int dataIndex = -1;
+    for (final v in this) {
+      dataIndex++;
+
+      if (range != null) {
+        if (!range.has(v)) continue;
+      }
+
+      int extentIndex = -1;
+      for (final e in binExtents) {
+        extentIndex++;
+        if (!e.has(v)) continue;
+
+        if (weights == null) {
+          counts[extentIndex]++;
+        } else {
+          int inc = weights.elementAt(dataIndex) ?? 1;
+          counts[extentIndex] += inc;
+        }
+        break;
+      }
+    }
+
+    return IntSeries(counts, labels: binExtents);
   }
 }

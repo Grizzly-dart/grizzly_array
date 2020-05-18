@@ -1,4 +1,4 @@
-library grizzly.series.array;
+library grizzly.array;
 
 import 'package:grizzly_primitives/grizzly_primitives.dart';
 

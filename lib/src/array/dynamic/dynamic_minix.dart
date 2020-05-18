@@ -1,4 +1,4 @@
-part of grizzly.series.array.dynamic;
+part of grizzly.array.dynamic;
 
 abstract class Dynamic1DViewMixin implements DynamicArrayView {
   Dynamic1DView makeView(Iterable<dynamic> newData, [String name]) =>
@@ -153,7 +153,7 @@ abstract class Dynamic1DViewMixin implements DynamicArrayView {
     return ret;
   }
 
-  Dynamic1D selectIf(Iterable<bool> mask) {
+  Dynamic1D selectByMask(Iterable<bool> mask) {
     if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;

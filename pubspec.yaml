@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   grizzly_primitives: ^2.0.2
+  grizzly_series:
   collection: ^1.14.12
   text_table: ^2.6.0
   grizzly_range:
@@ -19,3 +20,5 @@ dev_dependencies:
 dependency_overrides:
   grizzly_primitives:
     path: ../grizzly_primitives
+  grizzly_series:
+    path: ../grizzly_series

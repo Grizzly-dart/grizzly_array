@@ -1,4 +1,4 @@
-library grizzly.series.array.dynamic;
+library grizzly.array.dynamic;
 
 import 'dart:collection';
 import 'package:grizzly_primitives/grizzly_primitives.dart';
@@ -87,7 +87,7 @@ class Dynamic1D extends Object
 
   void sort({bool descending: false}) {}
 
-  void keepIf(Iterable<bool> mask) {
+  void keepByMask(Iterable<bool> mask) {
     if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {

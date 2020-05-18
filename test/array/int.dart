@@ -25,8 +25,8 @@ void main() {
       expect(s1.to2D(t: true), [
         [1, 5]
       ]);
-      expect(s1.to2D().shape, idx2D(2, 1));
-      expect(s1.to2D(t: true).shape, idx2D(1, 2));
+      expect(s1.to2D().shape, Index2D(2, 1));
+      expect(s1.to2D(t: true).shape, Index2D(1, 2));
     });
 
     test('covariance', () {
@@ -74,7 +74,7 @@ void main() {
 
     test('mask', () {
       print(ints([1, 5, 2, 4, 3])
-        ..keepIf(bools([false, true, false, true, false])));
+        ..keepByMask(bools([false, true, false, true, false])));
     });
 
     test('equality', () {

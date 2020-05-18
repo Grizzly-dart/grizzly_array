@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 abstract class Array2DMixin<E> implements Array2D<E> {
   set diagonal(val) {

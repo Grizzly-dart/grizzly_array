@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class String2DRow extends Object
     with Axis2DMixin<String>, RowMixin<String>, String2DAxisMixin

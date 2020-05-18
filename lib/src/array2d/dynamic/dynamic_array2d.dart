@@ -1,4 +1,4 @@
-part of grizzly.series.array2d;
+part of grizzly.array2d;
 
 class Dynamic2D extends Object
     with Array2DMixin<dynamic>, IterableMixin<Iterable<dynamic>>, Dynamic2DMixin

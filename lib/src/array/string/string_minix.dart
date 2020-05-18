@@ -1,4 +1,4 @@
-part of grizzly.series.array.string;
+part of grizzly.array.string;
 
 abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   String1DView makeView(Iterable<String> newData, [String name]) =>
@@ -211,7 +211,7 @@ abstract class String1DViewMixin implements ArrayView<String>, StringArrayView {
   @override
   int compareValue(String a, String b) => a.compareTo(b);
 
-  String1D selectIf(Iterable<bool> mask) {
+  String1D selectByMask(Iterable<bool> mask) {
     if (mask.length != length) throw Exception('Length mismatch!');
 
     int retLength = mask.where((v) => v).length;

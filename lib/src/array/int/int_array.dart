@@ -1,4 +1,4 @@
-library grizzly.series.array.int;
+library grizzly.array.int;
 
 import 'dart:collection';
 import 'dart:math' as math;
@@ -7,6 +7,7 @@ import 'package:grizzly_array/src/array2d/array2d.dart';
 import '../array.dart';
 import '../common/common.dart';
 import 'package:grizzly_range/grizzly_range.dart' as ranger;
+import 'package:grizzly_series/grizzly_series.dart';
 
 part 'int_fix_array.dart';
 part 'int_view_array.dart';
@@ -100,7 +101,7 @@ class Int1D extends Object
       _data.sort((int a, int b) => b.compareTo(a));
   }
 
-  void keepIf(Iterable<bool> mask) {
+  void keepByMask(Iterable<bool> mask) {
     if (mask.length != _data.length) throw Exception('Length mismatch!');
 
     for (int i = length - 1; i >= 0; i--) {
