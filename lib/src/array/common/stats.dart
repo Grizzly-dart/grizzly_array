@@ -42,17 +42,10 @@ class StatsImpl<T extends num> implements Stats<T> {
   }
 
   T get ptp {
-    T min;
-    T max;
-    for (int i = 0; i < length; i++) {
-      final T d = values.elementAt(i);
-      if (d == null) continue;
-      if (max == null || d > max) max = d;
-      if (min == null || d < min) min = d;
-    }
+    final range = extent;
+    if (range.lower == null) return null;
 
-    if (min == null) return null;
-    return max - min;
+    return extent.upper - extent.lower;
   }
 
   T get mode {
