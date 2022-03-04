@@ -20,13 +20,13 @@ class Bool1D extends Object
     implements Array<bool>, Bool1DFix, BoolArray {
   List<bool> _data;
 
-  String _name;
+  String? _name;
 
-  String get name => _name;
+  String? get name => _name;
 
   set name(String value) => _name = value;
 
-  Bool1D(Iterable<bool> data, [String name])
+  Bool1D(Iterable<bool> data, [String? name])
       : _data = List<bool>.from(data),
         _name = name;
 
