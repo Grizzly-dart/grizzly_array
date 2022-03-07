@@ -15,7 +15,7 @@ extension IterableExt<T> on Iterable<T> {
 
 extension ComparableListExt<T extends Comparable> on List<T> {
   void zort({bool descending: false}) {
-    if(isEmpty) return;
+    if (isEmpty) return;
 
     if (!descending)
       sort();
@@ -100,7 +100,18 @@ extension ListExt<T> on List<T> {
     return List<int>.from(ret.values);
   }
 
-  Int1D slice(int start, [int end]) => Int1D(_data.sublist(start, end));
+  List<T> slice(int start, [int? end]) {
+    end ??= length;
+
+    if (start.isNegative) {
+      start = length + start;
+    }
+    if (end.isNegative) {
+      end = length + end;
+    }
+
+    return sublist(start, end).toList();
+  }
 
   /// Returns a new [List] containing first [count] elements of this array
   ///
@@ -108,15 +119,227 @@ extension ListExt<T> on List<T> {
   /// returned
   List<T> head([int count = 10]) {
     if (length <= count) return toList();
-    return slice(0, count);
+    return sublist(0, count);
   }
 
   /// Returns a new  [Int1D] containing last [count] elements of this array
   ///
   /// If the length of the array is shorter than [count], all elements are
   /// returned
-  Array<E> tail([int count = 10]) {
-    if (length <= count) return makeArray(this);
-    return slice(length - count);
+  List<T> tail([int count = 10]) {
+    if (length <= count) return toList();
+    return slice(-count);
   }
+
+  List<String> toStringList() =>
+      map((e) => e?.toString()).cast<String>().toList();
+
+  List<bool> ne(other) {
+    final ret = List<bool>.filled(length, false, growable: true);
+    if (other is T) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] != other;
+      }
+    } else if (other is Iterable<T>) {
+      if (other.length != length)
+        throw LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
+      int i = 0;
+      for (final otherItem in other) {
+        ret[i] = this[i] != otherItem;
+        i++;
+      }
+    } else {
+      throw UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  List<bool> eq(other) {
+    final ret = List<bool>.filled(length, false, growable: true);
+    if (other is T) {
+      for (int i = 0; i < length; i++) {
+        ret[i] = this[i] == other;
+      }
+    } else if (other is Iterable<T>) {
+      if (other.length != length)
+        throw LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
+      int i = 0;
+      for (final otherItem in other) {
+        ret[i] = this[i] == otherItem;
+        i++;
+      }
+    } else {
+      throw UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  List<bool?> ge(other) {
+    final ret = List<bool?>.filled(length, false, growable: true);
+    if (other is T) {
+      for (int i = 0; i < length; i++) {
+        final thisItem = this[i];
+        if (thisItem == null || other == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(other) >= 0
+              : throw Exception('Elements are not comparable');
+        }
+      }
+    } else if (other is Iterable<T>) {
+      if (other.length != length)
+        throw LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
+
+      int i = 0;
+      for (final otherItem in other) {
+        final thisItem = this[i];
+        if (thisItem == null || otherItem == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(otherItem) >= 0
+              : throw Exception('Elements are not comparable');
+        }
+        i++;
+      }
+    } else {
+      throw UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  List<bool?> gt(other) {
+    final ret = List<bool?>.filled(length, false, growable: true);
+    if (other is T) {
+      for (int i = 0; i < length; i++) {
+        final thisItem = this[i];
+        if (thisItem == null || other == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(other) > 0
+              : throw Exception('Elements are not comparable');
+        }
+      }
+    } else if (other is Iterable<T>) {
+      if (other.length != length)
+        throw LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
+
+      int i = 0;
+      for (final otherItem in other) {
+        final thisItem = this[i];
+        if (thisItem == null || otherItem == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(otherItem) > 0
+              : throw Exception('Elements are not comparable');
+        }
+        i++;
+      }
+    } else {
+      throw UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  List<bool?> le(other) {
+    final ret = List<bool?>.filled(length, false, growable: true);
+    if (other is T) {
+      for (int i = 0; i < length; i++) {
+        final thisItem = this[i];
+        if (thisItem == null || other == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(other) <= 0
+              : throw Exception('Elements are not comparable');
+        }
+      }
+    } else if (other is Iterable<T>) {
+      if (other.length != length)
+        throw LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
+
+      int i = 0;
+      for (final otherItem in other) {
+        final thisItem = this[i];
+        if (thisItem == null || otherItem == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(otherItem) <= 0
+              : throw Exception('Elements are not comparable');
+        }
+        i++;
+      }
+    } else {
+      throw UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  List<bool?> lt(other) {
+    final ret = List<bool?>.filled(length, false, growable: true);
+    if (other is T) {
+      for (int i = 0; i < length; i++) {
+        final thisItem = this[i];
+        if (thisItem == null || other == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(other) < 0
+              : throw Exception('Elements are not comparable');
+        }
+      }
+    } else if (other is Iterable<T>) {
+      if (other.length != length)
+        throw LengthMismatch(
+            expected: length, found: other.length, subject: 'other');
+
+      int i = 0;
+      for (final otherItem in other) {
+        final thisItem = this[i];
+        if (thisItem == null || otherItem == null) {
+          ret[i] = null;
+        } else {
+          ret[i] = thisItem is Comparable
+              ? thisItem.compareTo(otherItem) < 0
+              : throw Exception('Elements are not comparable');
+        }
+        i++;
+      }
+    } else {
+      throw UnsupportedError('Type not supported!');
+    }
+    return ret;
+  }
+
+  bool isEqualTo(other, {bool ignoreLengths = false}) {
+    if (other is Iterable<T>) {
+      if (!ignoreLengths && other.length != length) return false;
+
+      int i = 0;
+      for(final otherItem in other) {
+        if(i >= length) {
+          return true;
+        }
+        if (this[i] != otherItem) return false;
+      }
+      return true;
+    } else if(other is T) {
+      for(final thisItem in this) {
+        if(thisItem != other) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // TODO print table
 }
